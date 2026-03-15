@@ -1,0 +1,15 @@
+{
+  "name": "tse-family-learning",
+  "version": "1.0.0",
+  "description": "謝家 Family Learning Hub — Wellington prep & family education",
+  "scripts": {
+    "build": "echo 'Static site — no build needed'",
+    "start": "npx serve . -p ${PORT:-3000}"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
