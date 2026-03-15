@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "title": "Wellington Practice Quiz",
+    "subject": "Mixed",
+    "generated": "2026-03-15",
+    "timeLimit": 600
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "subject": "English",
+      "question": "Which word means the opposite of 'happy'?",
+      "options": ["Excited", "Sad", "Angry", "Tired"],
+      "answer": 1,
+      "explanation": "'Sad' is the opposite (antonym) of 'happy'."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "What is 14 + 8?",
+      "options": ["20", "21", "22", "23"],
+      "answer": 2,
+      "explanation": "14 + 8 = 22"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "subject": "English",
+      "question": "Choose the correct sentence:",
+      "options": [
+        "The cat sits on the mat.",
+        "The cat sit on the mat.",
+        "The cat sitting on the mat.",
+        "The cat sitted on the mat."
+      ],
+      "answer": 0,
+      "explanation": "We use 'sits' (present tense) with 'the cat' (singular)."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "A bag has 3 red balls and 5 blue balls. How many balls are there in total?",
+      "options": ["6", "7", "8", "9"],
+      "answer": 2,
+      "explanation": "3 + 5 = 8 balls in total."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "subject": "English",
+      "question": "What is the plural of 'child'?",
+      "options": ["Childs", "Childes", "Children", "Child"],
+      "answer": 2,
+      "explanation": "The plural of 'child' is 'children' — it's an irregular plural."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "How many sides does a triangle have?",
+      "options": ["2", "3", "4", "5"],
+      "answer": 1,
+      "explanation": "A triangle has 3 sides."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "subject": "Verbal Reasoning",
+      "question": "Which word is the odd one out?",
+      "options": ["Apple", "Banana", "Carrot", "Orange"],
+      "answer": 2,
+      "explanation": "Carrot is a vegetable. Apple, Banana and Orange are all fruits."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "If you have 20p and spend 7p, how much do you have left?",
+      "options": ["11p", "12p", "13p", "14p"],
+      "answer": 2,
+      "explanation": "20 − 7 = 13p"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "subject": "English",
+      "question": "Which word rhymes with 'cat'?",
+      "options": ["Car", "Cup", "Hat", "Hen"],
+      "answer": 2,
+      "explanation": "'Hat' rhymes with 'cat' — both end in the '-at' sound."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "subject": "Verbal Reasoning",
+      "question": "What comes next? 2, 4, 6, 8, ___",
+      "options": ["9", "10", "11", "12"],
+      "answer": 1,
+      "explanation": "The pattern adds 2 each time: 2, 4, 6, 8, 10."
+    }
+  ]
+}
