@@ -1,3 +1,3 @@
 # Family Learning Hub
 
-Build test 3 — nixpacks path fix.
+Final test — all nixpacks fixes applied.
