@@ -9,7 +9,7 @@ ENV NODE_ENV=production
 COPY package.json ./
 RUN npm install --omit=dev --ignore-scripts
 
-COPY index.html questions.json server.js ./
+COPY index.html questions.json server.js FAMILY_LEARNING_HUB_ROADMAP.md ./
 
 EXPOSE 3000
 CMD ["node", "server.js"]
