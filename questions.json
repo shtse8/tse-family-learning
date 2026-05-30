@@ -1,9 +1,9 @@
 {
   "meta": {
-    "title": "Wellington Practice Quiz",
-    "subject": "Mixed",
-    "generated": "2026-03-15",
-    "timeLimit": 600
+    "title": "Wilson's & Phonics Practice Quiz",
+    "subject": "English, Phonics, Maths, Verbal Reasoning",
+    "generated": "2026-05-30",
+    "timeLimit": 900
   },
   "questions": [
     {
@@ -11,7 +11,12 @@
       "type": "mcq",
       "subject": "English",
       "question": "Which word means the opposite of 'happy'?",
-      "options": ["Excited", "Sad", "Angry", "Tired"],
+      "options": [
+        "Excited",
+        "Sad",
+        "Angry",
+        "Tired"
+      ],
       "answer": 1,
       "explanation": "'Sad' is the opposite (antonym) of 'happy'."
     },
@@ -20,7 +25,12 @@
       "type": "mcq",
       "subject": "Maths",
       "question": "What is 14 + 8?",
-      "options": ["20", "21", "22", "23"],
+      "options": [
+        "20",
+        "21",
+        "22",
+        "23"
+      ],
       "answer": 2,
       "explanation": "14 + 8 = 22"
     },
@@ -43,7 +53,12 @@
       "type": "mcq",
       "subject": "Maths",
       "question": "A bag has 3 red balls and 5 blue balls. How many balls are there in total?",
-      "options": ["6", "7", "8", "9"],
+      "options": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
       "answer": 2,
       "explanation": "3 + 5 = 8 balls in total."
     },
@@ -52,7 +67,12 @@
       "type": "mcq",
       "subject": "English",
       "question": "What is the plural of 'child'?",
-      "options": ["Childs", "Childes", "Children", "Child"],
+      "options": [
+        "Childs",
+        "Childes",
+        "Children",
+        "Child"
+      ],
       "answer": 2,
       "explanation": "The plural of 'child' is 'children' — it's an irregular plural."
     },
@@ -61,7 +81,12 @@
       "type": "mcq",
       "subject": "Maths",
       "question": "How many sides does a triangle have?",
-      "options": ["2", "3", "4", "5"],
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
       "answer": 1,
       "explanation": "A triangle has 3 sides."
     },
@@ -70,7 +95,12 @@
       "type": "mcq",
       "subject": "Verbal Reasoning",
       "question": "Which word is the odd one out?",
-      "options": ["Apple", "Banana", "Carrot", "Orange"],
+      "options": [
+        "Apple",
+        "Banana",
+        "Carrot",
+        "Orange"
+      ],
       "answer": 2,
       "explanation": "Carrot is a vegetable. Apple, Banana and Orange are all fruits."
     },
@@ -79,7 +109,12 @@
       "type": "mcq",
       "subject": "Maths",
       "question": "If you have 20p and spend 7p, how much do you have left?",
-      "options": ["11p", "12p", "13p", "14p"],
+      "options": [
+        "11p",
+        "12p",
+        "13p",
+        "14p"
+      ],
       "answer": 2,
       "explanation": "20 − 7 = 13p"
     },
@@ -88,7 +123,12 @@
       "type": "mcq",
       "subject": "English",
       "question": "Which word rhymes with 'cat'?",
-      "options": ["Car", "Cup", "Hat", "Hen"],
+      "options": [
+        "Car",
+        "Cup",
+        "Hat",
+        "Hen"
+      ],
       "answer": 2,
       "explanation": "'Hat' rhymes with 'cat' — both end in the '-at' sound."
     },
@@ -97,9 +137,154 @@
       "type": "mcq",
       "subject": "Verbal Reasoning",
       "question": "What comes next? 2, 4, 6, 8, ___",
-      "options": ["9", "10", "11", "12"],
+      "options": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
       "answer": 1,
       "explanation": "The pattern adds 2 each time: 2, 4, 6, 8, 10."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "subject": "Phonics",
+      "question": "Which word contains the same 'ai' sound as 'rain'?",
+      "options": [
+        "ran",
+        "train",
+        "ring",
+        "road"
+      ],
+      "answer": 1,
+      "explanation": "'Train' has the same long 'ai' sound as 'rain'."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "Silas has 9 stickers. Mummy gives him 6 more. How many stickers does he have now?",
+      "options": [
+        "13",
+        "14",
+        "15",
+        "16"
+      ],
+      "answer": 2,
+      "explanation": "9 + 6 = 15 stickers."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "subject": "English",
+      "question": "Choose the best word to complete the sentence: The puppy is ____ than the kitten.",
+      "options": [
+        "playful",
+        "more playful",
+        "most playful",
+        "playfully"
+      ],
+      "answer": 1,
+      "explanation": "When comparing two things, we can say 'more playful than'."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "subject": "Phonics",
+      "question": "Which word is a real word?",
+      "options": [
+        "splim",
+        "chabe",
+        "shop",
+        "vust"
+      ],
+      "answer": 2,
+      "explanation": "'Shop' is a real word. The others are alien/pseudo words for phonics practice."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "subject": "Verbal Reasoning",
+      "question": "Find the pair that goes together like hot → cold.",
+      "options": [
+        "day → night",
+        "blue → sky",
+        "dog → bark",
+        "pen → paper"
+      ],
+      "answer": 0,
+      "explanation": "Hot and cold are opposites. Day and night are also opposites."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "What number is 10 more than 37?",
+      "options": [
+        "38",
+        "40",
+        "47",
+        "57"
+      ],
+      "answer": 2,
+      "explanation": "10 more than 37 is 47."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "subject": "Phonics",
+      "question": "In the word 'ship', what sound do the letters 'sh' make?",
+      "options": [
+        "s",
+        "h",
+        "sh",
+        "ch"
+      ],
+      "answer": 2,
+      "explanation": "The letters 'sh' work together to make one sound: /sh/."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "subject": "English",
+      "question": "Which sentence uses a capital letter correctly?",
+      "options": [
+        "i went to Sutton.",
+        "I went to Sutton.",
+        "I went to sutton.",
+        "i went to sutton."
+      ],
+      "answer": 1,
+      "explanation": "Use a capital 'I' and a capital letter for place names like Sutton."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "A clock shows 3 o’clock. What time will it be in 2 hours?",
+      "options": [
+        "4 o’clock",
+        "5 o’clock",
+        "6 o’clock",
+        "2 o’clock"
+      ],
+      "answer": 1,
+      "explanation": "Two hours after 3 o’clock is 5 o’clock."
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "subject": "Verbal Reasoning",
+      "question": "Which word can go before all three words: cake, candle, card?",
+      "options": [
+        "school",
+        "birthday",
+        "garden",
+        "window"
+      ],
+      "answer": 1,
+      "explanation": "Birthday cake, birthday candle, and birthday card all make sense."
     }
   ]
 }

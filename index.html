@@ -86,6 +86,7 @@
     .badge-English { background: #e0e7ff; color: #4338ca; }
     .badge-Maths { background: #d1fae5; color: #065f46; }
     .badge-Verbal\\ Reasoning { background: #ffedd5; color: #9a3412; }
+    .badge-Phonics { background: #fce7f3; color: #9d174d; }
 
     /* ── Timer ── */
     .timer {
@@ -405,7 +406,8 @@
       const tips = {
         English: 'Read the question slowly, spot key grammar words, and explain why each wrong answer is wrong.',
         Maths: 'Write the working down, check units, and do the inverse calculation to catch small mistakes.',
-        'Verbal Reasoning': 'Look for the hidden pattern first, then test every option before choosing.'
+        'Verbal Reasoning': 'Look for the hidden pattern first, then test every option before choosing.',
+        Phonics: 'Say each sound out loud, blend the sounds together, and watch for digraphs like sh, ch, ai, ee.'
       };
       return {
         focus,
@@ -538,7 +540,7 @@
 
       let msg, sub, cls;
       if (pct >= 80) {
-        msg = '🌟 Outstanding!'; sub = 'You did brilliantly! Wellington would be proud!'; cls = 'excellent';
+        msg = '🌟 Outstanding!'; sub = 'You did brilliantly — Wilson practice is getting stronger!'; cls = 'excellent';
       } else if (pct >= 60) {
         msg = '👍 Well done!'; sub = 'Good effort! Keep practising and you\'ll get there!'; cls = 'good';
       } else {
