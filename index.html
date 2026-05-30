@@ -239,6 +239,35 @@
     .review-q { font-weight: 600; margin-bottom: 2px; }
     .review-ans { color: var(--subtext); font-size: 0.85rem; }
 
+    /* ── Learning history ── */
+    .history-panel, .study-plan {
+      background: #f8fafc;
+      border: 1px solid #e0e7ff;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 18px 0 24px;
+      text-align: left;
+    }
+    .history-panel h3, .study-plan h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+    .history-list { display: flex; flex-direction: column; gap: 8px; }
+    .history-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #fff;
+      font-size: 0.9rem;
+    }
+    .history-score { font-weight: 800; color: var(--primary); }
+    .history-meta { color: var(--subtext); font-size: 0.78rem; }
+    .study-plan p { color: var(--subtext); line-height: 1.55; }
+
     @media (max-width: 480px) {
       .card { padding: 20px; }
       .question-text { font-size: 1.1rem; }
@@ -270,6 +299,10 @@
         <div class="val" id="info-subject">-</div>
         <div class="lbl">Subject</div>
       </div>
+    </div>
+    <div class="history-panel" id="history-panel" style="display:none">
+      <h3>📈 Recent progress</h3>
+      <div class="history-list" id="history-list"></div>
     </div>
     <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.2rem; padding: 16px 40px; width:100%;">
       🚀 Let's Go!
@@ -306,6 +339,7 @@
     <div class="result-msg" id="result-msg"></div>
     <div class="result-sub" id="result-sub"></div>
     <div class="result-breakdown" id="result-breakdown"></div>
+    <div class="study-plan" id="study-plan"></div>
     <div class="review-list" id="review-list"></div>
     <div class="btn-row" style="justify-content:center; margin-top:28px;">
       <button class="btn btn-primary" onclick="location.reload()">🔄 Try Again</button>
@@ -320,6 +354,64 @@
     let timerInterval = null;
     let timeLeft = 0;
     let answered = false;
+    const HISTORY_KEY = 'tse-family-learning-history-v1';
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[ch]));
+    }
+
+    function loadHistory() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        return Array.isArray(parsed) ? parsed.slice(0, 8) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveHistory(entry) {
+      const history = [entry, ...loadHistory()].slice(0, 8);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      return history;
+    }
+
+    function renderHistory(history = loadHistory()) {
+      const panel = document.getElementById('history-panel');
+      const list = document.getElementById('history-list');
+      if (!history.length) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = 'block';
+      list.innerHTML = history.slice(0, 5).map(item => `
+        <div class="history-row">
+          <div>
+            <div class="history-score">${item.correct}/${item.total} (${item.percent}%)</div>
+            <div class="history-meta">${escapeHTML(item.date)} · ${escapeHTML(item.focus || 'Mixed practice')}</div>
+          </div>
+          <div>${item.percent >= 80 ? '🌟' : item.percent >= 60 ? '👍' : '💪'}</div>
+        </div>
+      `).join('');
+    }
+
+    function buildStudyPlan(subjects) {
+      const weakest = Object.entries(subjects)
+        .map(([subject, v]) => ({ subject, correct: v.correct, total: v.total, pct: v.total ? v.correct / v.total : 0 }))
+        .sort((a, b) => a.pct - b.pct || b.total - a.total)[0];
+      if (!weakest) return { focus: 'Mixed practice', html: '<h3>🎯 Next study focus</h3><p>Try another mixed round to build confidence.</p>' };
+      const focus = weakest.subject;
+      const tips = {
+        English: 'Read the question slowly, spot key grammar words, and explain why each wrong answer is wrong.',
+        Maths: 'Write the working down, check units, and do the inverse calculation to catch small mistakes.',
+        'Verbal Reasoning': 'Look for the hidden pattern first, then test every option before choosing.'
+      };
+      return {
+        focus,
+        html: `<h3>🎯 Next study focus: ${escapeHTML(focus)}</h3><p>${escapeHTML(tips[focus] || 'Review the missed questions, then try a short focused round tomorrow.')}</p>`
+      };
+    }
 
     // Load questions
     fetch('questions.json?v=' + Date.now())
@@ -333,9 +425,15 @@
         document.getElementById('info-subject').textContent = data.meta.subject;
         document.getElementById('quiz-desc').textContent =
           `Ready for ${questions.length} questions? You've got ${Math.round(data.meta.timeLimit/60)} minutes. Good luck! ⭐`;
+        renderHistory();
+      })
+      .catch(() => {
+        document.getElementById('quiz-title').textContent = 'Could not load quiz';
+        document.getElementById('quiz-desc').textContent = 'Please refresh and try again.';
       });
 
     function startQuiz() {
+      if (!quizData || !questions.length) return;
       document.getElementById('start-screen').style.display = 'none';
       document.getElementById('quiz-screen').style.display = 'block';
       timeLeft = quizData.meta.timeLimit;
@@ -379,7 +477,7 @@
       container.innerHTML = q.options.map((opt, i) => `
         <div class="option" id="opt-${i}" onclick="selectOption(${i})">
           <div class="option-letter">${letters[i]}</div>
-          <div>${opt}</div>
+          <div>${escapeHTML(opt)}</div>
         </div>
       `).join('');
 
@@ -410,7 +508,7 @@
       const expEl = document.getElementById('explanation');
       const isCorrect = idx === q.answer;
       expEl.className = `explanation show ${isCorrect ? 'correct-exp' : 'wrong-exp'}`;
-      expEl.innerHTML = (isCorrect ? '✅ <strong>Correct!</strong> ' : '❌ <strong>Not quite.</strong> ') + q.explanation;
+      expEl.innerHTML = (isCorrect ? '✅ <strong>Correct!</strong> ' : '❌ <strong>Not quite.</strong> ') + escapeHTML(q.explanation);
 
       document.getElementById('next-btn').disabled = false;
     }
@@ -460,9 +558,16 @@
       document.getElementById('result-breakdown').innerHTML = Object.entries(subjects).map(([s, v]) =>
         `<div class="breakdown-item">
           <div class="bval">${v.correct}/${v.total}</div>
-          <div class="blbl">${s}</div>
+          <div class="blbl">${escapeHTML(s)}</div>
         </div>`
       ).join('');
+
+      const plan = buildStudyPlan(subjects);
+      document.getElementById('study-plan').innerHTML = plan.html;
+      saveHistory({
+        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        correct, total, percent: pct, focus: plan.focus
+      });
 
       // Review list
       document.getElementById('review-list').innerHTML =
@@ -473,8 +578,8 @@
           return `<div class="review-item">
             <div class="review-icon">${ok ? '✅' : '❌'}</div>
             <div>
-              <div class="review-q">${q.question}</div>
-              <div class="review-ans">${ok ? 'Correct: ' + q.options[q.answer] : `Your answer: ${userAns} → Correct: ${q.options[q.answer]}`}</div>
+              <div class="review-q">${escapeHTML(q.question)}</div>
+              <div class="review-ans">${ok ? 'Correct: ' + escapeHTML(q.options[q.answer]) : `Your answer: ${escapeHTML(userAns)} → Correct: ${escapeHTML(q.options[q.answer])}`}</div>
             </div>
           </div>`;
         }).join('');
