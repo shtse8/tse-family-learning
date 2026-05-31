@@ -22,6 +22,7 @@ Start with browser-local storage rather than accounts or server-side secrets:
 - `questionSets`: subject, level, tags, language, source, estimated time.
 - `attempts`: learner id, question set id, answers, score, completed at.
 - `progress`: XP, level, streak, badges, last practice date.
+- Current implementation starts with browser-local attempts, best score, average score, and practice XP.
 
 Use export/import JSON early so family progress is not easily lost.
 
@@ -29,7 +30,7 @@ Use export/import JSON early so family progress is not easily lost.
 
 1. Learner profile picker.
 2. Per-learner score history in local storage.
-3. XP and level calculation from completed quizzes.
+3. XP and level calculation from completed quizzes. *(Started with local practice XP.)*
 4. Daily practice streaks.
 5. Badges for milestones.
 6. Family leaderboard.
@@ -46,5 +47,5 @@ Use export/import JSON early so family progress is not easily lost.
 ## Security and deployment notes
 
 - Do not put webhook secrets, private API tokens, or family-sensitive backend keys in public JavaScript.
-- Keep deployment reproducible with an explicit `Dockerfile` and `npm` path.
+- Keep deployment reproducible through the normal Sylphx generated build path and `npm` scripts.
 - Prefer small, reviewable increments and verify `/` plus `/questions.json` after deploy.

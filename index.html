@@ -241,7 +241,7 @@
     .review-ans { color: var(--subtext); font-size: 0.85rem; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan {
+    .history-panel, .study-plan, .stats-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -249,11 +249,25 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
     }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .stat-tile {
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      border: 1px solid #ede9fe;
+    }
+    .stat-tile .stat-val { font-size: 1.15rem; font-weight: 900; color: var(--primary); }
+    .stat-tile .stat-lbl { font-size: 0.72rem; color: var(--subtext); margin-top: 2px; }
     .history-list { display: flex; flex-direction: column; gap: 8px; }
     .history-row {
       display: flex;
@@ -273,6 +287,7 @@
       .card { padding: 20px; }
       .question-text { font-size: 1.1rem; }
       .option { padding: 13px 14px; font-size: 0.97rem; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
 </head>
@@ -300,6 +315,10 @@
         <div class="val" id="info-subject">-</div>
         <div class="lbl">Subject</div>
       </div>
+    </div>
+    <div class="stats-panel" id="stats-panel" style="display:none">
+      <h3>🏅 Learning stats</h3>
+      <div class="stats-grid" id="stats-grid"></div>
     </div>
     <div class="history-panel" id="history-panel" style="display:none">
       <h3>📈 Recent progress</h3>
@@ -378,7 +397,39 @@
       return history;
     }
 
+    function historyStats(history) {
+      const attempts = history.length;
+      const best = attempts ? Math.max(...history.map(item => item.percent || 0)) : 0;
+      const average = attempts ? Math.round(history.reduce((sum, item) => sum + (item.percent || 0), 0) / attempts) : 0;
+      const stars = history.filter(item => (item.percent || 0) >= 80).length;
+      const xp = history.reduce((sum, item) => sum + Math.max(10, Math.round((item.percent || 0) / 10) * 5), 0);
+      return { attempts, best, average, stars, xp };
+    }
+
+    function renderStats(history = loadHistory()) {
+      const panel = document.getElementById('stats-panel');
+      const grid = document.getElementById('stats-grid');
+      if (!history.length) {
+        panel.style.display = 'none';
+        return;
+      }
+      const stats = historyStats(history);
+      panel.style.display = 'block';
+      grid.innerHTML = [
+        ['Attempts', stats.attempts],
+        ['Best', `${stats.best}%`],
+        ['Average', `${stats.average}%`],
+        ['XP', stats.xp]
+      ].map(([label, value]) => `
+        <div class="stat-tile">
+          <div class="stat-val">${escapeHTML(value)}</div>
+          <div class="stat-lbl">${escapeHTML(label)}</div>
+        </div>
+      `).join('');
+    }
+
     function renderHistory(history = loadHistory()) {
+      renderStats(history);
       const panel = document.getElementById('history-panel');
       const list = document.getElementById('history-list');
       if (!history.length) {
@@ -566,10 +617,11 @@
 
       const plan = buildStudyPlan(subjects);
       document.getElementById('study-plan').innerHTML = plan.html;
-      saveHistory({
+      const updatedHistory = saveHistory({
         date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         correct, total, percent: pct, focus: plan.focus
       });
+      renderStats(updatedHistory);
 
       // Review list
       document.getElementById('review-list').innerHTML =
