@@ -241,7 +241,7 @@
     .review-ans { color: var(--subtext); font-size: 0.85rem; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -249,7 +249,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -282,10 +282,13 @@
     .history-score { font-weight: 800; color: var(--primary); }
     .history-meta { color: var(--subtext); font-size: 0.78rem; }
     .study-plan p, .data-panel p { color: var(--subtext); line-height: 1.55; }
-    .data-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .data-actions, .learner-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     .btn-secondary { background: #eef2ff; color: var(--primary); border: 1px solid #c7d2fe; }
     .btn-secondary:hover { background: #e0e7ff; }
     .file-input { display: none; }
+    .learner-chip { border: 1px solid #c7d2fe; background: #fff; color: var(--primary); border-radius: 999px; padding: 8px 12px; font-weight: 800; cursor: pointer; }
+    .learner-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .learner-note { color: var(--subtext); font-size: 0.86rem; margin-top: 8px; }
 
     @media (max-width: 480px) {
       .card { padding: 20px; }
@@ -319,6 +322,11 @@
         <div class="val" id="info-subject">-</div>
         <div class="lbl">Subject</div>
       </div>
+    </div>
+    <div class="learner-panel">
+      <h3>👧 Learner profile</h3>
+      <div class="learner-options" id="learner-options"></div>
+      <div class="learner-note" id="learner-note">Progress is saved separately for each family learner on this browser.</div>
     </div>
     <div class="stats-panel" id="stats-panel" style="display:none">
       <h3>🏅 Learning stats</h3>
@@ -388,6 +396,26 @@
     let timeLeft = 0;
     let answered = false;
     const HISTORY_KEY = 'tse-family-learning-history-v1';
+    const LEARNER_KEY = 'tse-family-learning-active-learner-v1';
+    const LEARNERS = [
+      { id: 'silas', name: 'Silas', emoji: '🦊', note: "Wilson's 11+ practice" },
+      { id: 'sylvie', name: 'Sylvie', emoji: '🌸', note: 'Early-years practice placeholder' },
+      { id: 'kyle', name: 'Kyle', emoji: '👨', note: 'Adult learning placeholder' },
+      { id: 'cheryl', name: 'Cheryl', emoji: '👩', note: 'Adult learning placeholder' }
+    ];
+
+    function activeLearnerId() {
+      const saved = localStorage.getItem(LEARNER_KEY);
+      return LEARNERS.some(learner => learner.id === saved) ? saved : 'silas';
+    }
+
+    function activeLearner() {
+      return LEARNERS.find(learner => learner.id === activeLearnerId()) || LEARNERS[0];
+    }
+
+    function learnerHistoryKey(id = activeLearnerId()) {
+      return `${HISTORY_KEY}-${id}`;
+    }
 
     function escapeHTML(value) {
       return String(value).replace(/[&<>"']/g, ch => ({
@@ -397,7 +425,9 @@
 
     function loadHistory() {
       try {
-        const parsed = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+        const key = learnerHistoryKey();
+        const legacy = activeLearnerId() === 'silas' ? localStorage.getItem(HISTORY_KEY) : null;
+        const parsed = JSON.parse(localStorage.getItem(key) || legacy || '[]');
         return Array.isArray(parsed) ? parsed.slice(0, 8) : [];
       } catch {
         return [];
@@ -406,7 +436,7 @@
 
     function saveHistory(entry) {
       const history = [entry, ...loadHistory()].slice(0, 8);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      localStorage.setItem(learnerHistoryKey(), JSON.stringify(history));
       return history;
     }
 
@@ -466,10 +496,12 @@
     function exportProgress() {
       const history = loadHistory();
       if (!history.length) return;
+      const learner = activeLearner();
       const payload = {
         app: 'tse-family-learning',
-        version: 1,
+        version: 2,
         exportedAt: new Date().toISOString(),
+        learner: { id: learner.id, name: learner.name },
         history
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -499,7 +531,7 @@
             percent: Math.max(0, Math.min(100, Number(item.percent || 0))),
             focus: String(item.focus || 'Mixed practice')
           }));
-          localStorage.setItem(HISTORY_KEY, JSON.stringify(cleaned));
+          localStorage.setItem(learnerHistoryKey(), JSON.stringify(cleaned));
           renderHistory(cleaned);
           alert('Progress imported successfully.');
         } catch {
@@ -530,7 +562,26 @@
       };
     }
 
+    function renderLearners() {
+      const currentId = activeLearnerId();
+      const learner = activeLearner();
+      document.getElementById('learner-options').innerHTML = LEARNERS.map(item => `
+        <button class="learner-chip ${item.id === currentId ? 'active' : ''}" onclick="selectLearner('${item.id}')">
+          ${item.emoji} ${escapeHTML(item.name)}
+        </button>
+      `).join('');
+      document.getElementById('learner-note').textContent = `${learner.note}. Progress is saved separately for ${learner.name} on this browser.`;
+    }
+
+    function selectLearner(id) {
+      if (!LEARNERS.some(learner => learner.id === id)) return;
+      localStorage.setItem(LEARNER_KEY, id);
+      renderLearners();
+      renderHistory();
+    }
+
     // Load questions
+    renderLearners();
     fetch('questions.json?v=' + Date.now())
       .then(r => r.json())
       .then(data => {
@@ -681,7 +732,9 @@
 
       const plan = buildStudyPlan(subjects);
       document.getElementById('study-plan').innerHTML = plan.html;
+      const learner = activeLearner();
       const updatedHistory = saveHistory({
+        learner: learner.id,
         date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         correct, total, percent: pct, focus: plan.focus
       });
