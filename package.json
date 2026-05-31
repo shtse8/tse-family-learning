@@ -1,7 +1,7 @@
 {
   "name": "tse-family-learning",
   "version": "1.0.0",
-  "description": "謝家 Family Learning Hub — Wellington prep & family education",
+  "description": "謝家 Family Learning Hub — Wilson's School 11+ prep & family education",
   "scripts": {
     "build": "echo 'Static site ready'",
     "start": "node server.js"

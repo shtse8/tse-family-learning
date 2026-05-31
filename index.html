@@ -241,7 +241,7 @@
     .review-ans { color: var(--subtext); font-size: 0.85rem; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -249,7 +249,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -281,7 +281,13 @@
     }
     .history-score { font-weight: 800; color: var(--primary); }
     .history-meta { color: var(--subtext); font-size: 0.78rem; }
-    .study-plan p, .data-panel p { color: var(--subtext); line-height: 1.55; }
+    .subject-list { display: flex; flex-direction: column; gap: 10px; }
+    .subject-row { background: #fff; border: 1px solid #ede9fe; border-radius: 12px; padding: 10px 12px; }
+    .subject-row-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; font-weight: 800; color: var(--primary); }
+    .subject-bar { height: 8px; background: #eef2ff; border-radius: 999px; overflow: hidden; }
+    .subject-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: inherit; }
+    .subject-tip { color: var(--subtext); font-size: 0.78rem; margin-top: 5px; }
+    .study-plan p, .data-panel p, .subject-panel p { color: var(--subtext); line-height: 1.55; }
     .data-actions, .learner-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     .btn-secondary { background: #eef2ff; color: var(--primary); border: 1px solid #c7d2fe; }
     .btn-secondary:hover { background: #e0e7ff; }
@@ -331,6 +337,11 @@
     <div class="stats-panel" id="stats-panel" style="display:none">
       <h3>🏅 Learning stats</h3>
       <div class="stats-grid" id="stats-grid"></div>
+    </div>
+    <div class="subject-panel" id="subject-panel" style="display:none">
+      <h3>🎯 Subject dashboard</h3>
+      <p>Shows this learner's recent strengths and focus areas from saved quiz history.</p>
+      <div class="subject-list" id="subject-list"></div>
     </div>
     <div class="history-panel" id="history-panel" style="display:none">
       <h3>📈 Recent progress</h3>
@@ -440,6 +451,46 @@
       return history;
     }
 
+    function subjectStats(history) {
+      return history.reduce((acc, item) => {
+        Object.entries(item.subjects || {}).forEach(([subject, value]) => {
+          if (!acc[subject]) acc[subject] = { correct: 0, total: 0 };
+          acc[subject].correct += Number(value.correct || 0);
+          acc[subject].total += Number(value.total || 0);
+        });
+        return acc;
+      }, {});
+    }
+
+    function renderSubjectDashboard(history = loadHistory()) {
+      const panel = document.getElementById('subject-panel');
+      const list = document.getElementById('subject-list');
+      const rows = Object.entries(subjectStats(history))
+        .map(([subject, value]) => ({
+          subject,
+          correct: value.correct,
+          total: value.total,
+          percent: value.total ? Math.round((value.correct / value.total) * 100) : 0
+        }))
+        .filter(row => row.total > 0)
+        .sort((a, b) => a.percent - b.percent || b.total - a.total);
+      if (!rows.length) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = 'block';
+      list.innerHTML = rows.map(row => {
+        const tip = row.percent >= 80 ? 'Strong area — keep it warm with mixed practice.' : row.percent >= 60 ? 'Nearly there — review mistakes before the next round.' : 'Focus area — try a short practice set here next.';
+        return `
+          <div class="subject-row">
+            <div class="subject-row-head"><span>${escapeHTML(row.subject)}</span><span>${row.correct}/${row.total} · ${row.percent}%</span></div>
+            <div class="subject-bar"><div class="subject-fill" style="width:${row.percent}%"></div></div>
+            <div class="subject-tip">${escapeHTML(tip)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
     function historyStats(history) {
       const attempts = history.length;
       const best = attempts ? Math.max(...history.map(item => item.percent || 0)) : 0;
@@ -505,10 +556,12 @@
       const list = document.getElementById('history-list');
       if (!history.length) {
         panel.style.display = 'none';
+        document.getElementById('subject-panel').style.display = 'none';
         document.getElementById('data-panel').style.display = 'none';
         return;
       }
       panel.style.display = 'block';
+      renderSubjectDashboard(history);
       document.getElementById('data-panel').style.display = 'block';
       list.innerHTML = history.slice(0, 5).map(item => `
         <div class="history-row">
@@ -558,7 +611,8 @@
             correct: Number(item.correct || 0),
             total: Number(item.total || questions.length || 0),
             percent: Math.max(0, Math.min(100, Number(item.percent || 0))),
-            focus: String(item.focus || 'Mixed practice')
+            focus: String(item.focus || 'Mixed practice'),
+            subjects: item.subjects && typeof item.subjects === 'object' ? item.subjects : {}
           }));
           localStorage.setItem(learnerHistoryKey(), JSON.stringify(cleaned));
           renderHistory(cleaned);
@@ -766,9 +820,10 @@
         learner: learner.id,
         date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         completedAt: new Date().toISOString(),
-        correct, total, percent: pct, focus: plan.focus
+        correct, total, percent: pct, focus: plan.focus, subjects
       });
       renderStats(updatedHistory);
+      renderSubjectDashboard(updatedHistory);
 
       // Review list
       document.getElementById('review-list').innerHTML =
