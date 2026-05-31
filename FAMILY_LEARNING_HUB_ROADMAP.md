@@ -35,7 +35,7 @@ Export/import JSON is now available for browser-local progress so family progres
 5. Daily practice streaks. *(Shipped for browser-local history.)*
 6. Per-learner subject dashboard. *(Shipped for browser-local history.)*
 7. Parent overview across learners. *(Shipped for browser-local histories.)*
-8. Badges for milestones.
+8. Badges for milestones. *(Started with local milestone badges for first quiz, high score, streak, attempts, subject breadth, and XP level.)*
 9. Family leaderboard.
 10. Family challenge of the day.
 

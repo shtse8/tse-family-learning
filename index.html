@@ -241,7 +241,7 @@
     .review-ans { color: var(--subtext); font-size: 0.85rem; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .badges-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -249,7 +249,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .badges-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -259,6 +259,19 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
     }
+    .badge-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .milestone-badge {
+      background: #fff;
+      border: 1px solid #ede9fe;
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      min-height: 86px;
+    }
+    .milestone-badge.locked { opacity: 0.48; filter: grayscale(0.8); }
+    .milestone-icon { font-size: 1.7rem; line-height: 1; margin-bottom: 6px; }
+    .milestone-title { font-weight: 900; color: var(--primary); font-size: 0.82rem; }
+    .milestone-desc { color: var(--subtext); font-size: 0.72rem; margin-top: 3px; line-height: 1.25; }
     .stat-tile {
       background: #fff;
       border-radius: 12px;
@@ -306,7 +319,7 @@
       .card { padding: 20px; }
       .question-text { font-size: 1.1rem; }
       .option { padding: 13px 14px; font-size: 0.97rem; }
-      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats-grid, .badge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
 </head>
@@ -343,6 +356,10 @@
     <div class="stats-panel" id="stats-panel" style="display:none">
       <h3>🏅 Learning stats</h3>
       <div class="stats-grid" id="stats-grid"></div>
+    </div>
+    <div class="badges-panel" id="badges-panel" style="display:none">
+      <h3>🏆 Milestone badges</h3>
+      <div class="badge-grid" id="badge-grid"></div>
     </div>
     <div class="parent-panel" id="parent-panel" style="display:none">
       <h3>👨‍👩‍👧‍👦 Parent overview</h3>
@@ -555,6 +572,36 @@
       return { attempts, best, average, stars, xp, level, streak };
     }
 
+    function milestoneBadges(history) {
+      const stats = historyStats(history);
+      const subjects = subjectStats(history);
+      return [
+        { icon: '🚀', title: 'First quiz', desc: 'Complete your first Family Learning round.', earned: stats.attempts >= 1 },
+        { icon: '🌟', title: 'Star score', desc: 'Score 80% or higher in any round.', earned: stats.best >= 80 },
+        { icon: '🔥', title: 'Practice streak', desc: 'Practise on two days in a row.', earned: stats.streak >= 2 },
+        { icon: '📚', title: 'Five rounds', desc: 'Finish five saved quiz attempts.', earned: stats.attempts >= 5 },
+        { icon: '🎯', title: 'Subject focus', desc: 'Build history in three subjects.', earned: Object.keys(subjects).length >= 3 },
+        { icon: '🧠', title: 'Level 2 learner', desc: 'Earn 100 practice XP.', earned: stats.level >= 2 }
+      ];
+    }
+
+    function renderBadges(history = loadHistory()) {
+      const panel = document.getElementById('badges-panel');
+      const grid = document.getElementById('badge-grid');
+      if (!history.length) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = 'block';
+      grid.innerHTML = milestoneBadges(history).map(badge => `
+        <div class="milestone-badge ${badge.earned ? '' : 'locked'}">
+          <div class="milestone-icon">${badge.earned ? badge.icon : '🔒'}</div>
+          <div class="milestone-title">${escapeHTML(badge.title)}</div>
+          <div class="milestone-desc">${escapeHTML(badge.desc)}</div>
+        </div>
+      `).join('');
+    }
+
     function practiceDateKey(item) {
       const raw = item.completedAt || item.date;
       const parsed = raw ? new Date(raw) : null;
@@ -605,12 +652,14 @@
 
     function renderHistory(history = loadHistory()) {
       renderStats(history);
+      renderBadges(history);
       const panel = document.getElementById('history-panel');
       const list = document.getElementById('history-list');
       renderParentOverview();
       if (!history.length) {
         panel.style.display = 'none';
         document.getElementById('subject-panel').style.display = 'none';
+        document.getElementById('badges-panel').style.display = 'none';
         document.getElementById('data-panel').style.display = 'none';
         return;
       }
@@ -879,6 +928,7 @@
         correct, total, percent: pct, focus: plan.focus, subjects
       });
       renderStats(updatedHistory);
+      renderBadges(updatedHistory);
       renderSubjectDashboard(updatedHistory);
       renderParentOverview();
 
