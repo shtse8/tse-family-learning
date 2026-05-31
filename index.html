@@ -241,7 +241,7 @@
     .review-ans { color: var(--subtext); font-size: 0.85rem; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -249,7 +249,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -287,7 +287,13 @@
     .subject-bar { height: 8px; background: #eef2ff; border-radius: 999px; overflow: hidden; }
     .subject-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: inherit; }
     .subject-tip { color: var(--subtext); font-size: 0.78rem; margin-top: 5px; }
-    .study-plan p, .data-panel p, .subject-panel p { color: var(--subtext); line-height: 1.55; }
+    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p { color: var(--subtext); line-height: 1.55; }
+    .family-list { display: flex; flex-direction: column; gap: 10px; }
+    .family-row { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr; gap: 10px; align-items: center; background: #fff; border: 1px solid #ede9fe; border-radius: 12px; padding: 10px 12px; }
+    .family-name { font-weight: 900; color: var(--primary); }
+    .family-meta { color: var(--subtext); font-size: 0.78rem; margin-top: 2px; }
+    .family-stat { text-align: right; font-weight: 800; color: var(--text); }
+    .family-focus { text-align: right; color: var(--subtext); font-size: 0.82rem; }
     .data-actions, .learner-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     .btn-secondary { background: #eef2ff; color: var(--primary); border: 1px solid #c7d2fe; }
     .btn-secondary:hover { background: #e0e7ff; }
@@ -337,6 +343,11 @@
     <div class="stats-panel" id="stats-panel" style="display:none">
       <h3>🏅 Learning stats</h3>
       <div class="stats-grid" id="stats-grid"></div>
+    </div>
+    <div class="parent-panel" id="parent-panel" style="display:none">
+      <h3>👨‍👩‍👧‍👦 Parent overview</h3>
+      <p>Quick family view across all learner profiles saved on this browser.</p>
+      <div class="family-list" id="family-list"></div>
     </div>
     <div class="subject-panel" id="subject-panel" style="display:none">
       <h3>🎯 Subject dashboard</h3>
@@ -434,15 +445,19 @@
       }[ch]));
     }
 
-    function loadHistory() {
+    function loadHistoryFor(id = activeLearnerId()) {
       try {
-        const key = learnerHistoryKey();
-        const legacy = activeLearnerId() === 'silas' ? localStorage.getItem(HISTORY_KEY) : null;
+        const key = learnerHistoryKey(id);
+        const legacy = id === 'silas' ? localStorage.getItem(HISTORY_KEY) : null;
         const parsed = JSON.parse(localStorage.getItem(key) || legacy || '[]');
         return Array.isArray(parsed) ? parsed.slice(0, 8) : [];
       } catch {
         return [];
       }
+    }
+
+    function loadHistory() {
+      return loadHistoryFor();
     }
 
     function saveHistory(entry) {
@@ -460,6 +475,44 @@
         });
         return acc;
       }, {});
+    }
+
+    function weakestSubjectLabel(history) {
+      const weakest = Object.entries(subjectStats(history))
+        .map(([subject, value]) => ({
+          subject,
+          total: value.total,
+          percent: value.total ? Math.round((value.correct / value.total) * 100) : 0
+        }))
+        .filter(row => row.total > 0)
+        .sort((a, b) => a.percent - b.percent || b.total - a.total)[0];
+      return weakest ? `${weakest.subject} ${weakest.percent}%` : 'Mixed practice';
+    }
+
+    function renderParentOverview() {
+      const panel = document.getElementById('parent-panel');
+      const list = document.getElementById('family-list');
+      const rows = LEARNERS.map(learner => {
+        const history = loadHistoryFor(learner.id);
+        const stats = historyStats(history);
+        const latest = history[0];
+        return { learner, history, stats, latest, focus: weakestSubjectLabel(history) };
+      }).filter(row => row.history.length);
+      if (!rows.length) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = 'block';
+      list.innerHTML = rows.map(row => `
+        <div class="family-row">
+          <div>
+            <div class="family-name">${row.learner.emoji} ${escapeHTML(row.learner.name)}</div>
+            <div class="family-meta">${row.stats.attempts} attempt${row.stats.attempts === 1 ? '' : 's'} · ${escapeHTML(row.latest.date || 'Recent')}</div>
+          </div>
+          <div class="family-stat">Avg ${row.stats.average}%<div class="family-meta">Best ${row.stats.best}% · L${row.stats.level}</div></div>
+          <div class="family-focus">Focus:<br>${escapeHTML(row.focus)}</div>
+        </div>
+      `).join('');
     }
 
     function renderSubjectDashboard(history = loadHistory()) {
@@ -554,6 +607,7 @@
       renderStats(history);
       const panel = document.getElementById('history-panel');
       const list = document.getElementById('history-list');
+      renderParentOverview();
       if (!history.length) {
         panel.style.display = 'none';
         document.getElementById('subject-panel').style.display = 'none';
@@ -562,6 +616,7 @@
       }
       panel.style.display = 'block';
       renderSubjectDashboard(history);
+      renderParentOverview();
       document.getElementById('data-panel').style.display = 'block';
       list.innerHTML = history.slice(0, 5).map(item => `
         <div class="history-row">
@@ -616,6 +671,7 @@
           }));
           localStorage.setItem(learnerHistoryKey(), JSON.stringify(cleaned));
           renderHistory(cleaned);
+          renderParentOverview();
           alert('Progress imported successfully.');
         } catch {
           alert('Could not import that progress file. Please choose a Family Learning Hub JSON backup.');
@@ -824,6 +880,7 @@
       });
       renderStats(updatedHistory);
       renderSubjectDashboard(updatedHistory);
+      renderParentOverview();
 
       // Review list
       document.getElementById('review-list').innerHTML =
