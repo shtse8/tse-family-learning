@@ -446,7 +446,33 @@
       const average = attempts ? Math.round(history.reduce((sum, item) => sum + (item.percent || 0), 0) / attempts) : 0;
       const stars = history.filter(item => (item.percent || 0) >= 80).length;
       const xp = history.reduce((sum, item) => sum + Math.max(10, Math.round((item.percent || 0) / 10) * 5), 0);
-      return { attempts, best, average, stars, xp };
+      const level = Math.max(1, Math.floor(xp / 100) + 1);
+      const streak = practiceStreak(history);
+      return { attempts, best, average, stars, xp, level, streak };
+    }
+
+    function practiceDateKey(item) {
+      const raw = item.completedAt || item.date;
+      const parsed = raw ? new Date(raw) : null;
+      if (!parsed || Number.isNaN(parsed.getTime())) return null;
+      return parsed.toISOString().slice(0, 10);
+    }
+
+    function practiceStreak(history) {
+      const dates = new Set(history.map(practiceDateKey).filter(Boolean));
+      if (!dates.size) return 0;
+      const cursor = new Date();
+      const todayKey = cursor.toISOString().slice(0, 10);
+      cursor.setDate(cursor.getDate() - 1);
+      const yesterdayKey = cursor.toISOString().slice(0, 10);
+      if (!dates.has(todayKey) && !dates.has(yesterdayKey)) return 0;
+      if (dates.has(todayKey)) cursor.setDate(cursor.getDate() + 1);
+      let streak = 0;
+      while (dates.has(cursor.toISOString().slice(0, 10))) {
+        streak += 1;
+        cursor.setDate(cursor.getDate() - 1);
+      }
+      return streak;
     }
 
     function renderStats(history = loadHistory()) {
@@ -462,6 +488,8 @@
         ['Attempts', stats.attempts],
         ['Best', `${stats.best}%`],
         ['Average', `${stats.average}%`],
+        ['Level', stats.level],
+        ['Streak', `${stats.streak} day${stats.streak === 1 ? '' : 's'}`],
         ['XP', stats.xp]
       ].map(([label, value]) => `
         <div class="stat-tile">
@@ -526,6 +554,7 @@
           if (!Array.isArray(imported)) throw new Error('Missing history array');
           const cleaned = imported.slice(0, 8).map(item => ({
             date: String(item.date || 'Imported'),
+            completedAt: item.completedAt ? String(item.completedAt) : new Date().toISOString(),
             correct: Number(item.correct || 0),
             total: Number(item.total || questions.length || 0),
             percent: Math.max(0, Math.min(100, Number(item.percent || 0))),
@@ -736,6 +765,7 @@
       const updatedHistory = saveHistory({
         learner: learner.id,
         date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        completedAt: new Date().toISOString(),
         correct, total, percent: pct, focus: plan.focus
       });
       renderStats(updatedHistory);

@@ -22,7 +22,7 @@ Start with browser-local storage rather than accounts or server-side secrets:
 - `questionSets`: subject, level, tags, language, source, estimated time.
 - `attempts`: learner id, question set id, answers, score, completed at.
 - `progress`: XP, level, streak, badges, last practice date.
-- Current implementation starts with browser-local learner profiles, attempts, best score, average score, and practice XP.
+- Current implementation starts with browser-local learner profiles, attempts, best score, average score, level, daily streak, and practice XP.
 
 Export/import JSON is now available for browser-local progress so family progress is not easily lost. Silas, Sylvie, Kyle, and Cheryl can now keep separate local history buckets.
 
@@ -32,7 +32,7 @@ Export/import JSON is now available for browser-local progress so family progres
 2. Learner profile picker. *(Shipped for browser-local profiles.)*
 3. Per-learner score history in local storage. *(Shipped for browser-local profiles.)*
 4. XP and level calculation from completed quizzes. *(Started with local practice XP.)*
-5. Daily practice streaks.
+5. Daily practice streaks. *(Shipped for browser-local history.)*
 6. Badges for milestones.
 7. Family leaderboard.
 8. Family challenge of the day.
