@@ -24,11 +24,12 @@ Start with browser-local storage rather than accounts or server-side secrets:
 - `progress`: XP, level, streak, badges, last practice date.
 - Current implementation starts with browser-local attempts, best score, average score, and practice XP.
 
-Use export/import JSON early so family progress is not easily lost.
+Export/import JSON is now available for browser-local progress so family progress is not easily lost.
 
 ## Gamification sequence
 
-1. Learner profile picker.
+1. Progress export/import JSON. *(Shipped for browser-local history.)*
+2. Learner profile picker.
 2. Per-learner score history in local storage.
 3. XP and level calculation from completed quizzes. *(Started with local practice XP.)*
 4. Daily practice streaks.
