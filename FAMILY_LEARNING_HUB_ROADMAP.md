@@ -3,7 +3,7 @@
 ## Current baseline
 
 - Static Node app served by `server.js`.
-- Current public content is Wilson's School 11+ practice in `questions.json`.
+- Current public content is Wilson's School 11+ practice in `questions.json`, now expanded to 28 starter questions.
 - The live Sylphx app should remain simple, safe, and easy to recover.
 
 ## Product direction
@@ -40,7 +40,7 @@ Export/import JSON is now available for browser-local progress so family progres
 
 ## Content sequence
 
-1. Keep existing Wilson's School 11+ quiz stable.
+1. Keep existing Wilson's School 11+ quiz stable. *(Stable and expanded to 28 starter questions.)*
 2. Add metadata to quiz files without breaking current rendering.
 3. Split content by subject and age band.
 4. Add Chinese and English language toggles where useful.

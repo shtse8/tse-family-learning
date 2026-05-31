@@ -2,8 +2,9 @@
   "meta": {
     "title": "Wilson's & Phonics Practice Quiz",
     "subject": "English, Phonics, Maths, Verbal Reasoning",
-    "generated": "2026-05-30",
-    "timeLimit": 900
+    "generated": "2026-05-31",
+    "timeLimit": 900,
+    "questionCount": 28
   },
   "questions": [
     {
@@ -285,6 +286,118 @@
       ],
       "answer": 1,
       "explanation": "Birthday cake, birthday candle, and birthday card all make sense."
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "subject": "English",
+      "question": "Read the sentence: The tiny mouse crept quietly under the chair. Which word means the same as 'tiny'?",
+      "options": [
+        "Huge",
+        "Small",
+        "Loud",
+        "Quick"
+      ],
+      "answer": 1,
+      "explanation": "'Tiny' means very small."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "Silas has 24 grapes. He shares them equally between 4 plates. How many grapes are on each plate?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "8"
+      ],
+      "answer": 2,
+      "explanation": "24 shared equally between 4 plates is 24 ÷ 4 = 6."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "subject": "Phonics",
+      "question": "Which word has the same 'igh' sound as 'night'?",
+      "options": [
+        "sit",
+        "light",
+        "net",
+        "snow"
+      ],
+      "answer": 1,
+      "explanation": "'Light' and 'night' both contain the long 'igh' sound."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "subject": "Verbal Reasoning",
+      "question": "Which word completes the pair? Bird is to nest as bee is to ___.",
+      "options": [
+        "hive",
+        "pond",
+        "stable",
+        "kennel"
+      ],
+      "answer": 0,
+      "explanation": "A bird lives in a nest; a bee lives in a hive."
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "subject": "English",
+      "question": "Choose the sentence with the correct punctuation.",
+      "options": [
+        "Where is my book",
+        "Where is my book?",
+        "Where is my book.",
+        "where is my book?"
+      ],
+      "answer": 1,
+      "explanation": "A question should start with a capital letter and end with a question mark."
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "subject": "Maths",
+      "question": "A ribbon is 30 cm long. Cheryl cuts off 12 cm. How much ribbon is left?",
+      "options": [
+        "16 cm",
+        "18 cm",
+        "20 cm",
+        "42 cm"
+      ],
+      "answer": 1,
+      "explanation": "30 cm − 12 cm = 18 cm."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "subject": "Phonics",
+      "question": "Which is an alien word for phonics practice?",
+      "options": [
+        "brush",
+        "chair",
+        "zemp",
+        "train"
+      ],
+      "answer": 2,
+      "explanation": "'Zemp' is not a real word, so it is an alien word."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "subject": "Verbal Reasoning",
+      "question": "Find the odd one out.",
+      "options": [
+        "Circle",
+        "Square",
+        "Triangle",
+        "Carrot"
+      ],
+      "answer": 3,
+      "explanation": "Circle, square, and triangle are shapes. Carrot is a vegetable."
     }
   ]
 }
