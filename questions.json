@@ -2,9 +2,14 @@
   "meta": {
     "title": "Wilson's & Phonics Practice Quiz",
     "subject": "English, Phonics, Maths, Verbal Reasoning",
-    "generated": "2026-05-31",
+    "generated": "2026-06-01",
     "timeLimit": 900,
-    "questionCount": 28
+    "questionCount": 28,
+    "difficultyBands": [
+      "Foundation",
+      "Core",
+      "Stretch"
+    ]
   },
   "questions": [
     {
@@ -19,7 +24,9 @@
         "Tired"
       ],
       "answer": 1,
-      "explanation": "'Sad' is the opposite (antonym) of 'happy'."
+      "explanation": "'Sad' is the opposite (antonym) of 'happy'.",
+      "difficulty": "Foundation",
+      "skill": "Grammar and vocabulary"
     },
     {
       "id": 2,
@@ -33,7 +40,9 @@
         "23"
       ],
       "answer": 2,
-      "explanation": "14 + 8 = 22"
+      "explanation": "14 + 8 = 22",
+      "difficulty": "Foundation",
+      "skill": "Number fluency"
     },
     {
       "id": 3,
@@ -47,7 +56,9 @@
         "The cat sitted on the mat."
       ],
       "answer": 0,
-      "explanation": "We use 'sits' (present tense) with 'the cat' (singular)."
+      "explanation": "We use 'sits' (present tense) with 'the cat' (singular).",
+      "difficulty": "Foundation",
+      "skill": "Grammar and vocabulary"
     },
     {
       "id": 4,
@@ -61,7 +72,9 @@
         "9"
       ],
       "answer": 2,
-      "explanation": "3 + 5 = 8 balls in total."
+      "explanation": "3 + 5 = 8 balls in total.",
+      "difficulty": "Foundation",
+      "skill": "Number fluency"
     },
     {
       "id": 5,
@@ -75,7 +88,9 @@
         "Child"
       ],
       "answer": 2,
-      "explanation": "The plural of 'child' is 'children' — it's an irregular plural."
+      "explanation": "The plural of 'child' is 'children' — it's an irregular plural.",
+      "difficulty": "Foundation",
+      "skill": "Grammar and vocabulary"
     },
     {
       "id": 6,
@@ -89,7 +104,9 @@
         "5"
       ],
       "answer": 1,
-      "explanation": "A triangle has 3 sides."
+      "explanation": "A triangle has 3 sides.",
+      "difficulty": "Foundation",
+      "skill": "Number fluency"
     },
     {
       "id": 7,
@@ -103,7 +120,9 @@
         "Orange"
       ],
       "answer": 2,
-      "explanation": "Carrot is a vegetable. Apple, Banana and Orange are all fruits."
+      "explanation": "Carrot is a vegetable. Apple, Banana and Orange are all fruits.",
+      "difficulty": "Core",
+      "skill": "Logic patterns"
     },
     {
       "id": 8,
@@ -117,7 +136,9 @@
         "14p"
       ],
       "answer": 2,
-      "explanation": "20 − 7 = 13p"
+      "explanation": "20 − 7 = 13p",
+      "difficulty": "Core",
+      "skill": "Number fluency"
     },
     {
       "id": 9,
@@ -131,7 +152,9 @@
         "Hen"
       ],
       "answer": 2,
-      "explanation": "'Hat' rhymes with 'cat' — both end in the '-at' sound."
+      "explanation": "'Hat' rhymes with 'cat' — both end in the '-at' sound.",
+      "difficulty": "Foundation",
+      "skill": "Grammar and vocabulary"
     },
     {
       "id": 10,
@@ -145,7 +168,9 @@
         "12"
       ],
       "answer": 1,
-      "explanation": "The pattern adds 2 each time: 2, 4, 6, 8, 10."
+      "explanation": "The pattern adds 2 each time: 2, 4, 6, 8, 10.",
+      "difficulty": "Stretch",
+      "skill": "Logic patterns"
     },
     {
       "id": 11,
@@ -159,7 +184,9 @@
         "road"
       ],
       "answer": 1,
-      "explanation": "'Train' has the same long 'ai' sound as 'rain'."
+      "explanation": "'Train' has the same long 'ai' sound as 'rain'.",
+      "difficulty": "Foundation",
+      "skill": "Sound patterns"
     },
     {
       "id": 12,
@@ -173,7 +200,9 @@
         "16"
       ],
       "answer": 2,
-      "explanation": "9 + 6 = 15 stickers."
+      "explanation": "9 + 6 = 15 stickers.",
+      "difficulty": "Foundation",
+      "skill": "Number fluency"
     },
     {
       "id": 13,
@@ -187,7 +216,9 @@
         "playfully"
       ],
       "answer": 1,
-      "explanation": "When comparing two things, we can say 'more playful than'."
+      "explanation": "When comparing two things, we can say 'more playful than'.",
+      "difficulty": "Core",
+      "skill": "Grammar and vocabulary"
     },
     {
       "id": 14,
@@ -201,7 +232,9 @@
         "vust"
       ],
       "answer": 2,
-      "explanation": "'Shop' is a real word. The others are alien/pseudo words for phonics practice."
+      "explanation": "'Shop' is a real word. The others are alien/pseudo words for phonics practice.",
+      "difficulty": "Foundation",
+      "skill": "Sound patterns"
     },
     {
       "id": 15,
@@ -215,7 +248,9 @@
         "pen → paper"
       ],
       "answer": 0,
-      "explanation": "Hot and cold are opposites. Day and night are also opposites."
+      "explanation": "Hot and cold are opposites. Day and night are also opposites.",
+      "difficulty": "Stretch",
+      "skill": "Logic patterns"
     },
     {
       "id": 16,
@@ -229,7 +264,9 @@
         "57"
       ],
       "answer": 2,
-      "explanation": "10 more than 37 is 47."
+      "explanation": "10 more than 37 is 47.",
+      "difficulty": "Core",
+      "skill": "Number fluency"
     },
     {
       "id": 17,
@@ -243,7 +280,9 @@
         "ch"
       ],
       "answer": 2,
-      "explanation": "The letters 'sh' work together to make one sound: /sh/."
+      "explanation": "The letters 'sh' work together to make one sound: /sh/.",
+      "difficulty": "Foundation",
+      "skill": "Sound patterns"
     },
     {
       "id": 18,
@@ -257,7 +296,9 @@
         "i went to sutton."
       ],
       "answer": 1,
-      "explanation": "Use a capital 'I' and a capital letter for place names like Sutton."
+      "explanation": "Use a capital 'I' and a capital letter for place names like Sutton.",
+      "difficulty": "Foundation",
+      "skill": "Grammar and vocabulary"
     },
     {
       "id": 19,
@@ -271,7 +312,9 @@
         "2 o’clock"
       ],
       "answer": 1,
-      "explanation": "Two hours after 3 o’clock is 5 o’clock."
+      "explanation": "Two hours after 3 o’clock is 5 o’clock.",
+      "difficulty": "Core",
+      "skill": "Number fluency"
     },
     {
       "id": 20,
@@ -285,7 +328,9 @@
         "window"
       ],
       "answer": 1,
-      "explanation": "Birthday cake, birthday candle, and birthday card all make sense."
+      "explanation": "Birthday cake, birthday candle, and birthday card all make sense.",
+      "difficulty": "Stretch",
+      "skill": "Logic patterns"
     },
     {
       "id": 21,
@@ -299,7 +344,9 @@
         "Quick"
       ],
       "answer": 1,
-      "explanation": "'Tiny' means very small."
+      "explanation": "'Tiny' means very small.",
+      "difficulty": "Stretch",
+      "skill": "Grammar and vocabulary"
     },
     {
       "id": 22,
@@ -313,7 +360,9 @@
         "8"
       ],
       "answer": 2,
-      "explanation": "24 shared equally between 4 plates is 24 ÷ 4 = 6."
+      "explanation": "24 shared equally between 4 plates is 24 ÷ 4 = 6.",
+      "difficulty": "Stretch",
+      "skill": "Number fluency"
     },
     {
       "id": 23,
@@ -327,7 +376,9 @@
         "snow"
       ],
       "answer": 1,
-      "explanation": "'Light' and 'night' both contain the long 'igh' sound."
+      "explanation": "'Light' and 'night' both contain the long 'igh' sound.",
+      "difficulty": "Stretch",
+      "skill": "Sound patterns"
     },
     {
       "id": 24,
@@ -341,7 +392,9 @@
         "kennel"
       ],
       "answer": 0,
-      "explanation": "A bird lives in a nest; a bee lives in a hive."
+      "explanation": "A bird lives in a nest; a bee lives in a hive.",
+      "difficulty": "Stretch",
+      "skill": "Logic patterns"
     },
     {
       "id": 25,
@@ -355,7 +408,9 @@
         "where is my book?"
       ],
       "answer": 1,
-      "explanation": "A question should start with a capital letter and end with a question mark."
+      "explanation": "A question should start with a capital letter and end with a question mark.",
+      "difficulty": "Stretch",
+      "skill": "Grammar and vocabulary"
     },
     {
       "id": 26,
@@ -369,7 +424,9 @@
         "42 cm"
       ],
       "answer": 1,
-      "explanation": "30 cm − 12 cm = 18 cm."
+      "explanation": "30 cm − 12 cm = 18 cm.",
+      "difficulty": "Stretch",
+      "skill": "Number fluency"
     },
     {
       "id": 27,
@@ -383,7 +440,9 @@
         "train"
       ],
       "answer": 2,
-      "explanation": "'Zemp' is not a real word, so it is an alien word."
+      "explanation": "'Zemp' is not a real word, so it is an alien word.",
+      "difficulty": "Stretch",
+      "skill": "Sound patterns"
     },
     {
       "id": 28,
@@ -397,7 +456,9 @@
         "Carrot"
       ],
       "answer": 3,
-      "explanation": "Circle, square, and triangle are shapes. Carrot is a vegetable."
+      "explanation": "Circle, square, and triangle are shapes. Carrot is a vegetable.",
+      "difficulty": "Stretch",
+      "skill": "Logic patterns"
     }
   ]
 }

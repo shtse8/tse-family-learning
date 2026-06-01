@@ -371,6 +371,7 @@
     .data-actions, .learner-options, .practice-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     .practice-chip { border: 1px solid #c7d2fe; background: #fff; color: var(--primary); border-radius: 999px; padding: 8px 12px; font-weight: 800; cursor: pointer; }
     .practice-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .practice-label { color: var(--text); font-size: 0.78rem; font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 12px; }
     .practice-note { color: var(--subtext); font-size: 0.86rem; margin-top: 8px; }
     .btn-secondary { background: #eef2ff; color: var(--primary); border: 1px solid #c7d2fe; }
     .btn-secondary:hover { background: #e0e7ff; }
@@ -453,8 +454,11 @@
     </div>
     <div class="practice-panel" id="practice-panel" style="display:none">
       <h3>⚡ Quick practice</h3>
-      <p>Choose a subject focus before starting, or keep the full mixed round.</p>
+      <p>Choose a subject and difficulty focus before starting, or keep the full mixed round.</p>
+      <div class="practice-label">Subject focus</div>
       <div class="practice-options" id="practice-options"></div>
+      <div class="practice-label">Difficulty band</div>
+      <div class="practice-options" id="difficulty-options"></div>
       <div class="practice-note" id="practice-note">Mixed practice uses the full question bank.</div>
     </div>
     <div class="next-step-panel" id="next-step-panel" style="display:none">
@@ -544,6 +548,7 @@
     let questions = [];
     let allQuestions = [];
     let selectedSubject = 'Mixed';
+    let selectedDifficulty = 'All';
     let current = 0;
     let answers = [];
     let timerInterval = null;
@@ -995,15 +1000,27 @@
       return ['Mixed', ...Array.from(new Set(allQuestions.map(q => q.subject).filter(Boolean))).sort()];
     }
 
+    function difficultyBands() {
+      const order = ['Foundation', 'Core', 'Stretch'];
+      return ['All', ...Array.from(new Set(allQuestions.map(q => q.difficulty).filter(Boolean))).sort((a, b) => {
+        const ai = order.indexOf(a);
+        const bi = order.indexOf(b);
+        return (ai === -1 ? order.length : ai) - (bi === -1 ? order.length : bi) || a.localeCompare(b);
+      })];
+    }
+
     function practiceQuestionSet() {
-      return selectedSubject === 'Mixed'
-        ? allQuestions
-        : allQuestions.filter(q => q.subject === selectedSubject);
+      return allQuestions.filter(q => {
+        const subjectMatch = selectedSubject === 'Mixed' || q.subject === selectedSubject;
+        const difficultyMatch = selectedDifficulty === 'All' || q.difficulty === selectedDifficulty;
+        return subjectMatch && difficultyMatch;
+      });
     }
 
     function renderPracticeOptions() {
       const panel = document.getElementById('practice-panel');
       const options = document.getElementById('practice-options');
+      const difficultyOptions = document.getElementById('difficulty-options');
       if (!allQuestions.length) {
         panel.style.display = 'none';
         return;
@@ -1013,6 +1030,10 @@
         const count = subject === 'Mixed' ? allQuestions.length : allQuestions.filter(q => q.subject === subject).length;
         return `<button class="practice-chip ${subject === selectedSubject ? 'active' : ''}" onclick="selectPracticeSubject('${escapeHTML(subject)}')">${escapeHTML(subject)} (${count})</button>`;
       }).join('');
+      difficultyOptions.innerHTML = difficultyBands().map(band => {
+        const count = band === 'All' ? allQuestions.length : allQuestions.filter(q => q.difficulty === band).length;
+        return `<button class="practice-chip ${band === selectedDifficulty ? 'active' : ''}" onclick="selectDifficulty('${escapeHTML(band)}')">${escapeHTML(band)} (${count})</button>`;
+      }).join('');
       applyPracticeSelection();
       renderNextStepRecommendation();
     }
@@ -1020,6 +1041,14 @@
     function selectPracticeSubject(subject) {
       const valid = practiceSubjects();
       selectedSubject = valid.includes(subject) ? subject : 'Mixed';
+      if (!practiceQuestionSet().length) selectedDifficulty = 'All';
+      renderPracticeOptions();
+    }
+
+    function selectDifficulty(band) {
+      const valid = difficultyBands();
+      selectedDifficulty = valid.includes(band) ? band : 'All';
+      if (!practiceQuestionSet().length) selectedSubject = 'Mixed';
       renderPracticeOptions();
     }
 
@@ -1027,14 +1056,15 @@
       questions = practiceQuestionSet();
       const count = questions.length;
       document.getElementById('info-questions').textContent = count;
-      document.getElementById('info-subject').textContent = selectedSubject === 'Mixed' ? (quizData?.meta?.subject || 'Mixed') : selectedSubject;
-      document.getElementById('practice-note').textContent = selectedSubject === 'Mixed'
+      const focusLabel = [selectedSubject === 'Mixed' ? 'Mixed' : selectedSubject, selectedDifficulty === 'All' ? null : selectedDifficulty].filter(Boolean).join(' · ');
+      document.getElementById('info-subject').textContent = focusLabel === 'Mixed' ? (quizData?.meta?.subject || 'Mixed') : focusLabel;
+      document.getElementById('practice-note').textContent = focusLabel === 'Mixed'
         ? `Mixed practice uses all ${count} questions.`
-        : `${selectedSubject} quick practice uses ${count} focused question${count === 1 ? '' : 's'}.`;
+        : `${focusLabel} practice uses ${count} focused question${count === 1 ? '' : 's'}.`;
       if (quizData) {
-        document.getElementById('quiz-desc').textContent = selectedSubject === 'Mixed'
+        document.getElementById('quiz-desc').textContent = focusLabel === 'Mixed'
           ? `Ready for ${count} questions? You've got ${Math.round(quizData.meta.timeLimit/60)} minutes. Good luck! ⭐`
-          : `Ready for ${count} ${selectedSubject} questions? Focus mode keeps the same timer and saves progress. ⭐`;
+          : `Ready for ${count} ${focusLabel} questions? Focus mode keeps the same timer and saves progress. ⭐`;
       }
     }
 
@@ -1125,7 +1155,7 @@
       document.getElementById('progress-fill').style.width = `${(current / total) * 100}%`;
 
       const badge = document.getElementById('subject-badge');
-      badge.textContent = q.subject;
+      badge.textContent = q.difficulty ? `${q.subject} · ${q.difficulty}` : q.subject;
       badge.className = `badge badge-${q.subject.replace(' ', '\\ ')}`;
 
       document.getElementById('question-text').textContent = q.question;
@@ -1228,7 +1258,7 @@
         date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
         completedAt: new Date().toISOString(),
         correct, total, percent: pct, focus: plan.focus, subjects,
-        practiceMode: selectedSubject
+        practiceMode: selectedSubject, difficultyMode: selectedDifficulty
       });
       renderStats(updatedHistory);
       renderBadges(updatedHistory);

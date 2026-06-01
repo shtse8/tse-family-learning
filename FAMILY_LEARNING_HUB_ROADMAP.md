@@ -49,7 +49,7 @@ Export/import JSON is now available for browser-local progress so family progres
 10. Family leaderboard. *(Shipped for browser-local learner histories.)*
 11. Subject quick-practice filters before starting a quiz. *(Shipped for focused rounds from the existing question bank.)*
 12. Personalised next-step practice recommendations from learner history. *(Shipped for browser-local learner history.)*
-13. Topic/difficulty filters before starting a quiz.
+13. Topic/difficulty filters before starting a quiz. *(Started with difficulty-band quick practice filters: Foundation/Core/Stretch.)*
 
 ## Content sequence
 
