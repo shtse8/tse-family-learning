@@ -241,7 +241,7 @@
     .review-ans { color: var(--subtext); font-size: 0.85rem; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .badges-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .badges-panel, .challenge-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -249,7 +249,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .badges-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .badges-panel h3, .challenge-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -300,7 +300,11 @@
     .subject-bar { height: 8px; background: #eef2ff; border-radius: 999px; overflow: hidden; }
     .subject-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: inherit; }
     .subject-tip { color: var(--subtext); font-size: 0.78rem; margin-top: 5px; }
-    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p { color: var(--subtext); line-height: 1.55; }
+    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p, .challenge-panel p { color: var(--subtext); line-height: 1.55; }
+    .challenge-card { background: #fff; border: 1px solid #fde68a; border-radius: 14px; padding: 12px; }
+    .challenge-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; color: var(--subtext); font-size: 0.78rem; font-weight: 800; }
+    .challenge-question { font-weight: 900; color: var(--text); margin-bottom: 6px; }
+    .challenge-tip { color: var(--subtext); font-size: 0.84rem; }
     .family-list { display: flex; flex-direction: column; gap: 10px; }
     .family-row { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr; gap: 10px; align-items: center; background: #fff; border: 1px solid #ede9fe; border-radius: 12px; padding: 10px 12px; }
     .family-name { font-weight: 900; color: var(--primary); }
@@ -352,6 +356,10 @@
       <h3>👧 Learner profile</h3>
       <div class="learner-options" id="learner-options"></div>
       <div class="learner-note" id="learner-note">Progress is saved separately for each family learner on this browser.</div>
+    </div>
+    <div class="challenge-panel" id="challenge-panel" style="display:none">
+      <h3>🌞 Challenge of the day</h3>
+      <div class="challenge-card" id="challenge-card"></div>
     </div>
     <div class="stats-panel" id="stats-panel" style="display:none">
       <h3>🏅 Learning stats</h3>
@@ -761,6 +769,27 @@
       document.getElementById('learner-note').textContent = `${learner.note}. Progress is saved separately for ${learner.name} on this browser.`;
     }
 
+    function dailyChallengeIndex(total) {
+      const key = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      return Number(key) % Math.max(1, total);
+    }
+
+    function renderDailyChallenge() {
+      const panel = document.getElementById('challenge-panel');
+      const card = document.getElementById('challenge-card');
+      if (!questions.length) {
+        panel.style.display = 'none';
+        return;
+      }
+      const q = questions[dailyChallengeIndex(questions.length)];
+      panel.style.display = 'block';
+      card.innerHTML = `
+        <div class="challenge-meta"><span>${escapeHTML(q.subject || 'Mixed')}</span><span>Question ${dailyChallengeIndex(questions.length) + 1}/${questions.length}</span></div>
+        <div class="challenge-question">${escapeHTML(q.question)}</div>
+        <div class="challenge-tip">Try this one first today, then complete the full quiz to save progress and streaks.</div>
+      `;
+    }
+
     function selectLearner(id) {
       if (!LEARNERS.some(learner => learner.id === id)) return;
       localStorage.setItem(LEARNER_KEY, id);
@@ -781,6 +810,7 @@
         document.getElementById('info-subject').textContent = data.meta.subject;
         document.getElementById('quiz-desc').textContent =
           `Ready for ${questions.length} questions? You've got ${Math.round(data.meta.timeLimit/60)} minutes. Good luck! ⭐`;
+        renderDailyChallenge();
         renderHistory();
       })
       .catch(() => {
