@@ -241,7 +241,7 @@
     .review-ans { color: var(--subtext); font-size: 0.85rem; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .leaderboard-panel, .badges-panel, .challenge-panel, .practice-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .leaderboard-panel, .badges-panel, .challenge-panel, .practice-panel, .next-step-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -249,7 +249,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .leaderboard-panel h3, .badges-panel h3, .challenge-panel h3, .practice-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .leaderboard-panel h3, .badges-panel h3, .challenge-panel h3, .practice-panel h3, .next-step-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -300,11 +300,15 @@
     .subject-bar { height: 8px; background: #eef2ff; border-radius: 999px; overflow: hidden; }
     .subject-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: inherit; }
     .subject-tip { color: var(--subtext); font-size: 0.78rem; margin-top: 5px; }
-    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p, .leaderboard-panel p, .challenge-panel p, .practice-panel p { color: var(--subtext); line-height: 1.55; }
+    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p, .leaderboard-panel p, .challenge-panel p, .practice-panel p, .next-step-panel p { color: var(--subtext); line-height: 1.55; }
     .challenge-card { background: #fff; border: 1px solid #fde68a; border-radius: 14px; padding: 12px; }
     .challenge-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; color: var(--subtext); font-size: 0.78rem; font-weight: 800; }
     .challenge-question { font-weight: 900; color: var(--text); margin-bottom: 6px; }
     .challenge-tip { color: var(--subtext); font-size: 0.84rem; }
+
+    .next-step-card { background: #fff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 12px; }
+    .next-step-title { font-weight: 900; color: var(--primary); margin-bottom: 5px; }
+    .next-step-meta { color: var(--subtext); font-size: 0.82rem; margin-bottom: 10px; line-height: 1.45; }
     .family-list { display: flex; flex-direction: column; gap: 10px; }
     .family-row { display: grid; grid-template-columns: 1.2fr 0.8fr 0.8fr; gap: 10px; align-items: center; background: #fff; border: 1px solid #ede9fe; border-radius: 12px; padding: 10px 12px; }
     .family-name { font-weight: 900; color: var(--primary); }
@@ -378,6 +382,10 @@
       <p>Choose a subject focus before starting, or keep the full mixed round.</p>
       <div class="practice-options" id="practice-options"></div>
       <div class="practice-note" id="practice-note">Mixed practice uses the full question bank.</div>
+    </div>
+    <div class="next-step-panel" id="next-step-panel" style="display:none">
+      <h3>🧭 Recommended next step</h3>
+      <div class="next-step-card" id="next-step-card"></div>
     </div>
     <div class="stats-panel" id="stats-panel" style="display:none">
       <h3>🏅 Learning stats</h3>
@@ -721,6 +729,7 @@
       const list = document.getElementById('history-list');
       renderParentOverview();
       renderFamilyLeaderboard();
+      renderNextStepRecommendation(history);
       if (!history.length) {
         panel.style.display = 'none';
         document.getElementById('subject-panel').style.display = 'none';
@@ -816,6 +825,65 @@
       };
     }
 
+
+    function subjectQuestionCount(subject) {
+      return allQuestions.filter(q => q.subject === subject).length;
+    }
+
+    function nextStepRecommendation(history = loadHistory()) {
+      const subjects = practiceSubjects().filter(subject => subject !== 'Mixed');
+      if (!subjects.length) return null;
+      const stats = subjectStats(history);
+      const attempted = new Set(Object.keys(stats));
+      const untried = subjects.find(subject => !attempted.has(subject));
+      if (!history.length || untried) {
+        const subject = untried || subjects[0];
+        return {
+          subject,
+          title: `Start with ${subject}`,
+          reason: history.length
+            ? `${subject} has no saved attempts yet. Try a focused set so the dashboard can spot strengths and gaps.`
+            : 'Complete one focused round to unlock personalised subject guidance for this learner.'
+        };
+      }
+      const weakest = Object.entries(stats)
+        .map(([subject, value]) => ({
+          subject,
+          correct: Number(value.correct || 0),
+          total: Number(value.total || 0),
+          percent: value.total ? Math.round((Number(value.correct || 0) / Number(value.total || 1)) * 100) : 0
+        }))
+        .filter(row => row.total > 0 && subjectQuestionCount(row.subject) > 0)
+        .sort((a, b) => a.percent - b.percent || b.total - a.total)[0];
+      if (!weakest) return { subject: subjects[0], title: 'Build a mixed baseline', reason: 'Try a short focused round so the app can recommend the next subject with evidence.' };
+      const reason = weakest.percent >= 80
+        ? `${weakest.subject} is already strong at ${weakest.percent}%. Keep it warm with one focused round.`
+        : `${weakest.subject} is the current focus area at ${weakest.percent}% across ${weakest.total} saved question${weakest.total === 1 ? '' : 's'}.`;
+      return { subject: weakest.subject, title: `Practise ${weakest.subject} next`, reason };
+    }
+
+    function startRecommendedPractice(subject) {
+      selectPracticeSubject(subject);
+      document.getElementById('practice-panel')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function renderNextStepRecommendation(history = loadHistory()) {
+      const panel = document.getElementById('next-step-panel');
+      const card = document.getElementById('next-step-card');
+      const rec = nextStepRecommendation(history);
+      if (!rec) {
+        panel.style.display = 'none';
+        return;
+      }
+      const count = subjectQuestionCount(rec.subject);
+      panel.style.display = 'block';
+      card.innerHTML = `
+        <div class="next-step-title">${escapeHTML(rec.title)}</div>
+        <div class="next-step-meta">${escapeHTML(rec.reason)} ${count ? `${count} question${count === 1 ? '' : 's'} available.` : ''}</div>
+        <button class="btn btn-secondary" onclick="startRecommendedPractice('${escapeHTML(rec.subject)}')">Use ${escapeHTML(rec.subject)} quick practice</button>
+      `;
+    }
+
     function renderLearners() {
       const currentId = activeLearnerId();
       const learner = activeLearner();
@@ -850,6 +918,7 @@
         return `<button class="practice-chip ${subject === selectedSubject ? 'active' : ''}" onclick="selectPracticeSubject('${escapeHTML(subject)}')">${escapeHTML(subject)} (${count})</button>`;
       }).join('');
       applyPracticeSelection();
+      renderNextStepRecommendation();
     }
 
     function selectPracticeSubject(subject) {
@@ -1067,6 +1136,7 @@
       renderStats(updatedHistory);
       renderBadges(updatedHistory);
       renderSubjectDashboard(updatedHistory);
+      renderNextStepRecommendation(updatedHistory);
       renderParentOverview();
 
       // Review list

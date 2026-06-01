@@ -5,7 +5,7 @@ A small static learning app for Tse family practice, currently focused on Wilson
 ## Current app
 
 - Static Node server in `server.js` serving `index.html` and the 28-question `questions.json` starter bank.
-- Browser-local per-learner quiz progress history with attempts, best score, average score, level, daily streak, practice XP, subject dashboard, parent overview across learner profiles, family leaderboard, milestone badges, daily challenge prompt, and subject quick-practice filters.
+- Browser-local per-learner quiz progress history with attempts, best score, average score, level, daily streak, practice XP, subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, milestone badges, daily challenge prompt, and subject quick-practice filters.
 - JSON export/import for progress backup between browsers or devices.
 - Deployed through the normal Sylphx product path for project `tart-duo-uvt9`.
 
