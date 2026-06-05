@@ -5,7 +5,7 @@
 - Static Node app served by `server.js`.
 - Current public content is Wilson's School 11+ practice in `questions.json`, now expanded to 28 starter questions.
 - The live Sylphx app should remain simple, safe, and easy to recover.
-- The app is being reshaped from a single quiz into a fully responsive multi-subject learning platform.
+- The app is being reshaped from a single quiz into a fully responsive multi-subject learning platform with explicit curriculum-pack roadmap slices.
 
 ## Product direction
 
@@ -23,15 +23,15 @@ Start with browser-local storage rather than accounts or server-side secrets:
 - `questionSets`: subject, level, tags, language, source, estimated time.
 - `attempts`: learner id, question set id, answers, score, completed at.
 - `progress`: XP, level, streak, badges, last practice date.
-- Current implementation starts with a responsive platform shell, learning-domain cards, browser-local learner profiles, attempts, best score, average score, level, daily streak, practice XP, per-learner subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, and subject quick-practice filters.
+- Current implementation starts with a responsive platform shell, learning-domain cards, curriculum-pack roadmap cards, browser-local learner profiles, attempts, best score, average score, level, daily streak, practice XP, per-learner subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, and subject quick-practice filters.
 
 Export/import JSON is now available for browser-local progress so family progress is not easily lost. Silas, Sylvie, Kyle, and Cheryl can now keep separate local history buckets.
 
 ## Platform foundation sequence
 
 1. Responsive app shell that no longer presents as only Silas's quiz. *(Shipped with the Family Learning Hub platform hero.)*
-2. Learning-domain cards for 11+ School Prep, Primary Learning, Secondary Bridge, French, Life in the UK, and English Mastery. *(Shipped as explicit curriculum placeholders; only 11+ currently has live questions.)*
-3. Curriculum-pack data model for topics, levels, skills, languages, activities, and readiness state.
+2. Learning-domain cards for 11+ School Prep, Traditional HK Chinese, Simplified Mandarin Chinese, Maths Foundation, Primary Learning, French, Life in the UK, and English Mastery. *(Shipped as explicit curriculum placeholders; only 11+ currently has live questions.)*
+3. Curriculum-pack data model for topics, levels, skills, languages, activities, and readiness state. *(Started with visible curriculum-pack roadmap cards for Wilson 11+, Traditional HK Chinese, Simplified Mandarin, Maths Foundation, Life in the UK, and French.)*
 4. Domain-specific learner journeys and parent planning view.
 5. Content authoring workflow for adding validated packs without editing the whole app shell.
 
@@ -56,7 +56,7 @@ Export/import JSON is now available for browser-local progress so family progres
 1. Keep existing Wilson's School 11+ quiz stable. *(Stable and expanded to 28 starter questions.)*
 2. Add metadata to quiz files without breaking current rendering.
 3. Split content by subject and age band.
-4. Add Chinese and English language toggles where useful.
+4. Add Chinese and English language toggles where useful. *(Roadmap now distinguishes Traditional HK/Cantonese from Simplified Mandarin/Pinyin.)*
 5. Add adult practice sets later.
 
 ## Security and deployment notes

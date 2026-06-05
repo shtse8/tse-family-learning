@@ -1,11 +1,12 @@
 # Family Learning Hub
 
-A responsive multi-subject learning platform foundation for Tse family practice. The first live activity is a Wilson's School 11+ style starter bank, and the product shell now models future French, Life in the UK, English, primary, and secondary learning domains.
+A responsive multi-subject learning platform foundation for Tse family practice. The first live activity is a Wilson's School 11+ style starter bank, and the product shell now models future French, Life in the UK, English, Maths Foundation, Traditional HK Chinese, Simplified Mandarin, primary, and secondary learning domains.
 
 ## Current app
 
 - Static Node server in `server.js` serving `index.html` and the 28-question `questions.json` starter bank.
-- Responsive platform shell with learning-domain cards for 11+ School Prep, Primary Learning, Secondary Bridge, French, Life in the UK, and English Mastery.
+- Responsive platform shell with learning-domain cards for 11+ School Prep, Traditional HK Chinese, Simplified Mandarin Chinese, Maths Foundation, Primary Learning, French, Life in the UK, and English Mastery.
+- Curriculum pack roadmap cards for language variant, learner fit, activity type, readiness, and next production step.
 - Browser-local per-learner quiz progress history with attempts, best score, average score, level, daily streak, practice XP, subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, milestone badges, daily challenge prompt, and subject quick-practice filters.
 - JSON export/import for progress backup between browsers or devices.
 - Deployed through the normal Sylphx product path for project `tart-duo-uvt9`.
