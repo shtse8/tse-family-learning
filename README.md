@@ -21,3 +21,5 @@ node server.js
 ```
 
 Then verify `/`, `/questions.json`, and `/FAMILY_LEARNING_HUB_ROADMAP.md`, including the responsive platform shell text and learning-domain cards.
+
+- Run #9 starts the mobile-first UI/UX rebuild: app-like Today command centre, bottom mobile navigation, clearer Learn/Practice/Progress sections, and a desktop command-centre layout while retaining the existing quiz/progress engine.

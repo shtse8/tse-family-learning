@@ -70,3 +70,7 @@ Export/import JSON is now available for browser-local progress so family progres
 - Do not put webhook secrets, private API tokens, or family-sensitive backend keys in public JavaScript.
 - Keep deployment reproducible through the normal Sylphx generated build path and `npm` scripts.
 - Prefer small, reviewable increments and verify `/` plus `/questions.json` after deploy.
+
+## Mobile-first modern UX rebuild
+
+Kyle flagged the current experience as not modern/responsive enough. The platform direction is now mobile-first: Today command centre, touch-friendly action flow, app-like mobile navigation, clearer Learn/Practice/Progress IA, and desktop parent command-centre layouts.

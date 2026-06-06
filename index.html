@@ -404,121 +404,239 @@
       .family-row, .leaderboard-row { grid-template-columns: 1fr; text-align: left; }
       .family-stat, .family-focus, .leaderboard-score { text-align: left; }
     }
+
+
+    /* ── Mobile-first modern app shell v2 ── */
+    :root {
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: rgba(148, 163, 184, 0.24);
+      --surface: rgba(255,255,255,0.86);
+      --surface-strong: #ffffff;
+      --shadow-soft: 0 18px 60px rgba(15, 23, 42, 0.10);
+      --shadow-card: 0 12px 34px rgba(79, 70, 229, 0.10);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      align-items: stretch;
+      padding: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% -8%, rgba(99,102,241,.24), transparent 34%),
+        radial-gradient(circle at 92% 3%, rgba(20,184,166,.18), transparent 31%),
+        linear-gradient(180deg, #f8fafc 0%, #eef2ff 46%, #f8fafc 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: -1;
+      background-image: linear-gradient(rgba(15,23,42,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,.035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+    }
+    .header { display: none; }
+    .card {
+      max-width: min(1180px, calc(100vw - 28px));
+      margin: 0 auto 20px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,.72);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+    }
+    #start-screen { margin-top: 14px; padding: 0; overflow: hidden; background: transparent; border: 0; box-shadow: none; backdrop-filter: none; }
+    .app-shell { min-height: 100vh; padding: 14px 14px 96px; }
+    .app-topbar {
+      position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 10px 4px 14px; backdrop-filter: blur(16px);
+    }
+    .brand-lockup { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 18px; background: linear-gradient(135deg, #4f46e5, #06b6d4); color: #fff; box-shadow: 0 14px 32px rgba(79,70,229,.28); }
+    .brand-title { font-size: .82rem; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; color: #4338ca; }
+    .brand-subtitle { font-size: .92rem; font-weight: 800; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .topbar-pill { border: 1px solid var(--line); background: rgba(255,255,255,.72); color: #334155; border-radius: 999px; padding: 9px 12px; font-weight: 900; font-size: .78rem; white-space: nowrap; }
+    .mobile-tabs { position: fixed; z-index: 50; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 8px; border: 1px solid rgba(255,255,255,.72); border-radius: 24px; background: rgba(15,23,42,.84); box-shadow: 0 18px 60px rgba(15,23,42,.35); backdrop-filter: blur(18px); }
+    .mobile-tab { color: #cbd5e1; text-decoration: none; text-align: center; border-radius: 17px; padding: 8px 4px; font-size: .72rem; font-weight: 900; }
+    .mobile-tab span { display: block; font-size: 1.05rem; margin-bottom: 2px; }
+    .mobile-tab:focus, .mobile-tab:hover { color: #fff; background: rgba(255,255,255,.13); }
+    .hero-v2 { display: grid; gap: 14px; margin-bottom: 14px; }
+    .today-hero { position: relative; overflow: hidden; border-radius: 32px; padding: 24px; color: #fff; background: linear-gradient(140deg, #312e81 0%, #4f46e5 46%, #0891b2 100%); box-shadow: 0 24px 70px rgba(49,46,129,.32); }
+    .today-hero::after { content: ""; position: absolute; width: 240px; height: 240px; right: -90px; top: -80px; border-radius: 999px; background: rgba(255,255,255,.13); }
+    .hero-eyebrow { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border-radius: 999px; background: rgba(255,255,255,.16); font-size: .78rem; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+    .today-hero h1 { position: relative; z-index: 1; margin: 18px 0 10px; font-size: clamp(2.15rem, 12vw, 5rem); line-height: .9; letter-spacing: -.07em; font-weight: 1000; }
+    .today-hero p { position: relative; z-index: 1; max-width: 58ch; color: rgba(255,255,255,.86); line-height: 1.62; font-size: 1.02rem; }
+    .hero-actions { position: relative; z-index: 1; display: grid; gap: 10px; margin-top: 20px; }
+    .hero-primary, .hero-secondary { min-height: 56px; border: 0; border-radius: 18px; font-weight: 950; cursor: pointer; }
+    .hero-primary { color: #312e81; background: #fff; box-shadow: 0 16px 34px rgba(15,23,42,.20); }
+    .hero-secondary { color: #fff; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); }
+    .command-card { border-radius: 28px; padding: 18px; background: var(--surface-strong); box-shadow: var(--shadow-card); border: 1px solid rgba(255,255,255,.72); }
+    .section-kicker { color: var(--primary); font-size: .74rem; font-weight: 950; letter-spacing: .10em; text-transform: uppercase; }
+    .command-card h2, .section-card h2 { margin: 6px 0 8px; font-size: 1.18rem; letter-spacing: -.03em; }
+    .command-card p, .section-card p { color: var(--muted); line-height: 1.55; }
+    .learner-strip { margin-top: 14px; }
+    .mission-grid-v2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .metric-tile { border-radius: 18px; padding: 13px 10px; background: #f8fafc; border: 1px solid var(--line); }
+    .metric-tile b { display:block; font-size: 1.28rem; letter-spacing: -.04em; }
+    .metric-tile span { color: var(--muted); font-size: .72rem; font-weight: 800; }
+    .app-grid { display: grid; gap: 14px; }
+    .section-card { border-radius: 28px; padding: 18px; background: var(--surface-strong); border: 1px solid rgba(255,255,255,.78); box-shadow: var(--shadow-card); scroll-margin-top: 80px; }
+    .section-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom: 14px; }
+    .section-head h2 { margin: 0; }
+    .section-icon { width: 42px; height: 42px; display:grid; place-items:center; border-radius: 16px; background:#eef2ff; }
+    .domain-grid, .curriculum-grid { grid-template-columns: 1fr; gap: 10px; }
+    .domain-card, .curriculum-card { border-radius: 22px; border: 1px solid var(--line); box-shadow: none; background: linear-gradient(180deg, #fff, #f8fafc); padding: 16px; }
+    .domain-card.ready, .domain-card.next { border-color: rgba(79,70,229,.20); }
+    .domain-icon { width: 42px; height: 42px; border-radius: 16px; display:grid; place-items:center; background:#eef2ff; margin-bottom: 10px; }
+    .practice-panel, .next-step-panel, .stats-panel, .badges-panel, .parent-panel, .leaderboard-panel, .subject-panel, .history-panel, .data-panel, .domain-panel, .learner-panel, .challenge-panel { background: transparent; border: 0; box-shadow: none; padding: 0; margin: 0; }
+    .practice-options, .learner-options, .data-actions { gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; scrollbar-width: none; }
+    .practice-chip, .learner-chip { min-height: 42px; white-space: nowrap; box-shadow: 0 6px 16px rgba(79,70,229,.08); }
+    .start-cta-sticky { position: sticky; bottom: 88px; z-index: 12; margin-top: 14px; padding: 10px; border-radius: 24px; background: rgba(255,255,255,.78); border: 1px solid rgba(255,255,255,.78); box-shadow: 0 16px 50px rgba(15,23,42,.16); backdrop-filter: blur(16px); }
+    .start-cta-sticky .btn { min-height: 56px; border-radius: 18px; }
+    @media (min-width: 760px) {
+      .app-shell { padding: 24px 24px 36px; }
+      .mobile-tabs { display: none; }
+      .app-topbar { padding-inline: 2px; }
+      .hero-v2 { grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr); align-items: stretch; }
+      .hero-actions { grid-template-columns: 1fr 1fr; max-width: 520px; }
+      .app-grid { grid-template-columns: minmax(0, 1.08fr) minmax(320px, .92fr); align-items: start; }
+      .section-card.wide { grid-column: 1 / -1; }
+      .domain-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .curriculum-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .start-cta-sticky { bottom: 20px; max-width: 420px; margin-left: auto; }
+    }
+    @media (min-width: 1080px) {
+      .app-shell { max-width: 1220px; margin: 0 auto; }
+      .app-grid { grid-template-columns: minmax(0, .95fr) minmax(0, .95fr) 340px; }
+      .section-card.wide { grid-column: span 2; }
+      .section-card.rail { grid-column: 3; }
+      .domain-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .card { max-width: 100%; }
+      .today-hero { padding: 20px; border-radius: 28px; }
+      .topbar-pill { display:none; }
+      .mission-grid-v2 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .metric-tile { padding: 10px 8px; }
+    }
+
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="platform-kicker">🏡 Tse Family Learning Platform</div>
-    <h1>Family Learning Hub</h1>
-    <p>Responsive multi-subject learning for children, parents, languages, citizenship, and school goals.</p>
-    <div class="hero-copy">Built as a real Sylphx/Spiron dogfood product: start with browser-local practice, then grow into structured curriculum, learner journeys, diagnostics, and family progress.</div>
-  </div>
-
   <!-- Start Screen -->
-  <div class="card" id="start-screen">
-    <div class="platform-hero">
-      <section class="hero-panel">
-        <div class="emoji">📚</div>
-        <h2 id="quiz-title">Loading...</h2>
-        <p id="quiz-desc">Get ready for your practice quiz!</p>
-      </section>
-      <aside class="mission-panel">
-        <strong>Product foundation milestone</strong>
-        <span>Learning domains now sit above the quiz, so the app can grow from one 11+ quiz into a family platform for French, Life in the UK, English, Maths, Chinese, primary, and secondary learning.</span>
-        <div class="mission-metrics">
-          <div class="mission-metric"><b>8</b><small>domains</small></div>
-          <div class="mission-metric"><b>4</b><small>learners</small></div>
-          <div class="mission-metric"><b>28</b><small>starter questions</small></div>
+  <div id="start-screen">
+    <div class="app-shell">
+      <nav class="app-topbar" aria-label="Family Learning Hub navigation">
+        <div class="brand-lockup">
+          <div class="brand-mark">學</div>
+          <div>
+            <div class="brand-title">Tse Family</div>
+            <div class="brand-subtitle">Learning Hub</div>
+          </div>
         </div>
-      </aside>
-    </div>
-    <div class="info-grid">
-      <div class="info-item">
-        <div class="val" id="info-questions">-</div>
-        <div class="lbl">Questions</div>
+        <div class="topbar-pill">Mobile-first platform v2</div>
+      </nav>
+
+      <div class="mobile-tabs" aria-label="Mobile app sections">
+        <a class="mobile-tab" href="#today"><span>🏠</span>Today</a>
+        <a class="mobile-tab" href="#learn"><span>🧭</span>Learn</a>
+        <a class="mobile-tab" href="#practice"><span>⚡</span>Practice</a>
+        <a class="mobile-tab" href="#progress"><span>📈</span>Progress</a>
       </div>
-      <div class="info-item">
-        <div class="val" id="info-time">-</div>
-        <div class="lbl">Minutes</div>
-      </div>
-      <div class="info-item">
-        <div class="val" id="info-subject">-</div>
-        <div class="lbl">Subject</div>
-      </div>
+
+      <main>
+        <section class="hero-v2" id="today">
+          <div class="today-hero">
+            <div class="hero-eyebrow">🏡 Modern family learning OS</div>
+            <h1>Today’s learning, beautifully focused.</h1>
+            <p id="quiz-desc">A mobile-first command centre for Silas, Sylvie, Kyle, and Cheryl — covering 11+, languages, Life in the UK, Maths, English, and family progress without feeling like a cramped quiz page.</p>
+            <div class="hero-actions">
+              <button class="hero-primary" onclick="startQuiz()">Start smart practice →</button>
+              <button class="hero-secondary" onclick="document.getElementById('learn').scrollIntoView({behavior:'smooth'})">Explore learning paths</button>
+            </div>
+          </div>
+          <aside class="command-card">
+            <div class="section-kicker">Today command centre</div>
+            <h2 id="quiz-title">Loading...</h2>
+            <p>Pick a learner, choose the right path, then start the smallest useful activity. Progress remains browser-local for now.</p>
+            <div class="mission-grid-v2">
+              <div class="metric-tile"><b>8</b><span>domains</span></div>
+              <div class="metric-tile"><b>4</b><span>learners</span></div>
+              <div class="metric-tile"><b id="info-questions">-</b><span>questions</span></div>
+            </div>
+            <div class="mission-grid-v2">
+              <div class="metric-tile"><b id="info-time">-</b><span>minutes</span></div>
+              <div class="metric-tile"><b id="info-subject">Mixed</b><span>focus</span></div>
+              <div class="metric-tile"><b>v2</b><span>UI</span></div>
+            </div>
+            <div class="learner-strip learner-panel">
+              <div class="section-kicker">Active learner</div>
+              <div class="learner-options" id="learner-options"></div>
+              <div class="learner-note" id="learner-note">Progress is saved separately for each family learner on this browser.</div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="app-grid">
+          <article class="section-card wide" id="learn">
+            <div class="section-head">
+              <div><div class="section-kicker">Learn</div><h2>Learning paths, not a long list of widgets</h2><p>Domains are grouped as family-ready learning paths so the site feels like a modern platform instead of a single quiz with features bolted on.</p></div>
+              <div class="section-icon">🧭</div>
+            </div>
+            <div class="domain-panel" id="domain-panel"><div class="domain-grid" id="domain-grid"></div></div>
+          </article>
+
+          <article class="section-card" id="practice">
+            <div class="section-head">
+              <div><div class="section-kicker">Practice</div><h2>Fast, focused, touch-friendly</h2><p>Subject, difficulty, and skill chips are designed for thumb-first use on mobile.</p></div>
+              <div class="section-icon">⚡</div>
+            </div>
+            <div class="challenge-panel" id="challenge-panel" style="display:none"><h3>🌞 Challenge of the day</h3><div class="challenge-card" id="challenge-card"></div></div>
+            <div class="practice-panel" id="practice-panel" style="display:none">
+              <h3>Quick practice</h3>
+              <p>Choose a subject, difficulty, and skill focus before starting, or keep the full mixed round.</p>
+              <div class="practice-label">Subject focus</div><div class="practice-options" id="practice-options"></div>
+              <div class="practice-label">Difficulty band</div><div class="practice-options" id="difficulty-options"></div>
+              <div class="practice-label">Skill focus</div><div class="practice-options" id="skill-options"></div>
+              <div class="practice-note" id="practice-note">Mixed practice uses the full question bank.</div>
+            </div>
+          </article>
+
+          <article class="section-card" id="journey">
+            <div class="section-head">
+              <div><div class="section-kicker">Next best action</div><h2>Learner journey</h2><p>Recommendations and stats are pulled forward so the product starts with guidance, not configuration.</p></div>
+              <div class="section-icon">🧑‍🚀</div>
+            </div>
+            <div class="next-step-panel" id="next-step-panel" style="display:none"><h3>🧭 Recommended next step</h3><div class="next-step-card" id="next-step-card"></div></div>
+            <div class="stats-panel" id="stats-panel" style="display:none"><h3>🏅 Learning stats</h3><div class="stats-grid" id="stats-grid"></div></div>
+            <div class="badges-panel" id="badges-panel" style="display:none"><h3>🏆 Milestone badges</h3><div class="badge-grid" id="badge-grid"></div></div>
+          </article>
+
+          <article class="section-card wide" id="curriculum">
+            <div class="section-head">
+              <div><div class="section-kicker">Curriculum architecture</div><h2>Multi-domain packs for the whole family</h2><p>French, Life in the UK, Chinese, Maths, English, and school prep now sit inside a clearer pack system.</p></div>
+              <div class="section-icon">🧱</div>
+            </div>
+            <div class="domain-panel" id="curriculum-panel"><div class="curriculum-grid" id="curriculum-grid"></div></div>
+          </article>
+
+          <article class="section-card rail" id="progress">
+            <div class="section-head">
+              <div><div class="section-kicker">Progress</div><h2>Parent command rail</h2><p>Family progress stays visible without overwhelming the first mobile screen.</p></div>
+              <div class="section-icon">📈</div>
+            </div>
+            <div class="parent-panel" id="parent-panel" style="display:none"><h3>👨‍👩‍👧‍👦 Parent overview</h3><p>Quick family view across all learner profiles saved on this browser.</p><div class="family-list" id="family-list"></div></div>
+            <div class="leaderboard-panel" id="leaderboard-panel" style="display:none"><h3>🏁 Family leaderboard</h3><p>Ranks saved learner profiles on this browser by average score, then practice XP.</p><div class="leaderboard-list" id="leaderboard-list"></div></div>
+            <div class="subject-panel" id="subject-panel" style="display:none"><h3>🎯 Subject dashboard</h3><p>Shows this learner's recent strengths and focus areas from saved quiz history.</p><div class="subject-list" id="subject-list"></div></div>
+            <div class="history-panel" id="history-panel" style="display:none"><h3>📈 Recent progress</h3><div class="history-list" id="history-list"></div></div>
+            <div class="data-panel" id="data-panel" style="display:none"><h3>💾 Progress backup</h3><p>Save or restore the selected learner's browser progress.</p><div class="data-actions"><button class="btn btn-secondary" onclick="exportProgress()">Export</button><button class="btn btn-secondary" onclick="document.getElementById('import-progress').click()">Import</button><input class="file-input" id="import-progress" type="file" accept="application/json,.json" onchange="importProgress(event)" /></div></div>
+          </article>
+        </section>
+
+        <div class="start-cta-sticky"><button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.08rem; padding: 16px 28px; width:100%;">🚀 Start today's practice</button></div>
+      </main>
     </div>
-    <div class="domain-panel" id="domain-panel">
-      <h3>🧭 Learning domains</h3>
-      <p>Choose the family learning direction first. Practice is currently live for the 11+ starter bank; other domains are explicit curriculum placeholders, not fake content.</p>
-      <div class="domain-grid" id="domain-grid"></div>
-    </div>
-    <div class="domain-panel" id="curriculum-panel">
-      <h3>🧱 Curriculum pack roadmap</h3>
-      <p>Small typed slices show what each family learning area needs next: language variant, activity type, learner fit, and readiness.</p>
-      <div class="curriculum-grid" id="curriculum-grid"></div>
-    </div>
-    <div class="learner-panel">
-      <h3>👧 Learner profile</h3>
-      <div class="learner-options" id="learner-options"></div>
-      <div class="learner-note" id="learner-note">Progress is saved separately for each family learner on this browser.</div>
-    </div>
-    <div class="challenge-panel" id="challenge-panel" style="display:none">
-      <h3>🌞 Challenge of the day</h3>
-      <div class="challenge-card" id="challenge-card"></div>
-    </div>
-    <div class="practice-panel" id="practice-panel" style="display:none">
-      <h3>⚡ Quick practice</h3>
-      <p>Choose a subject, difficulty, and skill focus before starting, or keep the full mixed round.</p>
-      <div class="practice-label">Subject focus</div>
-      <div class="practice-options" id="practice-options"></div>
-      <div class="practice-label">Difficulty band</div>
-      <div class="practice-options" id="difficulty-options"></div>
-      <div class="practice-label">Skill focus</div>
-      <div class="practice-options" id="skill-options"></div>
-      <div class="practice-note" id="practice-note">Mixed practice uses the full question bank.</div>
-    </div>
-    <div class="next-step-panel" id="next-step-panel" style="display:none">
-      <h3>🧭 Recommended next step</h3>
-      <div class="next-step-card" id="next-step-card"></div>
-    </div>
-    <div class="stats-panel" id="stats-panel" style="display:none">
-      <h3>🏅 Learning stats</h3>
-      <div class="stats-grid" id="stats-grid"></div>
-    </div>
-    <div class="badges-panel" id="badges-panel" style="display:none">
-      <h3>🏆 Milestone badges</h3>
-      <div class="badge-grid" id="badge-grid"></div>
-    </div>
-    <div class="parent-panel" id="parent-panel" style="display:none">
-      <h3>👨‍👩‍👧‍👦 Parent overview</h3>
-      <p>Quick family view across all learner profiles saved on this browser.</p>
-      <div class="family-list" id="family-list"></div>
-    </div>
-    <div class="leaderboard-panel" id="leaderboard-panel" style="display:none">
-      <h3>🏁 Family leaderboard</h3>
-      <p>Ranks saved learner profiles on this browser by average score, then practice XP.</p>
-      <div class="leaderboard-list" id="leaderboard-list"></div>
-    </div>
-    <div class="subject-panel" id="subject-panel" style="display:none">
-      <h3>🎯 Subject dashboard</h3>
-      <p>Shows this learner's recent strengths and focus areas from saved quiz history.</p>
-      <div class="subject-list" id="subject-list"></div>
-    </div>
-    <div class="history-panel" id="history-panel" style="display:none">
-      <h3>📈 Recent progress</h3>
-      <div class="history-list" id="history-list"></div>
-    </div>
-    <div class="data-panel" id="data-panel" style="display:none">
-      <h3>💾 Progress backup</h3>
-      <p>Save the selected learner's browser progress before changing devices, or restore it from a family backup file.</p>
-      <div class="data-actions">
-        <button class="btn btn-secondary" onclick="exportProgress()">Export progress</button>
-        <button class="btn btn-secondary" onclick="document.getElementById('import-progress').click()">Import progress</button>
-        <input class="file-input" id="import-progress" type="file" accept="application/json,.json" onchange="importProgress(event)" />
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.2rem; padding: 16px 40px; width:100%;">
-      🚀 Let's Go!
-    </button>
   </div>
 
   <!-- Quiz Screen -->
