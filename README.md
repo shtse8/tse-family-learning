@@ -24,3 +24,4 @@ Then verify `/`, `/questions.json`, and `/FAMILY_LEARNING_HUB_ROADMAP.md`, inclu
 
 - Run #9 starts the mobile-first UI/UX rebuild: app-like Today command centre, bottom mobile navigation, clearer Learn/Practice/Progress sections, and a desktop command-centre layout while retaining the existing quiz/progress engine.
 - Run #10 fixes real-device mobile clipping/overflow after Kyle review: stricter no-horizontal-overflow rules, left-aligned mobile sections, wrapped curriculum text, lighter cards, safer bottom nav, and hidden sticky duplicate CTA on small screens.
+- Run #8 keeps progress backup import discoverable on a fresh browser and removes a duplicate quick-practice filter return.

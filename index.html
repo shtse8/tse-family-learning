@@ -824,7 +824,7 @@
             <div class="leaderboard-panel" id="leaderboard-panel" style="display:none"><h3>🏁 Family leaderboard</h3><p>Ranks saved learner profiles on this browser by average score, then practice XP.</p><div class="leaderboard-list" id="leaderboard-list"></div></div>
             <div class="subject-panel" id="subject-panel" style="display:none"><h3>🎯 Subject dashboard</h3><p>Shows this learner's recent strengths and focus areas from saved quiz history.</p><div class="subject-list" id="subject-list"></div></div>
             <div class="history-panel" id="history-panel" style="display:none"><h3>📈 Recent progress</h3><div class="history-list" id="history-list"></div></div>
-            <div class="data-panel" id="data-panel" style="display:none"><h3>💾 Progress backup</h3><p>Save or restore the selected learner's browser progress.</p><div class="data-actions"><button class="btn btn-secondary" onclick="exportProgress()">Export</button><button class="btn btn-secondary" onclick="document.getElementById('import-progress').click()">Import</button><input class="file-input" id="import-progress" type="file" accept="application/json,.json" onchange="importProgress(event)" /></div></div>
+            <div class="data-panel" id="data-panel" style="display:none"><h3>💾 Progress backup</h3><p>Export appears after a saved round; import works anytime for the selected learner.</p><div class="data-actions"><button class="btn btn-secondary" onclick="exportProgress()">Export</button><button class="btn btn-secondary" onclick="document.getElementById('import-progress').click()">Import</button><input class="file-input" id="import-progress" type="file" accept="application/json,.json" onchange="importProgress(event)" /></div></div>
           </article>
         </section>
 
@@ -1159,7 +1159,7 @@
         panel.style.display = 'none';
         document.getElementById('subject-panel').style.display = 'none';
         document.getElementById('badges-panel').style.display = 'none';
-        document.getElementById('data-panel').style.display = 'none';
+        document.getElementById('data-panel').style.display = 'block';
         return;
       }
       panel.style.display = 'block';
@@ -1180,7 +1180,10 @@
 
     function exportProgress() {
       const history = loadHistory();
-      if (!history.length) return;
+      if (!history.length) {
+        alert('No saved progress for this learner yet. Import still works if you have a Family Learning Hub JSON backup.');
+        return;
+      }
       const learner = activeLearner();
       const payload = {
         app: 'tse-family-learning',

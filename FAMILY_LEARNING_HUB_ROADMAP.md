@@ -56,6 +56,7 @@ Export/import JSON is now available for browser-local progress so family progres
 
 1. Keep startup JavaScript deterministic: no duplicate state declarations or duplicated learner-note writes. *(Verified in run #7.)*
 2. Keep learner-facing copy generic where progress belongs to the selected learner, not only Silas. *(Shipped in run #7 for progress backup copy.)*
+3. Keep progress backup recovery visible even before a learner has local history. *(Shipped in run #8 so import is discoverable on a fresh browser.)*
 
 ## Content sequence
 
