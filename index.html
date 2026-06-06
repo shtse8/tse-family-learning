@@ -521,6 +521,200 @@
       .metric-tile { padding: 10px 8px; }
     }
 
+
+
+    /* ── Emergency mobile UX cleanup after real-device review ── */
+    html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+    body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    .app-shell, #start-screen, main, .hero-v2, .app-grid, .section-card, .command-card, .today-hero { min-width: 0; }
+    .section-card *, .command-card *, .today-hero *, .domain-card *, .curriculum-card * { min-width: 0; overflow-wrap: anywhere; word-break: normal; }
+    .section-card { color: var(--ink); }
+    .section-head { text-align: left; }
+    .section-head > div:first-child { min-width: 0; flex: 1 1 auto; }
+    .section-head h2, .command-card h2 { color: var(--ink); max-width: 100%; }
+    .section-head p, .command-card p { max-width: 62ch; }
+    .curriculum-card h3, .domain-card h3 { line-height: 1.15; }
+    .curriculum-next, .domain-card p { display: block; max-width: 100%; overflow: hidden; text-overflow: clip; }
+
+    @media (max-width: 640px) {
+      body {
+        background: #f6f7fb;
+      }
+      .app-shell {
+        padding: 10px 10px 92px;
+        width: 100%;
+      }
+      .app-topbar {
+        padding: 8px 2px 10px;
+      }
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 14px;
+        font-size: .95rem;
+      }
+      .brand-title {
+        font-size: .68rem;
+      }
+      .brand-subtitle {
+        font-size: .82rem;
+        max-width: 210px;
+      }
+      .today-hero {
+        border-radius: 22px;
+        padding: 18px 16px;
+        box-shadow: 0 14px 36px rgba(49,46,129,.24);
+      }
+      .today-hero h1 {
+        margin: 14px 0 10px;
+        font-size: clamp(2rem, 13vw, 3.35rem);
+        line-height: .96;
+        letter-spacing: -.055em;
+      }
+      .today-hero p {
+        font-size: .95rem;
+        line-height: 1.5;
+      }
+      .hero-actions {
+        grid-template-columns: 1fr;
+      }
+      .hero-primary, .hero-secondary {
+        min-height: 50px;
+        border-radius: 15px;
+      }
+      .command-card, .section-card {
+        border-radius: 22px;
+        padding: 16px;
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.07);
+        border: 1px solid rgba(226,232,240,.9);
+        background: #fff;
+      }
+      .section-head {
+        display: block;
+        margin-bottom: 12px;
+      }
+      .section-icon {
+        display: none;
+      }
+      .section-kicker {
+        font-size: .68rem;
+        letter-spacing: .09em;
+      }
+      .section-card h2,
+      .command-card h2 {
+        font-size: 1.38rem;
+        line-height: 1.12;
+        letter-spacing: -.035em;
+        text-align: left;
+        margin: 5px 0 8px;
+      }
+      .section-card p,
+      .command-card p {
+        font-size: .94rem;
+        line-height: 1.5;
+        text-align: left;
+      }
+      .mission-grid-v2 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+      .metric-tile {
+        padding: 10px 7px;
+        border-radius: 14px;
+      }
+      .metric-tile b {
+        font-size: 1.05rem;
+      }
+      .metric-tile span {
+        font-size: .66rem;
+      }
+      .domain-grid, .curriculum-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .domain-card, .curriculum-card {
+        border-radius: 18px;
+        padding: 14px;
+      }
+      .domain-card h3,
+      .curriculum-card h3 {
+        font-size: 1.06rem;
+        letter-spacing: -.02em;
+      }
+      .domain-meta,
+      .curriculum-meta,
+      .challenge-meta {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .domain-meta span,
+      .curriculum-meta span,
+      .challenge-meta span,
+      .practice-chip,
+      .learner-chip {
+        font-size: .78rem;
+        white-space: normal;
+      }
+      .curriculum-next,
+      .challenge-question,
+      .challenge-tip {
+        font-size: .94rem;
+        line-height: 1.45;
+      }
+      .practice-options,
+      .learner-options,
+      .data-actions {
+        overflow-x: visible;
+        flex-wrap: wrap;
+      }
+      .practice-chip,
+      .learner-chip {
+        min-height: 38px;
+        padding: 9px 11px;
+      }
+      .parent-panel h3,
+      .leaderboard-panel h3,
+      .subject-panel h3,
+      .history-panel h3,
+      .data-panel h3,
+      .practice-panel h3,
+      .challenge-panel h3,
+      .next-step-panel h3,
+      .stats-panel h3,
+      .badges-panel h3 {
+        text-align: left;
+        font-size: 1.02rem;
+        line-height: 1.2;
+      }
+      .mobile-tabs {
+        left: 10px;
+        right: 10px;
+        bottom: calc(8px + env(safe-area-inset-bottom));
+        gap: 4px;
+        padding: 6px;
+        border-radius: 22px;
+        background: rgba(15,23,42,.92);
+      }
+      .mobile-tab {
+        padding: 7px 2px;
+        border-radius: 16px;
+        font-size: .66rem;
+      }
+      .mobile-tab span {
+        font-size: .95rem;
+      }
+      .start-cta-sticky {
+        display: none;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .section-card h2, .command-card h2 { font-size: 1.24rem; }
+      .today-hero h1 { font-size: 2.35rem; }
+      .mobile-tab { font-size: .61rem; }
+    }
+
   </style>
 </head>
 <body>

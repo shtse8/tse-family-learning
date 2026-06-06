@@ -74,3 +74,7 @@ Export/import JSON is now available for browser-local progress so family progres
 ## Mobile-first modern UX rebuild
 
 Kyle flagged the current experience as not modern/responsive enough. The platform direction is now mobile-first: Today command centre, touch-friendly action flow, app-like mobile navigation, clearer Learn/Practice/Progress IA, and desktop parent command-centre layouts.
+
+### Real-device mobile correction
+
+After iPhone/Safari review, the next UX baseline requires zero horizontal clipping, left-aligned mobile section headers, wrapped curriculum card copy, lighter cards, and no duplicated sticky CTA fighting the browser toolbar.
