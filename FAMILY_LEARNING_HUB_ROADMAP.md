@@ -23,7 +23,7 @@ Start with browser-local storage rather than accounts or server-side secrets:
 - `questionSets`: subject, level, tags, language, source, estimated time.
 - `attempts`: learner id, question set id, answers, score, completed at.
 - `progress`: XP, level, streak, badges, last practice date.
-- Current implementation starts with a responsive platform shell, learning-domain cards, curriculum-pack roadmap cards, browser-local learner profiles, attempts, best score, average score, level, daily streak, practice XP, per-learner subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, and subject quick-practice filters.
+- Current implementation starts with a responsive platform shell, learning-domain cards, curriculum-pack roadmap cards, browser-local learner profiles, attempts, best score, average score, level, daily streak, practice XP, per-learner subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, and subject, difficulty, and skill quick-practice filters.
 
 Export/import JSON is now available for browser-local progress so family progress is not easily lost. Silas, Sylvie, Kyle, and Cheryl can now keep separate local history buckets.
 
@@ -49,7 +49,7 @@ Export/import JSON is now available for browser-local progress so family progres
 10. Family leaderboard. *(Shipped for browser-local learner histories.)*
 11. Subject quick-practice filters before starting a quiz. *(Shipped for focused rounds from the existing question bank.)*
 12. Personalised next-step practice recommendations from learner history. *(Shipped for browser-local learner history.)*
-13. Topic/difficulty filters before starting a quiz. *(Started with difficulty-band quick practice filters: Foundation/Core/Stretch.)*
+13. Topic/difficulty filters before starting a quiz. *(Expanded with difficulty-band and skill/topic quick-practice filters powered by question metadata: Foundation/Core/Stretch plus number fluency, sound patterns, grammar, and logic patterns.)*
 
 
 ## Quality sequence
@@ -60,7 +60,7 @@ Export/import JSON is now available for browser-local progress so family progres
 ## Content sequence
 
 1. Keep existing Wilson's School 11+ quiz stable. *(Stable and expanded to 28 starter questions.)*
-2. Add metadata to quiz files without breaking current rendering.
+2. Add metadata to quiz files without breaking current rendering. *(Skill metadata now powers focused quick-practice filters.)*
 3. Split content by subject and age band.
 4. Add Chinese and English language toggles where useful. *(Roadmap now distinguishes Traditional HK/Cantonese from Simplified Mandarin/Pinyin.)*
 5. Add adult practice sets later.

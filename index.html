@@ -467,11 +467,13 @@
     </div>
     <div class="practice-panel" id="practice-panel" style="display:none">
       <h3>⚡ Quick practice</h3>
-      <p>Choose a subject and difficulty focus before starting, or keep the full mixed round.</p>
+      <p>Choose a subject, difficulty, and skill focus before starting, or keep the full mixed round.</p>
       <div class="practice-label">Subject focus</div>
       <div class="practice-options" id="practice-options"></div>
       <div class="practice-label">Difficulty band</div>
       <div class="practice-options" id="difficulty-options"></div>
+      <div class="practice-label">Skill focus</div>
+      <div class="practice-options" id="skill-options"></div>
       <div class="practice-note" id="practice-note">Mixed practice uses the full question bank.</div>
     </div>
     <div class="next-step-panel" id="next-step-panel" style="display:none">
@@ -562,6 +564,7 @@
     let allQuestions = [];
     let selectedSubject = 'Mixed';
     let selectedDifficulty = 'All';
+    let selectedSkill = 'All';
     let current = 0;
     let answers = [];
     let timerInterval = null;
@@ -1053,11 +1056,16 @@
       })];
     }
 
+    function skillBands() {
+      return ['All', ...Array.from(new Set(allQuestions.map(q => q.skill).filter(Boolean))).sort()];
+    }
+
     function practiceQuestionSet() {
       return allQuestions.filter(q => {
         const subjectMatch = selectedSubject === 'Mixed' || q.subject === selectedSubject;
         const difficultyMatch = selectedDifficulty === 'All' || q.difficulty === selectedDifficulty;
-        return subjectMatch && difficultyMatch;
+        const skillMatch = selectedSkill === 'All' || q.skill === selectedSkill;
+        return subjectMatch && difficultyMatch && skillMatch;
       });
     }
 
@@ -1065,6 +1073,7 @@
       const panel = document.getElementById('practice-panel');
       const options = document.getElementById('practice-options');
       const difficultyOptions = document.getElementById('difficulty-options');
+      const skillOptions = document.getElementById('skill-options');
       if (!allQuestions.length) {
         panel.style.display = 'none';
         return;
@@ -1078,6 +1087,10 @@
         const count = band === 'All' ? allQuestions.length : allQuestions.filter(q => q.difficulty === band).length;
         return `<button class="practice-chip ${band === selectedDifficulty ? 'active' : ''}" onclick="selectDifficulty('${escapeHTML(band)}')">${escapeHTML(band)} (${count})</button>`;
       }).join('');
+      skillOptions.innerHTML = skillBands().map(skill => {
+        const count = skill === 'All' ? allQuestions.length : allQuestions.filter(q => q.skill === skill).length;
+        return `<button class="practice-chip ${skill === selectedSkill ? 'active' : ''}" onclick="selectSkill('${escapeHTML(skill)}')">${escapeHTML(skill)} (${count})</button>`;
+      }).join('');
       applyPracticeSelection();
       renderNextStepRecommendation();
     }
@@ -1085,14 +1098,21 @@
     function selectPracticeSubject(subject) {
       const valid = practiceSubjects();
       selectedSubject = valid.includes(subject) ? subject : 'Mixed';
-      if (!practiceQuestionSet().length) selectedDifficulty = 'All';
+      if (!practiceQuestionSet().length) { selectedDifficulty = 'All'; selectedSkill = 'All'; }
       renderPracticeOptions();
     }
 
     function selectDifficulty(band) {
       const valid = difficultyBands();
       selectedDifficulty = valid.includes(band) ? band : 'All';
-      if (!practiceQuestionSet().length) selectedSubject = 'Mixed';
+      if (!practiceQuestionSet().length) { selectedSubject = 'Mixed'; selectedSkill = 'All'; }
+      renderPracticeOptions();
+    }
+
+    function selectSkill(skill) {
+      const valid = skillBands();
+      selectedSkill = valid.includes(skill) ? skill : 'All';
+      if (!practiceQuestionSet().length) { selectedSubject = 'Mixed'; selectedDifficulty = 'All'; }
       renderPracticeOptions();
     }
 
@@ -1100,7 +1120,7 @@
       questions = practiceQuestionSet();
       const count = questions.length;
       document.getElementById('info-questions').textContent = count;
-      const focusLabel = [selectedSubject === 'Mixed' ? 'Mixed' : selectedSubject, selectedDifficulty === 'All' ? null : selectedDifficulty].filter(Boolean).join(' · ');
+      const focusLabel = [selectedSubject === 'Mixed' ? 'Mixed' : selectedSubject, selectedDifficulty === 'All' ? null : selectedDifficulty, selectedSkill === 'All' ? null : selectedSkill].filter(Boolean).join(' · ');
       document.getElementById('info-subject').textContent = focusLabel === 'Mixed' ? (quizData?.meta?.subject || 'Mixed') : focusLabel;
       document.getElementById('practice-note').textContent = focusLabel === 'Mixed'
         ? `Mixed practice uses all ${count} questions.`
