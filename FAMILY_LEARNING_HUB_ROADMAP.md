@@ -51,6 +51,12 @@ Export/import JSON is now available for browser-local progress so family progres
 12. Personalised next-step practice recommendations from learner history. *(Shipped for browser-local learner history.)*
 13. Topic/difficulty filters before starting a quiz. *(Started with difficulty-band quick practice filters: Foundation/Core/Stretch.)*
 
+
+## Quality sequence
+
+1. Keep startup JavaScript deterministic: no duplicate state declarations or duplicated learner-note writes. *(Verified in run #7.)*
+2. Keep learner-facing copy generic where progress belongs to the selected learner, not only Silas. *(Shipped in run #7 for progress backup copy.)*
+
 ## Content sequence
 
 1. Keep existing Wilson's School 11+ quiz stable. *(Stable and expanded to 28 starter questions.)*
