@@ -279,7 +279,7 @@
     .mission-metric small { color: #bae6fd; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .leaderboard-panel, .badges-panel, .challenge-panel, .practice-panel, .next-step-panel, .domain-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .leaderboard-panel, .badges-panel, .challenge-panel, .practice-panel, .next-step-panel, .domain-panel, .flashcard-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -287,7 +287,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .leaderboard-panel h3, .badges-panel h3, .challenge-panel h3, .practice-panel h3, .next-step-panel h3, .domain-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .leaderboard-panel h3, .badges-panel h3, .challenge-panel h3, .practice-panel h3, .next-step-panel h3, .domain-panel h3, .flashcard-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -338,7 +338,7 @@
     .subject-bar { height: 8px; background: #eef2ff; border-radius: 999px; overflow: hidden; }
     .subject-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: inherit; }
     .subject-tip { color: var(--subtext); font-size: 0.78rem; margin-top: 5px; }
-    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p, .leaderboard-panel p, .challenge-panel p, .practice-panel p, .next-step-panel p, .domain-panel p { color: var(--subtext); line-height: 1.55; }
+    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p, .leaderboard-panel p, .challenge-panel p, .practice-panel p, .next-step-panel p, .domain-panel p, .flashcard-panel p { color: var(--subtext); line-height: 1.55; }
     .challenge-card { background: #fff; border: 1px solid #fde68a; border-radius: 14px; padding: 12px; }
     .challenge-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; color: var(--subtext); font-size: 0.78rem; font-weight: 800; }
     .challenge-question { font-weight: 900; color: var(--text); margin-bottom: 6px; }
@@ -360,6 +360,13 @@
     .curriculum-badges { display: flex; flex-wrap: wrap; gap: 6px; }
     .curriculum-badge { border-radius: 999px; background: #eef2ff; color: #4338ca; padding: 4px 8px; font-size: 0.72rem; font-weight: 900; }
     .curriculum-status { color: var(--primary); font-size: 0.73rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+    .flashcard-panel { margin-top: 14px; }
+    .flashcard-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .flashcard { border: 1px solid #fecdd3; background: linear-gradient(180deg, #fff7ed, #fff); border-radius: 16px; padding: 12px; min-height: 132px; display: grid; gap: 6px; align-content: start; }
+    .flashcard-term { font-size: 1.65rem; font-weight: 900; color: #9f1239; line-height: 1; }
+    .flashcard-canto { font-weight: 900; color: var(--text); }
+    .flashcard-meta { color: var(--subtext); font-size: 0.78rem; line-height: 1.35; }
+    .flashcard-prompt { color: #be123c; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
     .next-step-card { background: #fff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 12px; }
     .next-step-title { font-weight: 900; color: var(--primary); margin-bottom: 5px; }
     .next-step-meta { color: var(--subtext); font-size: 0.82rem; margin-bottom: 10px; line-height: 1.45; }
@@ -400,7 +407,7 @@
       .question-text { font-size: 1.1rem; }
       .option { padding: 13px 14px; font-size: 0.97rem; }
       .stats-grid, .badge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .domain-grid, .curriculum-grid, .mission-metrics { grid-template-columns: 1fr; }
+      .domain-grid, .curriculum-grid, .mission-metrics, .flashcard-grid { grid-template-columns: 1fr; }
       .family-row, .leaderboard-row { grid-template-columns: 1fr; text-align: left; }
       .family-stat, .family-focus, .leaderboard-score { text-align: left; }
     }
@@ -489,7 +496,7 @@
     .domain-card, .curriculum-card { border-radius: 22px; border: 1px solid var(--line); box-shadow: none; background: linear-gradient(180deg, #fff, #f8fafc); padding: 16px; }
     .domain-card.ready, .domain-card.next { border-color: rgba(79,70,229,.20); }
     .domain-icon { width: 42px; height: 42px; border-radius: 16px; display:grid; place-items:center; background:#eef2ff; margin-bottom: 10px; }
-    .practice-panel, .next-step-panel, .stats-panel, .badges-panel, .parent-panel, .leaderboard-panel, .subject-panel, .history-panel, .data-panel, .domain-panel, .learner-panel, .challenge-panel { background: transparent; border: 0; box-shadow: none; padding: 0; margin: 0; }
+    .practice-panel, .next-step-panel, .stats-panel, .badges-panel, .parent-panel, .leaderboard-panel, .subject-panel, .history-panel, .data-panel, .domain-panel, .learner-panel, .challenge-panel, .flashcard-panel { background: transparent; border: 0; box-shadow: none; padding: 0; margin: 0; }
     .practice-options, .learner-options, .data-actions { gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; scrollbar-width: none; }
     .practice-chip, .learner-chip { min-height: 42px; white-space: nowrap; box-shadow: 0 6px 16px rgba(79,70,229,.08); }
     .start-cta-sticky { position: sticky; bottom: 88px; z-index: 12; margin-top: 14px; padding: 10px; border-radius: 24px; background: rgba(255,255,255,.78); border: 1px solid rgba(255,255,255,.78); box-shadow: 0 16px 50px rgba(15,23,42,.16); backdrop-filter: blur(16px); }
@@ -504,6 +511,7 @@
       .section-card.wide { grid-column: 1 / -1; }
       .domain-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .curriculum-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flashcard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .start-cta-sticky { bottom: 20px; max-width: 420px; margin-left: auto; }
     }
     @media (min-width: 1080px) {
@@ -512,6 +520,7 @@
       .section-card.wide { grid-column: span 2; }
       .section-card.rail { grid-column: 3; }
       .domain-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .flashcard-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     }
     @media (max-width: 480px) {
       .card { max-width: 100%; }
@@ -527,7 +536,7 @@
     html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
     .app-shell, #start-screen, main, .hero-v2, .app-grid, .section-card, .command-card, .today-hero { min-width: 0; }
-    .section-card *, .command-card *, .today-hero *, .domain-card *, .curriculum-card * { min-width: 0; overflow-wrap: anywhere; word-break: normal; }
+    .section-card *, .command-card *, .today-hero *, .domain-card *, .curriculum-card *, .flashcard * { min-width: 0; overflow-wrap: anywhere; word-break: normal; }
     .section-card { color: var(--ink); }
     .section-head { text-align: left; }
     .section-head > div:first-child { min-width: 0; flex: 1 1 auto; }
@@ -813,6 +822,7 @@
               <div class="section-icon">🧱</div>
             </div>
             <div class="domain-panel" id="curriculum-panel"><div class="curriculum-grid" id="curriculum-grid"></div></div>
+            <div class="flashcard-panel" id="flashcard-panel"><h3>🧧 Traditional HK Chinese starter cards</h3><p>A first real curriculum slice: family words with Traditional characters, Jyutping, Cantonese prompts, and English meaning.</p><div class="flashcard-grid" id="flashcard-grid"></div></div>
           </article>
 
           <article class="section-card rail" id="progress">
@@ -900,9 +910,16 @@
       { id: 'life-uk', icon: '🇬🇧', title: 'Life in the UK', audience: 'Kyle + Cheryl', status: 'Mock test planned', state: 'planned', description: '24-question, 45-minute, 75% pass mock tests plus weak-topic review.' },
       { id: 'english', icon: '✍️', title: 'English Mastery', audience: 'Family', status: 'Planned', state: 'planned', description: 'Grammar, comprehension, writing, vocabulary, and reading confidence.' }
     ];
+    const HK_CHINESE_FLASHCARDS = [
+      { traditional: '爸爸', jyutping: 'baa4 baa1', canto: 'baa baa', english: 'Dad / father', prompt: 'Say it to Kyle' },
+      { traditional: '媽媽', jyutping: 'maa4 maa1', canto: 'maa maa', english: 'Mum / mother', prompt: 'Say it to Cheryl' },
+      { traditional: '哥哥', jyutping: 'go4 go1', canto: 'go go', english: 'Older brother', prompt: 'Silas can teach Sylvie' },
+      { traditional: '妹妹', jyutping: 'mui6 mui2', canto: 'mui mui', english: 'Younger sister', prompt: 'Sylvie family word' },
+      { traditional: '多謝', jyutping: 'do1 ze6', canto: 'dor jeh', english: 'Thank you', prompt: 'Use after help' }
+    ];
     const CURRICULUM_PACKS = [
       { title: 'Wilson 11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Silas', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.' },
-      { title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'Family', activity: 'Flashcards + listen/repeat', readiness: 'Next', next: 'Start with family words, colours, numbers, greetings, Jyutping, and audio prompts.' },
+      { title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'Family', activity: 'Flashcards + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.' },
       { title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'Family', activity: 'Flashcards + matching', readiness: 'Next', next: 'Pair Simplified characters with Pinyin, tone marks, and Traditional equivalents.' },
       { title: 'Maths numbers foundation', domain: 'Maths Foundation', language: 'English', learners: 'Silas + Sylvie', activity: 'Short adaptive drills', readiness: 'Next', next: 'Add number bonds, counting, place value, and times-table micro practice.' },
       { title: 'Life in the UK mock mode', domain: 'Life in the UK', language: 'English', learners: 'Kyle + Cheryl', activity: '24Q / 45m mock test', readiness: 'Planned', next: 'Add official-topic taxonomy, pass mark display, and timed mock-test shell.' },
@@ -1326,6 +1343,19 @@
       `).join('');
     }
 
+    function renderHKChineseFlashcards() {
+      const grid = document.getElementById('flashcard-grid');
+      if (!grid) return;
+      grid.innerHTML = HK_CHINESE_FLASHCARDS.map(card => `
+        <article class="flashcard">
+          <div class="flashcard-term">${escapeHTML(card.traditional)}</div>
+          <div class="flashcard-canto">${escapeHTML(card.canto)}</div>
+          <div class="flashcard-meta">Jyutping: ${escapeHTML(card.jyutping)}<br>${escapeHTML(card.english)}</div>
+          <div class="flashcard-prompt">${escapeHTML(card.prompt)}</div>
+        </article>
+      `).join('');
+    }
+
     function renderCurriculumPacks() {
       const grid = document.getElementById('curriculum-grid');
       if (!grid) return;
@@ -1487,6 +1517,7 @@
         document.getElementById('info-time').textContent = Math.round(data.meta.timeLimit / 60);
         renderLearningDomains();
         renderCurriculumPacks();
+        renderHKChineseFlashcards();
         renderPracticeOptions();
         renderDailyChallenge();
         renderHistory();

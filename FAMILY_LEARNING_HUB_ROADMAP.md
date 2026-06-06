@@ -31,7 +31,7 @@ Export/import JSON is now available for browser-local progress so family progres
 
 1. Responsive app shell that no longer presents as only Silas's quiz. *(Shipped with the Family Learning Hub platform hero.)*
 2. Learning-domain cards for 11+ School Prep, Traditional HK Chinese, Simplified Mandarin Chinese, Maths Foundation, Primary Learning, French, Life in the UK, and English Mastery. *(Shipped as explicit curriculum placeholders; only 11+ currently has live questions.)*
-3. Curriculum-pack data model for topics, levels, skills, languages, activities, and readiness state. *(Started with visible curriculum-pack roadmap cards for Wilson 11+, Traditional HK Chinese, Simplified Mandarin, Maths Foundation, Life in the UK, and French.)*
+3. Curriculum-pack data model for topics, levels, skills, languages, activities, and readiness state. *(Started with visible curriculum-pack roadmap cards for Wilson 11+, Traditional HK Chinese, Simplified Mandarin, Maths Foundation, Life in the UK, and French; Traditional HK Chinese now has the first visible flashcard slice.)*
 4. Domain-specific learner journeys and parent planning view.
 5. Content authoring workflow for adding validated packs without editing the whole app shell.
 
@@ -63,8 +63,13 @@ Export/import JSON is now available for browser-local progress so family progres
 1. Keep existing Wilson's School 11+ quiz stable. *(Stable and expanded to 28 starter questions.)*
 2. Add metadata to quiz files without breaking current rendering. *(Skill metadata now powers focused quick-practice filters.)*
 3. Split content by subject and age band.
-4. Add Chinese and English language toggles where useful. *(Roadmap now distinguishes Traditional HK/Cantonese from Simplified Mandarin/Pinyin.)*
+4. Add Chinese and English language toggles where useful. *(Roadmap now distinguishes Traditional HK/Cantonese from Simplified Mandarin/Pinyin, and the first Traditional HK family-word flashcards are visible in the app.)*
 5. Add adult practice sets later.
+
+
+## Content-pack activation
+
+The first non-11+ content slice is now visible in the curriculum area: Traditional HK Chinese family-word flashcards for 爸爸, 媽媽, 哥哥, 妹妹, and 多謝, with Jyutping, simple Cantonese-style romanisation prompts, English meaning, and family-use prompts. Next content-pack work should move this inline seed into a reusable JSON pack shape before it grows too large.
 
 ## Security and deployment notes
 
