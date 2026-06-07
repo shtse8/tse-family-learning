@@ -14,6 +14,7 @@ for (const marker of [
   'serviceWorker',
   'Set up today’s mission',
   'learningquest-onboarding-v1',
+  'learner-1',
   'overflow-x: hidden'
 ]) {
   if (!html.includes(marker)) throw new Error(`Missing app marker: ${marker}`);

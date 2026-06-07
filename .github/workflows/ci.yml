@@ -20,7 +20,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Install dependencies
+        run: npm install
       - name: Validate static app
         run: npm test
       - name: Build
         run: npm run build
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Mobile app shell smoke test
+        run: npm run smoke:mobile

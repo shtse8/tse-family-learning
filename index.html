@@ -1015,7 +1015,7 @@
 
     function activeLearnerId() {
       const saved = localStorage.getItem(LEARNER_KEY);
-      return LEARNERS.some(learner => learner.id === saved) ? saved : 'silas';
+      return LEARNERS.some(learner => learner.id === saved) ? saved : 'learner-1';
     }
 
     function activeLearner() {
@@ -1593,6 +1593,7 @@
     }
 
     // Load questions
+    renderOnboarding();
     renderLearners();
     fetch('questions.json?v=' + Date.now())
       .then(r => r.json())
@@ -1606,6 +1607,7 @@
         renderCurriculumPacks();
         renderHKChineseFlashcards();
         renderPracticeOptions();
+        renderOnboarding();
         renderDailyChallenge();
         renderHistory();
       })
