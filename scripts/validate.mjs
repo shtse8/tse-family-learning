@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js'];
+const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile'];
 for (const file of requiredFiles) {
   if (!fs.existsSync(file)) throw new Error(`Missing required file: ${file}`);
 }
@@ -46,3 +46,7 @@ if (manifest.display !== 'standalone') throw new Error('PWA manifest must use st
 if (!manifest.name || !manifest.start_url) throw new Error('PWA manifest missing name/start_url');
 
 console.log(`Validated LearningQuest static app with ${data.questions.length} questions.`);
+
+const serverLog = fs.readFileSync('server.js', 'utf8');
+if (serverLog.includes('Tse Family')) throw new Error('server.js still contains legacy family-specific branding');
+if (!serverLog.includes('LearningQuest running on port')) throw new Error('server.js missing LearningQuest startup marker');

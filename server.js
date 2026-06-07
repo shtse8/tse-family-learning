@@ -35,5 +35,5 @@ http.createServer((req, res) => {
     res.end(data);
   });
 }).listen(PORT, () => {
-  console.log(`🌿 Tse Family Learning Hub running on port ${PORT}`);
+  console.log(`📱 LearningQuest running on port ${PORT}`);
 });
