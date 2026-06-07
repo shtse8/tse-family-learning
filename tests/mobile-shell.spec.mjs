@@ -33,6 +33,7 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await page.locator('#hk-matching-grid .matching-card').first().getByRole('button', { name: 'Dad / father' }).tap();
   await expect(page.locator('#hk-matching-grid .matching-card').first().getByText('✅ Matched')).toBeVisible();
   await expect(page.locator('#hk-matching-grid .matching-card').first().getByText('1/4 matched · 1 tried')).toBeVisible();
+  await expect(page.locator('#history-panel').getByText('Traditional HK Chinese matching')).toBeVisible();
   await page.locator('#mandarin-matching-grid .matching-card').first().getByRole('button', { name: 'Dad / father' }).tap();
   await expect(page.locator('#mandarin-matching-grid .matching-card').first().getByText('✅ Matched')).toBeVisible();
 
@@ -46,6 +47,18 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
   expect(state.matchingPracticeScores.hkChinese).toEqual({ correct: 1, attempted: 1, total: 4 });
   expect(state.matchingPracticeScores.mandarin).toEqual({ correct: 1, attempted: 1, total: 4 });
+  expect(state.latestMatchingProgress).toMatchObject({
+    activityType: 'matching-practice',
+    matchingPackKey: 'mandarin',
+    practiceMode: 'matching-practice',
+    correct: 1,
+    total: 4,
+    percent: 25,
+    attempted: 1
+  });
+  const savedHistory = await page.evaluate(() => JSON.parse(localStorage.getItem('learningquest-history-v1-learner-1')));
+  expect(savedHistory[0]).toMatchObject({ activityType: 'matching-practice', matchingPackKey: 'mandarin', correct: 1, total: 4, percent: 25 });
+  expect(savedHistory[1]).toMatchObject({ activityType: 'matching-practice', matchingPackKey: 'hkChinese', correct: 1, total: 4, percent: 25 });
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
