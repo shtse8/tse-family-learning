@@ -29,6 +29,12 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.getByRole('heading', { name: 'Simplified Mandarin matching practice' })).toBeVisible();
   await expect(page.locator('#hk-matching-grid .matching-card').first().getByText('Dad / father')).toBeVisible();
   await expect(page.locator('#mandarin-matching-grid .matching-card').first().getByText('bàba')).toBeVisible();
+  await expect(page.locator('#hk-matching-grid .matching-card').first().getByText('Tap the meaning that matches this term.')).toBeVisible();
+  await page.locator('#hk-matching-grid .matching-card').first().getByRole('button', { name: 'Dad / father' }).tap();
+  await expect(page.locator('#hk-matching-grid .matching-card').first().getByText('✅ Matched')).toBeVisible();
+  await expect(page.locator('#hk-matching-grid .matching-card').first().getByText('1/4 matched · 1 tried')).toBeVisible();
+  await page.locator('#mandarin-matching-grid .matching-card').first().getByRole('button', { name: 'Dad / father' }).tap();
+  await expect(page.locator('#mandarin-matching-grid .matching-card').first().getByText('✅ Matched')).toBeVisible();
 
   const state = await page.evaluate(() => window.__learningQuestTestState);
   expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(2);
@@ -38,6 +44,8 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(state.recommendedCurriculumTitles).toContain('Simplified Mandarin basics');
   expect(state.recommendedProgressionPaths.join(' | ')).toContain('Use matching practice, then move into listening prompts');
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
+  expect(state.matchingPracticeScores.hkChinese).toEqual({ correct: 1, attempted: 1, total: 4 });
+  expect(state.matchingPracticeScores.mandarin).toEqual({ correct: 1, attempted: 1, total: 4 });
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);

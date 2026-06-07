@@ -374,6 +374,14 @@
     .matching-prompt { color: #166534; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
     .matching-term { font-size: 1.35rem; font-weight: 900; color: #14532d; }
     .matching-answer { color: var(--text); font-weight: 800; }
+    .matching-options { display: grid; gap: 6px; }
+    .matching-option { border: 1px solid #bbf7d0; background: #fff; color: #14532d; border-radius: 10px; padding: 8px 10px; font-weight: 800; text-align: left; cursor: pointer; transition: all 0.2s; }
+    .matching-option:hover { border-color: #22c55e; background: #f0fdf4; transform: translateY(-1px); }
+    .matching-option.correct { border-color: #16a34a; background: #dcfce7; color: #166534; }
+    .matching-option.incorrect { border-color: #fb7185; background: #fff1f2; color: #be123c; }
+    .matching-option:disabled { cursor: default; transform: none; }
+    .matching-score { display: inline-flex; align-items: center; gap: 6px; width: fit-content; border-radius: 999px; background: #dcfce7; color: #166534; padding: 5px 9px; font-size: 0.74rem; font-weight: 900; }
+    .matching-feedback { min-height: 1.2em; color: #166534; font-size: 0.78rem; font-weight: 900; }
     .matching-meta { color: var(--subtext); font-size: 0.78rem; line-height: 1.35; }
     .flashcard-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
     .flashcard { border: 1px solid #fecdd3; background: linear-gradient(180deg, #fff7ed, #fff); border-radius: 16px; padding: 12px; min-height: 132px; display: grid; gap: 6px; align-content: start; }
@@ -961,6 +969,7 @@
     let mandarinPack = null;
     let mandarinFlashcards = [];
     let mandarinPackError = null;
+    const matchingPracticeScores = { hkChinese: {}, mandarin: {} };
 
     function contentPackDefinition(id) {
       return contentPackRegistry.find(pack => pack.id === id) || FALLBACK_CONTENT_PACK_REGISTRY.find(pack => pack.id === id);
@@ -1609,7 +1618,29 @@
       }));
     }
 
-    function renderMatchingPractice(gridId, cards, termField, soundField, unavailableMessage) {
+    function matchingAnswerOptions(matchCards, index) {
+      if (!matchCards.length) return [];
+      return matchCards.map(card => card.answer).slice(index).concat(matchCards.map(card => card.answer).slice(0, index));
+    }
+
+    function matchingPracticeScore(packKey, total) {
+      const attempts = Object.values(matchingPracticeScores[packKey] || {});
+      const correct = attempts.filter(Boolean).length;
+      return { correct, attempted: attempts.length, total };
+    }
+
+    function matchingPracticeSummary(packKey, total) {
+      const score = matchingPracticeScore(packKey, total);
+      return `${score.correct}/${score.total} matched · ${score.attempted} tried`;
+    }
+
+    function recordMatchingAnswer(packKey, cardIndex, selectedAnswer, expectedAnswer) {
+      matchingPracticeScores[packKey][cardIndex] = selectedAnswer === expectedAnswer;
+      renderChineseMatchingPractice();
+      updateRecommendedCurriculumTestState();
+    }
+
+    function renderMatchingPractice(gridId, packKey, cards, termField, soundField, unavailableMessage) {
       const grid = document.getElementById(gridId);
       if (!grid) return;
       if (!cards.length) {
@@ -1621,19 +1652,31 @@
           </article>`;
         return;
       }
-      grid.innerHTML = matchingPracticeCards(cards, termField, soundField).map(card => `
-        <article class="matching-card">
-          <div class="matching-prompt">Pair ${card.index}: match term → meaning</div>
-          <div class="matching-term">${escapeHTML(card.term)}</div>
-          <div class="matching-answer">${escapeHTML(card.answer)}</div>
-          <div class="matching-meta">Sound clue: ${escapeHTML(card.sound)}<br>${escapeHTML(card.prompt)}</div>
-        </article>
-      `).join('');
+      const matchCards = matchingPracticeCards(cards, termField, soundField);
+      grid.innerHTML = matchCards.map((card, optionIndex) => {
+        const recorded = matchingPracticeScores[packKey][card.index];
+        const answered = typeof recorded === 'boolean';
+        const options = matchingAnswerOptions(matchCards, optionIndex);
+        return `
+          <article class="matching-card" data-pack="${escapeHTML(packKey)}" data-match-index="${card.index}">
+            <div class="matching-prompt">Pair ${card.index}: choose the meaning</div>
+            <div class="matching-term">${escapeHTML(card.term)}</div>
+            <div class="matching-options" role="group" aria-label="Meaning options for ${escapeHTML(card.term)}">
+              ${options.map(option => `
+                <button type="button" class="matching-option ${answered && option === card.answer ? 'correct' : ''} ${answered && option !== card.answer && recorded === false ? 'incorrect' : ''}" data-answer="${escapeHTML(option)}" data-expected="${escapeHTML(card.answer)}" onclick="recordMatchingAnswer('${packKey}', ${card.index}, this.dataset.answer, this.dataset.expected)" ${answered ? 'disabled' : ''}>${escapeHTML(option)}</button>
+              `).join('')}
+            </div>
+            <div class="matching-feedback">${answered ? (recorded ? '✅ Matched' : `↪ Correct answer: ${escapeHTML(card.answer)}`) : 'Tap the meaning that matches this term.'}</div>
+            <div class="matching-score">${escapeHTML(matchingPracticeSummary(packKey, matchCards.length))}</div>
+            <div class="matching-meta">Sound clue: ${escapeHTML(card.sound)}<br>${escapeHTML(card.prompt)}</div>
+          </article>
+        `;
+      }).join('');
     }
 
     function renderChineseMatchingPractice() {
-      renderMatchingPractice('hk-matching-grid', hkChineseFlashcards, 'traditional', 'jyutping', hkChinesePackError);
-      renderMatchingPractice('mandarin-matching-grid', mandarinFlashcards, 'simplified', 'pinyin', mandarinPackError);
+      renderMatchingPractice('hk-matching-grid', 'hkChinese', hkChineseFlashcards, 'traditional', 'jyutping', hkChinesePackError);
+      renderMatchingPractice('mandarin-matching-grid', 'mandarin', mandarinFlashcards, 'simplified', 'pinyin', mandarinPackError);
     }
 
     function updateRecommendedCurriculumTestState() {
@@ -1641,7 +1684,8 @@
         ...(window.__learningQuestTestState || {}),
         recommendedCurriculumTitles: curriculumPacks().filter(pack => pack.recommended).map(pack => pack.title),
         recommendedProgressionPaths: curriculumPacks().filter(pack => pack.recommended).map(pack => progressionPathText(pack)),
-        matchingPracticeCounts: { hkChinese: hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0, mandarin: mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0 }
+        matchingPracticeCounts: { hkChinese: hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0, mandarin: mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0 },
+        matchingPracticeScores: { hkChinese: matchingPracticeScore('hkChinese', hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0), mandarin: matchingPracticeScore('mandarin', mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0) }
       };
     }
 
