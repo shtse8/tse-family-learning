@@ -6,9 +6,13 @@
     "build": "echo 'Static site ready'",
     "validate": "node scripts/validate.mjs",
     "test": "npm run validate",
+    "smoke:mobile": "playwright test",
     "start": "node server.js"
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0"
   }
 }
