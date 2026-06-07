@@ -84,3 +84,21 @@ Kyle flagged the current experience as not modern/responsive enough. The platfor
 ### Real-device mobile correction
 
 After iPhone/Safari review, the next UX baseline requires zero horizontal clipping, left-aligned mobile section headers, wrapped curriculum card copy, lighter cards, and no duplicated sticky CTA fighting the browser toolbar.
+
+
+## Public product foundation — 2026-06-07
+
+Kyle requested a shift from a family-specific prototype to a public-facing, production-ready, commercial-grade HTML5 mobile app. The next architecture direction is user-centric: reusable learner profiles, coach/parent insights, curriculum packs, PWA/mobile-native behaviour, CI governance, and no hardcoded private family names in the visible product shell.
+
+Shipped first foundation slice:
+- Renamed visible app shell to LearningQuest.
+- Generalized learner profiles and copy away from private family members.
+- Added PWA manifest and service worker for mobile app-like launch/offline caching.
+- Added GitHub Actions CI validation for HTML/script syntax, question schema, PWA files, and private-name regression checks.
+
+Next slices:
+1. Add onboarding: create learner profile, age band, goal, and preferred curriculum.
+2. Split inline JS/CSS/data into typed app modules and JSON content packs.
+3. Add mobile-native mission mode as the default first screen.
+4. Add accessibility, Playwright mobile no-overflow tests, and branch protection required checks.
+5. Add SaaS-ready auth/storage/backend later; do not embed secrets in public static JS.

@@ -1,6 +1,6 @@
-# Family Learning Hub
+# LearningQuest
 
-A responsive multi-subject learning platform foundation for Tse family practice. The first live activity is a Wilson's School 11+ style starter bank, and the product shell now models future French, Life in the UK, English, Maths Foundation, Traditional HK Chinese, Simplified Mandarin, primary, and secondary learning domains.
+A responsive, mobile-native HTML5 learning platform foundation for personalised practice. The first live activity is a school-prep starter bank, and the product shell now models reusable curriculum packs for languages, exams, Maths, English, primary learning, and adult learning.
 
 ## Current app
 
@@ -27,3 +27,8 @@ Then verify `/`, `/questions.json`, and `/FAMILY_LEARNING_HUB_ROADMAP.md`, inclu
 - Run #9 starts the mobile-first UI/UX rebuild: app-like Today command centre, bottom mobile navigation, clearer Learn/Practice/Progress sections, and a desktop command-centre layout while retaining the existing quiz/progress engine.
 - Run #10 fixes real-device mobile clipping/overflow after Kyle review: stricter no-horizontal-overflow rules, left-aligned mobile sections, wrapped curriculum text, lighter cards, safer bottom nav, and hidden sticky duplicate CTA on small screens.
 - Run #8 keeps progress backup import discoverable on a fresh browser and removes a duplicate quick-practice filter return.
+
+
+## Public / commercial-grade direction
+
+This app is being generalized from a family prototype into a public-facing product foundation. The current baseline avoids hardcoded private learner names in the UI, includes a PWA manifest/service worker for app-like mobile launch, and adds GitHub Actions CI for static validation.

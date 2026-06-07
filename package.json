@@ -1,9 +1,11 @@
 {
   "name": "tse-family-learning",
   "version": "1.0.0",
-  "description": "謝家 Family Learning Hub — Wilson's School 11+ prep & family education",
+  "description": "LearningQuest — mobile-native HTML5 learning app for personalised practice",
   "scripts": {
     "build": "echo 'Static site ready'",
+    "validate": "node scripts/validate.mjs",
+    "test": "npm run validate",
     "start": "node server.js"
   },
   "engines": {

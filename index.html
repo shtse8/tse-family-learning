@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Family Learning Hub 🌟</title>
+  <title>LearningQuest — Mobile Learning App</title>
+  <meta name="description" content="A mobile-native HTML5 learning app for personalised practice, learner progress, and curriculum missions." />
+  <meta name="theme-color" content="#5b6cff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="LearningQuest" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <style>
     :root {
       --primary: #6c63ff;
@@ -730,15 +736,15 @@
   <!-- Start Screen -->
   <div id="start-screen">
     <div class="app-shell">
-      <nav class="app-topbar" aria-label="Family Learning Hub navigation">
+      <nav class="app-topbar" aria-label="LearningQuest navigation">
         <div class="brand-lockup">
           <div class="brand-mark">學</div>
           <div>
-            <div class="brand-title">Tse Family</div>
-            <div class="brand-subtitle">Learning Hub</div>
+            <div class="brand-title">LearningQuest</div>
+            <div class="brand-subtitle">Mobile Learning</div>
           </div>
         </div>
-        <div class="topbar-pill">Mobile-first platform v2</div>
+        <div class="topbar-pill">Public mobile app foundation</div>
       </nav>
 
       <div class="mobile-tabs" aria-label="Mobile app sections">
@@ -751,9 +757,9 @@
       <main>
         <section class="hero-v2" id="today">
           <div class="today-hero">
-            <div class="hero-eyebrow">🏡 Modern family learning OS</div>
-            <h1>Today’s learning, beautifully focused.</h1>
-            <p id="quiz-desc">A mobile-first command centre for Silas, Sylvie, Kyle, and Cheryl — covering 11+, languages, Life in the UK, Maths, English, and family progress without feeling like a cramped quiz page.</p>
+            <div class="hero-eyebrow">📱 Mobile-native learning app</div>
+            <h1>Your learning day, beautifully focused.</h1>
+            <p id="quiz-desc">A mobile-first learning app for any learner — combining guided missions, adaptive practice, progress insights, and curriculum packs without feeling like a cramped quiz page.</p>
             <div class="hero-actions">
               <button class="hero-primary" onclick="startQuiz()">Start smart practice →</button>
               <button class="hero-secondary" onclick="document.getElementById('learn').scrollIntoView({behavior:'smooth'})">Explore learning paths</button>
@@ -765,7 +771,7 @@
             <p>Pick a learner, choose the right path, then start the smallest useful activity. Progress remains browser-local for now.</p>
             <div class="mission-grid-v2">
               <div class="metric-tile"><b>8</b><span>domains</span></div>
-              <div class="metric-tile"><b>4</b><span>learners</span></div>
+              <div class="metric-tile"><b>∞</b><span>learners</span></div>
               <div class="metric-tile"><b id="info-questions">-</b><span>questions</span></div>
             </div>
             <div class="mission-grid-v2">
@@ -776,7 +782,7 @@
             <div class="learner-strip learner-panel">
               <div class="section-kicker">Active learner</div>
               <div class="learner-options" id="learner-options"></div>
-              <div class="learner-note" id="learner-note">Progress is saved separately for each family learner on this browser.</div>
+              <div class="learner-note" id="learner-note">Progress is saved separately for each learner profile on this browser.</div>
             </div>
           </aside>
         </section>
@@ -784,7 +790,7 @@
         <section class="app-grid">
           <article class="section-card wide" id="learn">
             <div class="section-head">
-              <div><div class="section-kicker">Learn</div><h2>Learning paths, not a long list of widgets</h2><p>Domains are grouped as family-ready learning paths so the site feels like a modern platform instead of a single quiz with features bolted on.</p></div>
+              <div><div class="section-kicker">Learn</div><h2>Learning paths, not a worksheet dump</h2><p>Domains are grouped as reusable learning paths so the app can serve many learners, subjects, ages, and goals.</p></div>
               <div class="section-icon">🧭</div>
             </div>
             <div class="domain-panel" id="domain-panel"><div class="domain-grid" id="domain-grid"></div></div>
@@ -818,27 +824,27 @@
 
           <article class="section-card wide" id="curriculum">
             <div class="section-head">
-              <div><div class="section-kicker">Curriculum architecture</div><h2>Multi-domain packs for the whole family</h2><p>French, Life in the UK, Chinese, Maths, English, and school prep now sit inside a clearer pack system.</p></div>
+              <div><div class="section-kicker">Curriculum architecture</div><h2>Multi-domain packs for every learner</h2><p>Languages, exams, school skills, adult learning, and primary practice now sit inside a clearer pack system.</p></div>
               <div class="section-icon">🧱</div>
             </div>
             <div class="domain-panel" id="curriculum-panel"><div class="curriculum-grid" id="curriculum-grid"></div></div>
-            <div class="flashcard-panel" id="flashcard-panel"><h3>🧧 Traditional HK Chinese starter cards</h3><p>A first real curriculum slice: family words with Traditional characters, Jyutping, Cantonese prompts, and English meaning.</p><div class="flashcard-grid" id="flashcard-grid"></div></div>
+            <div class="flashcard-panel" id="flashcard-panel"><h3>🧧 Traditional HK Chinese starter cards</h3><p>A first real curriculum slice: Traditional characters, Jyutping, Cantonese prompts, and English meaning.</p><div class="flashcard-grid" id="flashcard-grid"></div></div>
           </article>
 
           <article class="section-card rail" id="progress">
             <div class="section-head">
-              <div><div class="section-kicker">Progress</div><h2>Parent command rail</h2><p>Family progress stays visible without overwhelming the first mobile screen.</p></div>
+              <div><div class="section-kicker">Progress</div><h2>Coach command rail</h2><p>Progress insights stay visible without overwhelming the first mobile screen.</p></div>
               <div class="section-icon">📈</div>
             </div>
-            <div class="parent-panel" id="parent-panel" style="display:none"><h3>👨‍👩‍👧‍👦 Parent overview</h3><p>Quick family view across all learner profiles saved on this browser.</p><div class="family-list" id="family-list"></div></div>
-            <div class="leaderboard-panel" id="leaderboard-panel" style="display:none"><h3>🏁 Family leaderboard</h3><p>Ranks saved learner profiles on this browser by average score, then practice XP.</p><div class="leaderboard-list" id="leaderboard-list"></div></div>
+            <div class="parent-panel" id="parent-panel" style="display:none"><h3>🧑‍🏫 Coach overview</h3><p>Quick view across all learner profiles saved on this browser.</p><div class="family-list" id="family-list"></div></div>
+            <div class="leaderboard-panel" id="leaderboard-panel" style="display:none"><h3>🏁 Learner leaderboard</h3><p>Ranks saved learner profiles on this browser by average score, then practice XP.</p><div class="leaderboard-list" id="leaderboard-list"></div></div>
             <div class="subject-panel" id="subject-panel" style="display:none"><h3>🎯 Subject dashboard</h3><p>Shows this learner's recent strengths and focus areas from saved quiz history.</p><div class="subject-list" id="subject-list"></div></div>
             <div class="history-panel" id="history-panel" style="display:none"><h3>📈 Recent progress</h3><div class="history-list" id="history-list"></div></div>
             <div class="data-panel" id="data-panel" style="display:none"><h3>💾 Progress backup</h3><p>Export appears after a saved round; import works anytime for the selected learner.</p><div class="data-actions"><button class="btn btn-secondary" onclick="exportProgress()">Export</button><button class="btn btn-secondary" onclick="document.getElementById('import-progress').click()">Import</button><input class="file-input" id="import-progress" type="file" accept="application/json,.json" onchange="importProgress(event)" /></div></div>
           </article>
         </section>
 
-        <div class="start-cta-sticky"><button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.08rem; padding: 16px 28px; width:100%;">🚀 Start today's practice</button></div>
+        <div class="start-cta-sticky"><button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.08rem; padding: 16px 28px; width:100%;">🚀 Start today's mission</button></div>
       </main>
     </div>
   </div>
@@ -892,37 +898,43 @@
     let timerInterval = null;
     let timeLeft = 0;
     let answered = false;
-    const HISTORY_KEY = 'tse-family-learning-history-v1';
-    const LEARNER_KEY = 'tse-family-learning-active-learner-v1';
+    const HISTORY_KEY = 'learningquest-history-v1';
+    const LEARNER_KEY = 'learningquest-active-learner-v1';
+    const APP_PROFILE = {
+      product: 'LearningQuest',
+      tagline: 'Mobile-native practice for every learner',
+      storagePrefix: 'learningquest'
+    };
+
     const LEARNERS = [
-      { id: 'silas', name: 'Silas', emoji: '🦊', note: "Wilson's 11+ practice" },
-      { id: 'sylvie', name: 'Sylvie', emoji: '🌸', note: 'Early-years practice placeholder' },
-      { id: 'kyle', name: 'Kyle', emoji: '👨', note: 'Adult learning placeholder' },
-      { id: 'cheryl', name: 'Cheryl', emoji: '👩', note: 'Adult learning placeholder' }
+      { id: 'learner-1', name: 'Learner 1', emoji: '🦊', note: 'School practice profile' },
+      { id: 'learner-2', name: 'Learner 2', emoji: '🌸', note: 'Early-years practice profile' },
+      { id: 'learner-3', name: 'Learner 3', emoji: '🧑', note: 'Adult learning profile' },
+      { id: 'coach-demo', name: 'Coach Demo', emoji: '🧑‍🏫', note: 'Coach and parent review profile' }
     ];
     const LEARNING_DOMAINS = [
-      { id: 'eleven-plus', icon: '🎓', title: '11+ School Prep', audience: 'Silas', status: 'Live practice', state: 'ready', description: 'English, Maths, Verbal Reasoning, and Phonics starter bank.' },
+      { id: 'eleven-plus', icon: '🎓', title: '11+ School Prep', audience: 'Young learners', status: 'Live practice', state: 'ready', description: 'English, Maths, Verbal Reasoning, and Phonics starter bank.' },
       { id: 'chinese-hk', icon: '繁', title: 'Chinese · Traditional HK', audience: 'Family', status: 'Roadmap slice', state: 'next', description: 'Traditional Chinese, Cantonese prompts, Jyutping, and Hong Kong usage.' },
       { id: 'chinese-cn', icon: '简', title: 'Chinese · Simplified Mandarin', audience: 'Family', status: 'Roadmap slice', state: 'next', description: 'Simplified Chinese, Mandarin Pinyin, pronunciation, and Mainland usage.' },
-      { id: 'maths-foundation', icon: '🧮', title: 'Maths Foundation', audience: 'Silas + Sylvie', status: 'Roadmap slice', state: 'next', description: 'Numbers, bonds, times tables, word problems, and confidence drills.' },
-      { id: 'primary', icon: '📚', title: 'Primary Learning', audience: 'Silas + Sylvie', status: 'Planned', state: 'planned', description: 'Reading, spelling, science, school skills, and age-banded practice.' },
+      { id: 'maths-foundation', icon: '🧮', title: 'Maths Foundation', audience: 'Primary learners', status: 'Roadmap slice', state: 'next', description: 'Numbers, bonds, times tables, word problems, and confidence drills.' },
+      { id: 'primary', icon: '📚', title: 'Primary Learning', audience: 'Primary learners', status: 'Planned', state: 'planned', description: 'Reading, spelling, science, school skills, and age-banded practice.' },
       { id: 'french', icon: '🇫🇷', title: 'French', audience: 'Family', status: 'Planned', state: 'planned', description: 'Vocabulary, phrases, listening prompts, grammar, and spaced recall.' },
-      { id: 'life-uk', icon: '🇬🇧', title: 'Life in the UK', audience: 'Kyle + Cheryl', status: 'Mock test planned', state: 'planned', description: '24-question, 45-minute, 75% pass mock tests plus weak-topic review.' },
+      { id: 'life-uk', icon: '🇬🇧', title: 'Life in the UK', audience: 'Adult learners', status: 'Mock test planned', state: 'planned', description: '24-question, 45-minute, 75% pass mock tests plus weak-topic review.' },
       { id: 'english', icon: '✍️', title: 'English Mastery', audience: 'Family', status: 'Planned', state: 'planned', description: 'Grammar, comprehension, writing, vocabulary, and reading confidence.' }
     ];
     const HK_CHINESE_FLASHCARDS = [
-      { traditional: '爸爸', jyutping: 'baa4 baa1', canto: 'baa baa', english: 'Dad / father', prompt: 'Say it to Kyle' },
-      { traditional: '媽媽', jyutping: 'maa4 maa1', canto: 'maa maa', english: 'Mum / mother', prompt: 'Say it to Cheryl' },
-      { traditional: '哥哥', jyutping: 'go4 go1', canto: 'go go', english: 'Older brother', prompt: 'Silas can teach Sylvie' },
-      { traditional: '妹妹', jyutping: 'mui6 mui2', canto: 'mui mui', english: 'Younger sister', prompt: 'Sylvie family word' },
+      { traditional: '爸爸', jyutping: 'baa4 baa1', canto: 'baa baa', english: 'Dad / father', prompt: 'Practise with a coach' },
+      { traditional: '媽媽', jyutping: 'maa4 maa1', canto: 'maa maa', english: 'Mum / mother', prompt: 'Practise with a coach' },
+      { traditional: '哥哥', jyutping: 'go4 go1', canto: 'go go', english: 'Older brother', prompt: 'A learner can teach another learner' },
+      { traditional: '妹妹', jyutping: 'mui6 mui2', canto: 'mui mui', english: 'Younger sister', prompt: 'Family vocabulary word' },
       { traditional: '多謝', jyutping: 'do1 ze6', canto: 'dor jeh', english: 'Thank you', prompt: 'Use after help' }
     ];
     const CURRICULUM_PACKS = [
-      { title: 'Wilson 11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Silas', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.' },
+      { title: 'Wilson 11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Young learners', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.' },
       { title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'Family', activity: 'Flashcards + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.' },
       { title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'Family', activity: 'Flashcards + matching', readiness: 'Next', next: 'Pair Simplified characters with Pinyin, tone marks, and Traditional equivalents.' },
-      { title: 'Maths numbers foundation', domain: 'Maths Foundation', language: 'English', learners: 'Silas + Sylvie', activity: 'Short adaptive drills', readiness: 'Next', next: 'Add number bonds, counting, place value, and times-table micro practice.' },
-      { title: 'Life in the UK mock mode', domain: 'Life in the UK', language: 'English', learners: 'Kyle + Cheryl', activity: '24Q / 45m mock test', readiness: 'Planned', next: 'Add official-topic taxonomy, pass mark display, and timed mock-test shell.' },
+      { title: 'Maths numbers foundation', domain: 'Maths Foundation', language: 'English', learners: 'Primary learners', activity: 'Short adaptive drills', readiness: 'Next', next: 'Add number bonds, counting, place value, and times-table micro practice.' },
+      { title: 'Life in the UK mock mode', domain: 'Life in the UK', language: 'English', learners: 'Adult learners', activity: '24Q / 45m mock test', readiness: 'Planned', next: 'Add official-topic taxonomy, pass mark display, and timed mock-test shell.' },
       { title: 'French first phrases', domain: 'French', language: 'French + English', learners: 'Family', activity: 'Phrase recall', readiness: 'Planned', next: 'Start with greetings, family, numbers, food, and travel phrases.' }
     ];
 
@@ -948,7 +960,7 @@
     function loadHistoryFor(id = activeLearnerId()) {
       try {
         const key = learnerHistoryKey(id);
-        const legacy = id === 'silas' ? localStorage.getItem(HISTORY_KEY) : null;
+        const legacy = id === 'learner-1' ? localStorage.getItem(HISTORY_KEY) : null;
         const parsed = JSON.parse(localStorage.getItem(key) || legacy || '[]');
         return Array.isArray(parsed) ? parsed.slice(0, 8) : [];
       } catch {
@@ -1090,7 +1102,7 @@
       const stats = historyStats(history);
       const subjects = subjectStats(history);
       return [
-        { icon: '🚀', title: 'First quiz', desc: 'Complete your first Family Learning round.', earned: stats.attempts >= 1 },
+        { icon: '🚀', title: 'First quiz', desc: 'Complete your first LearningQuest round.', earned: stats.attempts >= 1 },
         { icon: '🌟', title: 'Star score', desc: 'Score 80% or higher in any round.', earned: stats.best >= 80 },
         { icon: '🔥', title: 'Practice streak', desc: 'Practise on two days in a row.', earned: stats.streak >= 2 },
         { icon: '📚', title: 'Five rounds', desc: 'Finish five saved quiz attempts.', earned: stats.attempts >= 5 },
@@ -1198,7 +1210,7 @@
     function exportProgress() {
       const history = loadHistory();
       if (!history.length) {
-        alert('No saved progress for this learner yet. Import still works if you have a Family Learning Hub JSON backup.');
+        alert('No saved progress for this learner yet. Import still works if you have a LearningQuest JSON backup.');
         return;
       }
       const learner = activeLearner();
@@ -1243,7 +1255,7 @@
           renderParentOverview();
           alert('Progress imported successfully.');
         } catch {
-          alert('Could not import that progress file. Please choose a Family Learning Hub JSON backup.');
+          alert('Could not import that progress file. Please choose a LearningQuest JSON backup.');
         } finally {
           event.target.value = '';
         }
@@ -1637,7 +1649,7 @@
 
       let msg, sub, cls;
       if (pct >= 80) {
-        msg = '🌟 Outstanding!'; sub = 'You did brilliantly — Wilson practice is getting stronger!'; cls = 'excellent';
+        msg = '🌟 Outstanding!'; sub = 'You did brilliantly — your learning momentum is getting stronger!'; cls = 'excellent';
       } else if (pct >= 60) {
         msg = '👍 Well done!'; sub = 'Good effort! Keep practising and you\'ll get there!'; cls = 'good';
       } else {
@@ -1692,6 +1704,15 @@
           </div>`;
         }).join('');
     }
-  </script>
+
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {
+          // Non-blocking: the app must remain usable if offline caching is unavailable.
+        });
+      });
+    }
+</script>
 </body>
 </html>

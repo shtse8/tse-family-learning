@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Wilson's & Phonics Practice Quiz",
+    "title": "School Prep & Phonics Practice Quiz",
     "subject": "English, Phonics, Maths, Verbal Reasoning",
     "generated": "2026-06-01",
     "timeLimit": 900,
@@ -192,7 +192,7 @@
       "id": 12,
       "type": "mcq",
       "subject": "Maths",
-      "question": "Silas has 9 stickers. Mummy gives him 6 more. How many stickers does he have now?",
+      "question": "A learner has 9 stickers. A coach gives them 6 more. How many stickers do they have now?",
       "options": [
         "13",
         "14",
@@ -352,7 +352,7 @@
       "id": 22,
       "type": "mcq",
       "subject": "Maths",
-      "question": "Silas has 24 grapes. He shares them equally between 4 plates. How many grapes are on each plate?",
+      "question": "A learner has 24 grapes. They share them equally between 4 plates. How many grapes are on each plate?",
       "options": [
         "4",
         "5",
@@ -416,7 +416,7 @@
       "id": 26,
       "type": "mcq",
       "subject": "Maths",
-      "question": "A ribbon is 30 cm long. Cheryl cuts off 12 cm. How much ribbon is left?",
+      "question": "A ribbon is 30 cm long. A learner cuts off 12 cm. How much ribbon is left?",
       "options": [
         "16 cm",
         "18 cm",
