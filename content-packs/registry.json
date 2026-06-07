@@ -30,6 +30,11 @@
         "confidence",
         "language",
         "mastery"
+      ],
+      "progressionSteps": [
+        "Start with family words and greetings",
+        "Practise colours, numbers, and Jyutping recall",
+        "Move into audio prompts and short household phrases"
       ]
     },
     {
@@ -60,6 +65,11 @@
         "language",
         "confidence",
         "mastery"
+      ],
+      "progressionSteps": [
+        "Start with greetings and core family words",
+        "Compare Simplified, Traditional, and Pinyin forms",
+        "Move into matching practice and listening prompts"
       ]
     }
   ]

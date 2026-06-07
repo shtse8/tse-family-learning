@@ -136,3 +136,11 @@ Next slices:
 - Runtime content-pack registry entries carry `recommendedStages` and `recommendedGoals` metadata, keeping pack recommendation hints with the registry SSOT.
 - Recommendations re-render immediately when the learner switches stage or goal and remain resilient when optional pack routes are loading or unavailable.
 - Mobile regression coverage verifies exam-prep learners see the 11+ starter bank and adult language learners see registry-driven Mandarin recommendations.
+
+
+## Run #15 recommendation progression paths
+
+- Recommended curriculum cards now include a visible three-step progression path, turning recommendations into an actionable learning journey rather than only a label.
+- Runtime content-pack registry entries carry `progressionSteps` metadata for HK Chinese and Mandarin, keeping progression guidance alongside the pack metadata SSOT.
+- Inline planned packs and the 11+ starter bank include matching progression paths so every recommended card can explain the next sequence.
+- Mobile regression coverage verifies exam-prep and adult-language recommendation paths and exposes `recommendedProgressionPaths` test-state evidence.

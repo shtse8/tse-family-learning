@@ -59,10 +59,11 @@ for (const [id, path, fields] of [
   for (const field of ['recommendedStages', 'recommendedGoals']) {
     if (!Array.isArray(registered[field]) || !registered[field].length) throw new Error(`Content pack registry ${id} missing ${field}`);
   }
+  if (!Array.isArray(registered.progressionSteps) || registered.progressionSteps.length < 3) throw new Error(`Content pack registry ${id} missing progressionSteps`);
 }
 const hkChinesePack = validatePackFile('content-packs/hk-chinese-basics.json', 'hk-chinese-basics-v1', registryById['hk-chinese-basics-v1'].schema, 'HK Chinese');
 const mandarinPack = validatePackFile('content-packs/mandarin-basics.json', 'mandarin-basics-v1', registryById['mandarin-basics-v1'].schema, 'Mandarin');
-for (const marker of ['CONTENT_PACK_REGISTRY_PATH', 'FALLBACK_CONTENT_PACK_REGISTRY', 'loadContentPackRegistry', 'validateContentPackRegistry', 'contentPackRegistryError', 'recommendedStages', 'recommendedGoals', 'recommendCurriculumPacks', 'recommendedCurriculumTitles', 'loadHKChinesePack', 'loadMandarinPack', 'validateHKChinesePack', 'validateMandarinPack', 'hkChineseFlashcards', 'mandarinFlashcards', 'hkChinesePackError', 'mandarinPackError', 'flashcard-placeholder', 'Question practice remains available', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json']) {
+for (const marker of ['CONTENT_PACK_REGISTRY_PATH', 'FALLBACK_CONTENT_PACK_REGISTRY', 'loadContentPackRegistry', 'validateContentPackRegistry', 'contentPackRegistryError', 'recommendedStages', 'recommendedGoals', 'progressionSteps', 'progressionPathText', 'recommendedProgressionPaths', 'recommendCurriculumPacks', 'recommendedCurriculumTitles', 'loadHKChinesePack', 'loadMandarinPack', 'validateHKChinesePack', 'validateMandarinPack', 'hkChineseFlashcards', 'mandarinFlashcards', 'hkChinesePackError', 'mandarinPackError', 'flashcard-placeholder', 'Question practice remains available', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json']) {
   if (!html.includes(marker)) throw new Error(`Missing runtime HK Chinese content-pack marker: ${marker}`);
 }
 for (const inlineSeed of ['baa4 baa1', 'zou2 san4', 'bàba', 'zǎoshang hǎo', 'Find something red nearby']) {
