@@ -115,3 +115,9 @@ Next slices:
 
 - The Traditional HK Chinese content-pack loader now fails soft: a missing or invalid optional pack shows a clear curriculum recovery state while the core question-practice app remains available.
 - Playwright mobile coverage now simulates a content-pack outage and verifies the mission onboarding/start path still renders.
+
+## Run #12 Simplified Mandarin content-pack slice
+
+- Added `content-packs/mandarin-basics.json` as a second reusable Chinese curriculum pack with 10 Simplified Mandarin flashcards.
+- The app now runtime-loads and browser-validates both Traditional HK Chinese and Simplified Mandarin starter packs.
+- Mobile regression coverage verifies the Mandarin cards render and that a Mandarin pack outage fails soft while the core mission and HK Chinese pack remain available.

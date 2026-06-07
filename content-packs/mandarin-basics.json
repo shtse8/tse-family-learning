@@ -1,0 +1,83 @@
+{
+  "id": "mandarin-basics-v1",
+  "title": "Simplified Mandarin basics",
+  "domain": "Chinese · Simplified Mandarin",
+  "language": "简体中文 + Pinyin",
+  "learners": "All learners",
+  "activity": "Flashcards + listen/repeat",
+  "readiness": "Live slice",
+  "next": "Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.",
+  "flashcards": [
+    {
+      "simplified": "爸爸",
+      "traditional": "爸爸",
+      "pinyin": "bàba",
+      "english": "Dad / father",
+      "prompt": "Say it to a coach or parent"
+    },
+    {
+      "simplified": "妈妈",
+      "traditional": "媽媽",
+      "pinyin": "māma",
+      "english": "Mum / mother",
+      "prompt": "Practise the first tone"
+    },
+    {
+      "simplified": "哥哥",
+      "traditional": "哥哥",
+      "pinyin": "gēge",
+      "english": "Older brother",
+      "prompt": "Compare with Cantonese go go"
+    },
+    {
+      "simplified": "妹妹",
+      "traditional": "妹妹",
+      "pinyin": "mèimei",
+      "english": "Younger sister",
+      "prompt": "Use a soft final syllable"
+    },
+    {
+      "simplified": "谢谢",
+      "traditional": "謝謝",
+      "pinyin": "xièxie",
+      "english": "Thank you",
+      "prompt": "Use after help"
+    },
+    {
+      "simplified": "早上好",
+      "traditional": "早上好",
+      "pinyin": "zǎoshang hǎo",
+      "english": "Good morning",
+      "prompt": "Say it at breakfast"
+    },
+    {
+      "simplified": "你好",
+      "traditional": "你好",
+      "pinyin": "nǐ hǎo",
+      "english": "Hello",
+      "prompt": "Start a practice chat"
+    },
+    {
+      "simplified": "红色",
+      "traditional": "紅色",
+      "pinyin": "hóngsè",
+      "english": "Red",
+      "prompt": "Find something red nearby"
+    },
+    {
+      "simplified": "蓝色",
+      "traditional": "藍色",
+      "pinyin": "lánsè",
+      "english": "Blue",
+      "prompt": "Point to something blue"
+    },
+    {
+      "simplified": "一",
+      "traditional": "一",
+      "pinyin": "yī",
+      "english": "One",
+      "prompt": "Count one object"
+    }
+  ],
+  "sourcePath": "content-packs/mandarin-basics.json"
+}

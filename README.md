@@ -8,6 +8,7 @@ A responsive, mobile-native HTML5 learning platform foundation for personalised 
 - Responsive platform shell with learning-domain cards for 11+ School Prep, Traditional HK Chinese, Simplified Mandarin Chinese, Maths Foundation, Primary Learning, French, Life in the UK, and English Mastery.
 - Curriculum pack roadmap cards for language variant, learner fit, activity type, readiness, and next production step.
 - First Traditional HK Chinese flashcard slice is runtime-loaded from `content-packs/hk-chinese-basics.json` with family words, greetings, colours, Jyutping, Cantonese prompts, and English meaning.
+- First Simplified Mandarin flashcard slice is runtime-loaded from `content-packs/mandarin-basics.json` with Pinyin, Traditional comparison text, and English meaning.
 - Browser-local per-learner quiz progress history with attempts, best score, average score, level, daily streak, practice XP, subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, milestone badges, daily challenge prompt, and subject/difficulty/skill quick-practice filters.
 - JSON export/import for progress backup between browsers or devices.
 - Run #7 cleanup keeps startup state declarations single-source and makes progress-backup copy apply to the selected learner.
@@ -36,5 +37,5 @@ This app is being generalized from a family prototype into a public-facing produ
 
 ## Content packs
 
-- `content-packs/hk-chinese-basics.json` is the first reusable curriculum pack shape. The app now fetches it at runtime, validates it in the browser, and renders the live Traditional HK Chinese flashcards from external JSON instead of inline seed data.
+- `content-packs/hk-chinese-basics.json` and `content-packs/mandarin-basics.json` are the first reusable Chinese curriculum pack shapes. The app fetches them at runtime, validates them in the browser, and renders the live Chinese flashcards from external JSON instead of inline seed data.
 - The HK Chinese pack is treated as optional runtime curriculum content: if the pack route is temporarily unavailable, core question practice still loads and the curriculum card shows a clear recovery state instead of blocking the app.

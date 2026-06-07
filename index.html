@@ -829,6 +829,7 @@
             </div>
             <div class="domain-panel" id="curriculum-panel"><div class="curriculum-grid" id="curriculum-grid"></div></div>
             <div class="flashcard-panel" id="flashcard-panel"><h3>🧧 Traditional HK Chinese starter cards</h3><p>A first real curriculum slice: Traditional characters, Jyutping, Cantonese prompts, and English meaning.</p><div class="flashcard-grid" id="flashcard-grid"></div></div>
+            <div class="flashcard-panel" id="mandarin-flashcard-panel"><h3>🧧 Simplified Mandarin starter cards</h3><p>A second reusable curriculum slice: Simplified characters, Pinyin, Traditional comparison, and English meaning.</p><div class="flashcard-grid" id="mandarin-flashcard-grid"></div></div>
           </article>
 
           <article class="section-card rail" id="progress">
@@ -937,9 +938,13 @@
       { id: 'english', icon: '✍️', title: 'English Mastery', audience: 'Family', status: 'Planned', state: 'planned', description: 'Grammar, comprehension, writing, vocabulary, and reading confidence.' }
     ];
     const HK_CHINESE_PACK_PATH = 'content-packs/hk-chinese-basics.json';
+    const MANDARIN_PACK_PATH = 'content-packs/mandarin-basics.json';
     let hkChinesePack = null;
     let hkChineseFlashcards = [];
     let hkChinesePackError = null;
+    let mandarinPack = null;
+    let mandarinFlashcards = [];
+    let mandarinPackError = null;
 
     function hkPackSummary() {
       const pack = hkChinesePack || {
@@ -964,11 +969,35 @@
       };
     }
 
+
+    function mandarinPackSummary() {
+      const pack = mandarinPack || {
+        title: 'Simplified Mandarin basics',
+        domain: 'Chinese · Simplified Mandarin',
+        language: '简体中文 + Pinyin',
+        learners: 'All learners',
+        activity: 'Flashcards + listen/repeat',
+        readiness: mandarinPackError ? 'Pack unavailable' : 'Loading pack',
+        next: mandarinPackError
+          ? 'Question practice still works; retry the Mandarin content pack route after it recovers.'
+          : `Runtime-load ${MANDARIN_PACK_PATH} and render a second Chinese flashcard slice from external JSON.`
+      };
+      return {
+        title: pack.title,
+        domain: pack.domain,
+        language: pack.language,
+        learners: pack.learners,
+        activity: pack.activity,
+        readiness: pack.readiness,
+        next: pack.next
+      };
+    }
+
     function curriculumPacks() {
       return [
         { title: '11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Young learners', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.' },
         hkPackSummary(),
-        { title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching', readiness: 'Next', next: 'Pair Simplified characters with Pinyin, tone marks, and Traditional equivalents.' },
+        mandarinPackSummary(),
         { title: 'Maths numbers foundation', domain: 'Maths Foundation', language: 'English', learners: 'Primary learners', activity: 'Short adaptive drills', readiness: 'Next', next: 'Add number bonds, counting, place value, and times-table micro practice.' },
         { title: 'Life in the UK mock mode', domain: 'Life in the UK', language: 'English', learners: 'Adult learners', activity: '24Q / 45m mock test', readiness: 'Planned', next: 'Add official-topic taxonomy, pass mark display, and timed mock-test shell.' },
         { title: 'French first phrases', domain: 'French', language: 'French + English', learners: 'All learners', activity: 'Phrase recall', readiness: 'Planned', next: 'Start with greetings, family, numbers, food, and travel phrases.' }
@@ -1484,6 +1513,32 @@
       `).join('');
     }
 
+
+
+    function renderMandarinFlashcards() {
+      const grid = document.getElementById('mandarin-flashcard-grid');
+      if (!grid) return;
+      if (!mandarinFlashcards.length) {
+        grid.innerHTML = `
+          <article class="flashcard flashcard-placeholder">
+            <div class="flashcard-term">${mandarinPackError ? '稍后' : '…'}</div>
+            <div class="flashcard-canto">${mandarinPackError ? 'Pack unavailable' : 'Loading cards'}</div>
+            <div class="flashcard-meta">${escapeHTML(mandarinPackError || `Fetching ${MANDARIN_PACK_PATH}`)}</div>
+            <div class="flashcard-prompt">Question practice remains available</div>
+          </article>
+        `;
+        return;
+      }
+      grid.innerHTML = mandarinFlashcards.map(card => `
+        <article class="flashcard">
+          <div class="flashcard-term">${escapeHTML(card.simplified)}</div>
+          <div class="flashcard-canto">${escapeHTML(card.pinyin)}</div>
+          <div class="flashcard-meta">Traditional: ${escapeHTML(card.traditional)}<br>${escapeHTML(card.english)}</div>
+          <div class="flashcard-prompt">${escapeHTML(card.prompt)}</div>
+        </article>
+      `).join('');
+    }
+
     function renderCurriculumPacks() {
       const grid = document.getElementById('curriculum-grid');
       if (!grid) return;
@@ -1535,6 +1590,40 @@
       } finally {
         renderCurriculumPacks();
         renderHKChineseFlashcards();
+      }
+    }
+
+
+    function validateMandarinPack(pack) {
+      if (!pack || pack.id !== 'mandarin-basics-v1') throw new Error('Unexpected Mandarin content pack id');
+      if (!Array.isArray(pack.flashcards) || pack.flashcards.length < 10) throw new Error('Mandarin content pack needs at least 10 flashcards');
+      pack.flashcards.forEach((card, index) => {
+        ['simplified', 'traditional', 'pinyin', 'english', 'prompt'].forEach(field => {
+          if (!card[field]) throw new Error(`Mandarin flashcard ${index + 1} missing ${field}`);
+        });
+      });
+      return pack;
+    }
+
+    async function loadMandarinPack() {
+      try {
+        const response = await fetch(`${MANDARIN_PACK_PATH}?v=${Date.now()}`);
+        if (!response.ok) throw new Error(`Could not load ${MANDARIN_PACK_PATH}: ${response.status}`);
+        mandarinPack = validateMandarinPack(await response.json());
+        mandarinFlashcards = mandarinPack.flashcards;
+        mandarinPackError = null;
+        window.__learningQuestTestState = { ...(window.__learningQuestTestState || {}), mandarinPackId: mandarinPack.id, mandarinPackError: null };
+        return mandarinPack;
+      } catch (error) {
+        mandarinPack = null;
+        mandarinFlashcards = [];
+        mandarinPackError = error.message || 'Could not load the Mandarin content pack';
+        window.__learningQuestTestState = { ...(window.__learningQuestTestState || {}), mandarinPackId: null, mandarinPackError };
+        console.warn(mandarinPackError);
+        return null;
+      } finally {
+        renderCurriculumPacks();
+        renderMandarinFlashcards();
       }
     }
 
@@ -1672,9 +1761,11 @@
     renderLearningDomains();
     renderCurriculumPacks();
     renderHKChineseFlashcards();
+    renderMandarinFlashcards();
     Promise.all([
       fetch('questions.json?v=' + Date.now()).then(r => r.json()),
-      loadHKChinesePack()
+      loadHKChinesePack(),
+      loadMandarinPack()
     ])
       .then(([data]) => {
         quizData = data;
