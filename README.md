@@ -37,5 +37,5 @@ This app is being generalized from a family prototype into a public-facing produ
 
 ## Content packs
 
-- `content-packs/hk-chinese-basics.json` and `content-packs/mandarin-basics.json` are the first reusable Chinese curriculum pack shapes. The app fetches them at runtime, validates them in the browser, and renders the live Chinese flashcards from external JSON instead of inline seed data.
+- `content-packs/registry.json` is the runtime pack metadata SSOT. It lists reusable packs, paths, schemas, render targets, readiness copy, and next-step copy. The app fetches the registry first, falls back to baked-in registry metadata if unavailable, then loads `content-packs/hk-chinese-basics.json` and `content-packs/mandarin-basics.json` from the registered paths.
 - The HK Chinese pack is treated as optional runtime curriculum content: if the pack route is temporarily unavailable, core question practice still loads and the curriculum card shows a clear recovery state instead of blocking the app.
