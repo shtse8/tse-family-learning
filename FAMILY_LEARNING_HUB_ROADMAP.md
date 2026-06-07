@@ -152,3 +152,10 @@ Next slices:
 - The curriculum now renders matching-practice panels from runtime pack flashcards, pairing Chinese terms with English meaning and sound clues.
 - Pack and registry metadata now advertise `Flashcards + matching + listen/repeat`, keeping activity promises aligned with the content-pack SSOT.
 - Mobile regression coverage verifies both matching panels and `matchingPracticeCounts` test-state evidence.
+
+
+## Run #17 interactive matching scores
+
+- Turned Chinese matching practice from display-only panels into tappable answer-choice cards.
+- Added per-pack score summaries for HK Chinese and Mandarin matching practice using the runtime pack flashcards as the source of truth.
+- Exposed `matchingPracticeScores` test-state evidence and mobile coverage for matched answers.
