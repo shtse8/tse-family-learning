@@ -159,3 +159,10 @@ Next slices:
 - Turned Chinese matching practice from display-only panels into tappable answer-choice cards.
 - Added per-pack score summaries for HK Chinese and Mandarin matching practice using the runtime pack flashcards as the source of truth.
 - Exposed `matchingPracticeScores` test-state evidence and mobile coverage for matched answers.
+
+
+## Run #18 matching progress persistence
+
+- Persisted Chinese matching-practice answers into the same browser-local learner history used by quizzes.
+- Matching progress now contributes to progress stats, subject dashboard, leaderboard XP, backup/export, and next-step recommendations.
+- Added `latestMatchingProgress` test-state evidence plus mobile coverage proving HK Chinese and Mandarin matching entries are saved.

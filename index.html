@@ -1181,6 +1181,16 @@
       return history;
     }
 
+    function upsertHistoryEntry(entry, matcher) {
+      const current = loadHistory();
+      const existingIndex = current.findIndex(matcher);
+      const history = existingIndex >= 0
+        ? [entry, ...current.slice(0, existingIndex), ...current.slice(existingIndex + 1)].slice(0, 8)
+        : [entry, ...current].slice(0, 8);
+      localStorage.setItem(learnerHistoryKey(), JSON.stringify(history));
+      return history;
+    }
+
     function subjectStats(history) {
       return history.reduce((acc, item) => {
         Object.entries(item.subjects || {}).forEach(([subject, value]) => {
@@ -1634,10 +1644,45 @@
       return `${score.correct}/${score.total} matched · ${score.attempted} tried`;
     }
 
+    function matchingPracticeMeta(packKey) {
+      return packKey === 'mandarin'
+        ? { label: 'Simplified Mandarin matching', subject: 'Chinese · Simplified Mandarin' }
+        : { label: 'Traditional HK Chinese matching', subject: 'Chinese · Traditional HK' };
+    }
+
+    function saveMatchingPracticeProgress(packKey, total) {
+      const score = matchingPracticeScore(packKey, total);
+      const meta = matchingPracticeMeta(packKey);
+      const percent = total ? Math.round((score.correct / total) * 100) : 0;
+      const learner = activeLearner();
+      const entry = {
+        learner: learner.id,
+        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        completedAt: new Date().toISOString(),
+        correct: score.correct,
+        total,
+        percent,
+        focus: meta.label,
+        subjects: { [meta.subject]: { correct: score.correct, total } },
+        practiceMode: 'matching-practice',
+        difficultyMode: packKey,
+        activityType: 'matching-practice',
+        matchingPackKey: packKey,
+        attempted: score.attempted
+      };
+      const history = upsertHistoryEntry(entry, item => item.activityType === 'matching-practice' && item.matchingPackKey === packKey);
+      renderHistory(history);
+      return entry;
+    }
+
     function recordMatchingAnswer(packKey, cardIndex, selectedAnswer, expectedAnswer) {
       matchingPracticeScores[packKey][cardIndex] = selectedAnswer === expectedAnswer;
+      const total = packKey === 'mandarin'
+        ? Math.min(4, mandarinFlashcards.length)
+        : Math.min(4, hkChineseFlashcards.length);
+      const saved = saveMatchingPracticeProgress(packKey, total);
       renderChineseMatchingPractice();
-      updateRecommendedCurriculumTestState();
+      updateRecommendedCurriculumTestState(saved);
     }
 
     function renderMatchingPractice(gridId, packKey, cards, termField, soundField, unavailableMessage) {
@@ -1679,13 +1724,16 @@
       renderMatchingPractice('mandarin-matching-grid', 'mandarin', mandarinFlashcards, 'simplified', 'pinyin', mandarinPackError);
     }
 
-    function updateRecommendedCurriculumTestState() {
+    function updateRecommendedCurriculumTestState(lastMatchingProgress = null) {
+      const history = loadHistory();
+      const latestMatchingProgress = lastMatchingProgress || history.find(item => item.activityType === 'matching-practice') || null;
       window.__learningQuestTestState = {
         ...(window.__learningQuestTestState || {}),
         recommendedCurriculumTitles: curriculumPacks().filter(pack => pack.recommended).map(pack => pack.title),
         recommendedProgressionPaths: curriculumPacks().filter(pack => pack.recommended).map(pack => progressionPathText(pack)),
         matchingPracticeCounts: { hkChinese: hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0, mandarin: mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0 },
-        matchingPracticeScores: { hkChinese: matchingPracticeScore('hkChinese', hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0), mandarin: matchingPracticeScore('mandarin', mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0) }
+        matchingPracticeScores: { hkChinese: matchingPracticeScore('hkChinese', hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0), mandarin: matchingPracticeScore('mandarin', mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0) },
+        latestMatchingProgress
       };
     }
 
