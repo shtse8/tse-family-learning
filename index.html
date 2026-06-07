@@ -398,6 +398,11 @@
     .flashcard-canto { font-weight: 900; color: var(--text); }
     .flashcard-meta { color: var(--subtext); font-size: 0.78rem; line-height: 1.35; }
     .flashcard-prompt { color: #be123c; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+    .audio-button { border: 1px solid #fecdd3; background: #fff1f2; color: #9f1239; border-radius: 999px; padding: 7px 10px; width: fit-content; font-weight: 900; cursor: pointer; transition: all 0.2s; }
+    .audio-button:hover { background: #ffe4e6; border-color: #fb7185; transform: translateY(-1px); }
+    .audio-button:focus-visible { outline: 3px solid #fecdd3; outline-offset: 2px; }
+    .audio-button[aria-disabled="true"] { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .audio-status { color: #be123c; font-size: 0.76rem; font-weight: 800; min-height: 1.15em; }
     .next-step-card { background: #fff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 12px; }
     .next-step-title { font-weight: 900; color: var(--primary); margin-bottom: 5px; }
     .next-step-meta { color: var(--subtext); font-size: 0.82rem; margin-bottom: 10px; line-height: 1.45; }
@@ -967,8 +972,8 @@
     ];
     const CONTENT_PACK_REGISTRY_PATH = 'content-packs/registry.json';
     const FALLBACK_CONTENT_PACK_REGISTRY = [
-      { id: 'hk-chinese-basics-v1', path: 'content-packs/hk-chinese-basics.json', kind: 'flashcards', title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'All learners', activity: 'Flashcards + matching + comparison + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, comparison drills, and audio prompts.', schema: ['traditional', 'jyutping', 'canto', 'english', 'prompt'], renderTarget: 'flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['confidence', 'language', 'mastery'], progressionSteps: ['Start with family words and greetings', 'Practise colours, numbers, and Jyutping recall', 'Move into matching practice, comparison drills, audio prompts, and short household phrases'] },
-      { id: 'mandarin-basics-v1', path: 'content-packs/mandarin-basics.json', kind: 'flashcards', title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching + comparison + listen/repeat', readiness: 'Live slice', next: 'Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.', schema: ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], renderTarget: 'mandarin-flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence', 'mastery'], progressionSteps: ['Start with greetings and core family words', 'Compare Simplified, Traditional, and Pinyin forms', 'Use matching practice and comparison drills, then move into listening prompts'] }
+      { id: 'hk-chinese-basics-v1', path: 'content-packs/hk-chinese-basics.json', kind: 'flashcards', title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, comparison drills, and audio prompts.', schema: ['traditional', 'jyutping', 'canto', 'english', 'prompt'], renderTarget: 'flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['confidence', 'language', 'mastery'], progressionSteps: ['Start with family words and greetings', 'Practise colours, numbers, and Jyutping recall', 'Move into matching practice, comparison drills, audio prompts, and short household phrases'] },
+      { id: 'mandarin-basics-v1', path: 'content-packs/mandarin-basics.json', kind: 'flashcards', title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.', schema: ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], renderTarget: 'mandarin-flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence', 'mastery'], progressionSteps: ['Start with greetings and core family words', 'Compare Simplified, Traditional, and Pinyin forms', 'Use matching practice and comparison drills, then try audio prompts'] }
     ];
     let contentPackRegistry = [...FALLBACK_CONTENT_PACK_REGISTRY];
     let contentPackRegistryError = null;
@@ -979,6 +984,59 @@
     let mandarinFlashcards = [];
     let mandarinPackError = null;
     const matchingPracticeScores = { hkChinese: {}, mandarin: {} };
+    const CHINESE_AUDIO_PROMPT_LIMIT = 5;
+
+    function speechSynthesisAvailable() {
+      return typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+    }
+
+    function audioPromptCards(cards, packKey) {
+      return cards.slice(0, CHINESE_AUDIO_PROMPT_LIMIT).map((card, index) => ({
+        index: index + 1,
+        packKey,
+        text: packKey === 'mandarin' ? card.simplified : card.traditional,
+        romanisation: packKey === 'mandarin' ? card.pinyin : card.jyutping,
+        prompt: card.prompt,
+        english: card.english,
+        lang: packKey === 'mandarin' ? 'zh-CN' : 'zh-HK',
+        label: packKey === 'mandarin' ? 'Mandarin audio prompt' : 'Cantonese audio prompt'
+      }));
+    }
+
+    function audioSupportCopy() {
+      return speechSynthesisAvailable() ? 'Tap to listen with this browser’s speech voice.' : 'Audio controls need browser speech support; reading prompts remain visible.';
+    }
+
+    function updateAudioPromptTestState(lastAudioPrompt = null) {
+      window.__learningQuestTestState = {
+        ...(window.__learningQuestTestState || {}),
+        speechSynthesisAvailable: speechSynthesisAvailable(),
+        audioPromptCounts: {
+          hkChinese: audioPromptCards(hkChineseFlashcards, 'hkChinese').length,
+          mandarin: audioPromptCards(mandarinFlashcards, 'mandarin').length
+        },
+        audioPromptLocales: ['zh-HK', 'zh-CN'],
+        latestAudioPrompt: lastAudioPrompt || window.__learningQuestTestState?.latestAudioPrompt || null
+      };
+    }
+
+    function speakChinesePrompt(text, lang, label) {
+      const prompt = { text, lang, label, spokenAt: new Date().toISOString(), supported: speechSynthesisAvailable() };
+      if (prompt.supported) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = 0.82;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      }
+      updateAudioPromptTestState(prompt);
+      document.querySelectorAll('[data-audio-status]').forEach(node => {
+        node.textContent = node.dataset.audioStatus === `${lang}:${text}`
+          ? (prompt.supported ? `🔊 Playing ${label}` : 'Audio support unavailable in this browser')
+          : '';
+      });
+    }
+
 
     function contentPackDefinition(id) {
       return contentPackRegistry.find(pack => pack.id === id) || FALLBACK_CONTENT_PACK_REGISTRY.find(pack => pack.id === id);
@@ -1596,9 +1654,12 @@
           <div class="flashcard-term">${escapeHTML(card.traditional)}</div>
           <div class="flashcard-canto">${escapeHTML(card.canto)}</div>
           <div class="flashcard-meta">Jyutping: ${escapeHTML(card.jyutping)}<br>${escapeHTML(card.english)}</div>
-          <div class="flashcard-prompt">${escapeHTML(card.prompt)}</div>
+          <button type="button" class="audio-button" data-audio-text="${escapeHTML(card.traditional)}" data-audio-lang="zh-HK" data-audio-label="Cantonese audio prompt" onclick="speakChinesePrompt(this.dataset.audioText, this.dataset.audioLang, this.dataset.audioLabel)">🔊 Hear Cantonese</button>
+          <div class="audio-status" data-audio-status="zh-HK:${escapeHTML(card.traditional)}"></div>
+          <div class="flashcard-prompt">${escapeHTML(card.prompt)} · ${audioSupportCopy()}</div>
         </article>
       `).join('');
+      updateAudioPromptTestState();
     }
 
 
@@ -1622,9 +1683,12 @@
           <div class="flashcard-term">${escapeHTML(card.simplified)}</div>
           <div class="flashcard-canto">${escapeHTML(card.pinyin)}</div>
           <div class="flashcard-meta">Traditional: ${escapeHTML(card.traditional)}<br>${escapeHTML(card.english)}</div>
-          <div class="flashcard-prompt">${escapeHTML(card.prompt)}</div>
+          <button type="button" class="audio-button" data-audio-text="${escapeHTML(card.simplified)}" data-audio-lang="zh-CN" data-audio-label="Mandarin audio prompt" onclick="speakChinesePrompt(this.dataset.audioText, this.dataset.audioLang, this.dataset.audioLabel)">🔊 Hear Mandarin</button>
+          <div class="audio-status" data-audio-status="zh-CN:${escapeHTML(card.simplified)}"></div>
+          <div class="flashcard-prompt">${escapeHTML(card.prompt)} · ${audioSupportCopy()}</div>
         </article>
       `).join('');
+      updateAudioPromptTestState();
     }
 
     function matchingPracticeCards(cards, termField, soundField) {
@@ -1798,6 +1862,9 @@
         matchingPracticeCounts: { hkChinese: hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0, mandarin: mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0 },
         matchingPracticeScores: { hkChinese: matchingPracticeScore('hkChinese', hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0), mandarin: matchingPracticeScore('mandarin', mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0) },
         comparisonDrillPairs: comparisonDrillCards().map(card => ({ traditional: card.traditional, simplified: card.simplified, english: card.english, changed: card.changed })),
+        audioPromptCounts: { hkChinese: audioPromptCards(hkChineseFlashcards, 'hkChinese').length, mandarin: audioPromptCards(mandarinFlashcards, 'mandarin').length },
+        audioPromptLocales: ['zh-HK', 'zh-CN'],
+        latestAudioPrompt: window.__learningQuestTestState?.latestAudioPrompt || null,
         latestMatchingProgress
       };
     }
