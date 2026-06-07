@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/hk-chinese-basics.json'];
+const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json'];
 for (const file of requiredFiles) {
   if (!fs.existsSync(file)) throw new Error(`Missing required file: ${file}`);
 }
@@ -29,18 +29,24 @@ const scriptMatch = html.match(/<script>([\s\S]*)<\/script>\s*<\/body>/);
 if (!scriptMatch) throw new Error('Could not locate inline script');
 new vm.Script(scriptMatch[1]);
 
-const hkChinesePack = JSON.parse(fs.readFileSync('content-packs/hk-chinese-basics.json', 'utf8'));
-if (hkChinesePack.id !== 'hk-chinese-basics-v1') throw new Error('HK Chinese pack id changed unexpectedly');
-if (!Array.isArray(hkChinesePack.flashcards) || hkChinesePack.flashcards.length < 10) throw new Error('HK Chinese pack needs at least 10 flashcards');
-for (const [i, card] of hkChinesePack.flashcards.entries()) {
-  for (const field of ['traditional', 'jyutping', 'canto', 'english', 'prompt']) {
-    if (!card[field]) throw new Error(`HK Chinese flashcard ${i + 1} missing ${field}`);
+function validatePackFile(path, expectedId, fields, label) {
+  const pack = JSON.parse(fs.readFileSync(path, 'utf8'));
+  if (pack.id !== expectedId) throw new Error(`${label} pack id changed unexpectedly`);
+  if (!Array.isArray(pack.flashcards) || pack.flashcards.length < 10) throw new Error(`${label} pack needs at least 10 flashcards`);
+  for (const [i, card] of pack.flashcards.entries()) {
+    for (const field of fields) {
+      if (!card[field]) throw new Error(`${label} flashcard ${i + 1} missing ${field}`);
+    }
   }
+  return pack;
 }
-for (const marker of ['HK_CHINESE_PACK_PATH', 'loadHKChinesePack', 'validateHKChinesePack', 'hkChineseFlashcards', 'hkChinesePackError', 'flashcard-placeholder', 'Question practice remains available', 'content-packs/hk-chinese-basics.json']) {
+
+const hkChinesePack = validatePackFile('content-packs/hk-chinese-basics.json', 'hk-chinese-basics-v1', ['traditional', 'jyutping', 'canto', 'english', 'prompt'], 'HK Chinese');
+const mandarinPack = validatePackFile('content-packs/mandarin-basics.json', 'mandarin-basics-v1', ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], 'Mandarin');
+for (const marker of ['HK_CHINESE_PACK_PATH', 'MANDARIN_PACK_PATH', 'loadHKChinesePack', 'loadMandarinPack', 'validateHKChinesePack', 'validateMandarinPack', 'hkChineseFlashcards', 'mandarinFlashcards', 'hkChinesePackError', 'mandarinPackError', 'flashcard-placeholder', 'Question practice remains available', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json']) {
   if (!html.includes(marker)) throw new Error(`Missing runtime HK Chinese content-pack marker: ${marker}`);
 }
-for (const inlineSeed of ['baa4 baa1', 'zou2 san4', 'Find something red nearby']) {
+for (const inlineSeed of ['baa4 baa1', 'zou2 san4', 'bàba', 'zǎoshang hǎo', 'Find something red nearby']) {
   if (html.includes(inlineSeed)) throw new Error(`HK Chinese flashcards should be runtime-loaded from JSON, not inline seeded: ${inlineSeed}`);
 }
 
