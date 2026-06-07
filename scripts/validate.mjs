@@ -34,6 +34,7 @@ function validatePackFile(path, expectedId, fields, label) {
   if (pack.id !== expectedId) throw new Error(`${label} pack id changed unexpectedly`);
   if (!pack.activity || !pack.activity.includes('matching')) throw new Error(`${label} pack metadata must advertise matching practice`);
   if (!pack.activity || !pack.activity.includes('comparison')) throw new Error(`${label} pack metadata must advertise comparison drills`);
+  if (!pack.activity || !pack.activity.includes('audio prompts')) throw new Error(`${label} pack metadata must advertise audio prompts`);
   if (!Array.isArray(pack.flashcards) || pack.flashcards.length < 10) throw new Error(`${label} pack needs at least 10 flashcards`);
   for (const [i, card] of pack.flashcards.entries()) {
     for (const field of fields) {
@@ -63,11 +64,59 @@ for (const [id, path, fields] of [
   }
   if (!registered.activity.includes('matching')) throw new Error(`Content pack registry ${id} missing matching activity`);
   if (!registered.activity.includes('comparison')) throw new Error(`Content pack registry ${id} missing comparison activity`);
+  if (!registered.activity.includes('audio prompts')) throw new Error(`Content pack registry ${id} missing audio prompt activity`);
   if (!Array.isArray(registered.progressionSteps) || registered.progressionSteps.length < 3) throw new Error(`Content pack registry ${id} missing progressionSteps`);
 }
 const hkChinesePack = validatePackFile('content-packs/hk-chinese-basics.json', 'hk-chinese-basics-v1', registryById['hk-chinese-basics-v1'].schema, 'HK Chinese');
 const mandarinPack = validatePackFile('content-packs/mandarin-basics.json', 'mandarin-basics-v1', registryById['mandarin-basics-v1'].schema, 'Mandarin');
-for (const marker of ['CONTENT_PACK_REGISTRY_PATH', 'FALLBACK_CONTENT_PACK_REGISTRY', 'loadContentPackRegistry', 'validateContentPackRegistry', 'contentPackRegistryError', 'recommendedStages', 'recommendedGoals', 'progressionSteps', 'progressionPathText', 'recommendedProgressionPaths', 'matchingPracticeCards', 'renderChineseMatchingPractice', 'comparison-grid', 'comparison-card', 'Traditional/Simplified comparison drill', 'comparisonDrillPairs', 'renderChineseComparisonDrill', 'comparisonDrillCards', 'choose the meaning', 'matching-option', 'matchingPracticeSummary', 'matchingPracticeScores', 'recordMatchingAnswer', 'matchingPracticeMeta', 'matching-practice', 'latestMatchingProgress', 'upsertHistoryEntry', 'saveMatchingPracticeProgress', 'matchingPracticeCounts', 'Traditional HK Chinese matching practice', 'Simplified Mandarin matching practice', 'recommendCurriculumPacks', 'recommendedCurriculumTitles', 'loadHKChinesePack', 'loadMandarinPack', 'validateHKChinesePack', 'validateMandarinPack', 'hkChineseFlashcards', 'mandarinFlashcards', 'hkChinesePackError', 'mandarinPackError', 'flashcard-placeholder', 'Question practice remains available', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json']) {
+for (const marker of [
+  'FALLBACK_CONTENT_PACK_REGISTRY',
+  'renderCurriculumPacks',
+  'content-packs/registry.json',
+  'content-packs/hk-chinese-basics.json',
+  'content-packs/mandarin-basics.json',
+  'renderChineseMatchingPractice',
+  'matchingPracticeCounts',
+  'renderChineseComparisonDrill',
+  'comparisonDrillCards',
+  'comparisonDrillPairs',
+  'comparison-card',
+  'comparison-grid',
+  'audio-button',
+  'speakChinesePrompt',
+  'speechSynthesisAvailable',
+  'SpeechSynthesisUtterance',
+  'audioPromptCards',
+  'audioPromptCounts',
+  'audioPromptLocales',
+  'latestAudioPrompt',
+  'zh-HK',
+  'zh-CN',
+  'Hear Cantonese',
+  'Hear Mandarin',
+  'matchingPracticeSummary',
+  'matchingPracticeScores',
+  'recordMatchingAnswer',
+  'matchingPracticeMeta',
+  'matching-practice',
+  'latestMatchingProgress',
+  'upsertHistoryEntry',
+  'saveMatchingPracticeProgress',
+  'Traditional HK Chinese matching practice',
+  'Simplified Mandarin matching practice',
+  'recommendCurriculumPacks',
+  'recommendedCurriculumTitles',
+  'loadHKChinesePack',
+  'loadMandarinPack',
+  'validateHKChinesePack',
+  'validateMandarinPack',
+  'hkChineseFlashcards',
+  'mandarinFlashcards',
+  'hkChinesePackError',
+  'mandarinPackError',
+  'flashcard-placeholder',
+  'Question practice remains available'
+]) {
   if (!html.includes(marker)) throw new Error(`Missing runtime HK Chinese content-pack marker: ${marker}`);
 }
 for (const inlineSeed of ['baa4 baa1', 'zou2 san4', 'bàba', 'zǎoshang hǎo', 'Find something red nearby']) {

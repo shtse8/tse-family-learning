@@ -173,3 +173,10 @@ Next slices:
 - Added a runtime Traditional/Simplified comparison drill that joins shared meanings across the HK Chinese and Mandarin content packs.
 - The drill highlights same-form words versus changed characters with Jyutping and Pinyin side by side.
 - Added `comparisonDrillCards`, `renderChineseComparisonDrill`, and `comparisonDrillPairs` test-state evidence.
+
+
+## Run #20 Chinese audio prompts
+
+- Added browser Web Speech audio prompt controls to runtime HK Chinese and Mandarin flashcards.
+- Audio controls expose `speakChinesePrompt`, `audioPromptCards`, `audioPromptCounts`, `audioPromptLocales`, and `latestAudioPrompt` evidence for validation.
+- Controls gracefully show visible fallback status when a browser lacks speech synthesis support.

@@ -20,11 +20,15 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.getByText('Listen & recall: Adult')).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: 'Simplified Mandarin basics' })).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended').getByText('Adult language goal match from the runtime content-pack registry.').first()).toBeVisible();
-  await expect(page.locator('.curriculum-card.recommended').getByText('Start with greetings and core family words → Compare Simplified, Traditional, and Pinyin forms → Use matching practice and comparison drills, then move into listening prompts').first()).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Start with greetings and core family words → Compare Simplified, Traditional, and Pinyin forms → Use matching practice and comparison drills, then try audio prompts').first()).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '早晨' })).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '紅色' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '早上好' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '红色' })).toBeVisible();
+  await expect(page.locator('#flashcard-grid .flashcard').first().getByRole('button', { name: 'Hear Cantonese' })).toBeVisible();
+  await expect(page.locator('#mandarin-flashcard-grid .flashcard').first().getByRole('button', { name: 'Hear Mandarin' })).toBeVisible();
+  await page.locator('#flashcard-grid .flashcard').first().getByRole('button', { name: 'Hear Cantonese' }).tap();
+  await expect(page.locator('#flashcard-grid .flashcard').first().locator('.audio-status')).toContainText(/Playing Cantonese audio prompt|Audio support unavailable/);
   await expect(page.getByRole('heading', { name: 'Traditional HK Chinese matching practice' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Simplified Mandarin matching practice' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Traditional/Simplified comparison drill' })).toBeVisible();
@@ -49,8 +53,11 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(state.hkChinesePackId).toBe('hk-chinese-basics-v1');
   expect(state.mandarinPackId).toBe('mandarin-basics-v1');
   expect(state.recommendedCurriculumTitles).toContain('Simplified Mandarin basics');
-  expect(state.recommendedProgressionPaths.join(' | ')).toContain('Use matching practice and comparison drills, then move into listening prompts');
+  expect(state.recommendedProgressionPaths.join(' | ')).toContain('Use matching practice and comparison drills, then try audio prompts');
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
+  expect(state.audioPromptCounts).toEqual({ hkChinese: 5, mandarin: 5 });
+  expect(state.audioPromptLocales).toEqual(['zh-HK', 'zh-CN']);
+  expect(state.latestAudioPrompt).toMatchObject({ text: '爸爸', lang: 'zh-HK', label: 'Cantonese audio prompt' });
   expect(state.comparisonDrillPairs).toHaveLength(6);
   expect(state.comparisonDrillPairs).toEqual(expect.arrayContaining([
     expect.objectContaining({ traditional: '媽媽', simplified: '妈妈', english: 'Mum / mother', changed: true })
