@@ -285,7 +285,7 @@
     .mission-metric small { color: #bae6fd; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .leaderboard-panel, .badges-panel, .challenge-panel, .practice-panel, .next-step-panel, .domain-panel, .flashcard-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .leaderboard-panel, .badges-panel, .challenge-panel, .practice-panel, .next-step-panel, .domain-panel, .flashcard-panel, .matching-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -293,7 +293,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .leaderboard-panel h3, .badges-panel h3, .challenge-panel h3, .practice-panel h3, .next-step-panel h3, .domain-panel h3, .flashcard-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .leaderboard-panel h3, .badges-panel h3, .challenge-panel h3, .practice-panel h3, .next-step-panel h3, .domain-panel h3, .flashcard-panel h3, .matching-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -344,7 +344,7 @@
     .subject-bar { height: 8px; background: #eef2ff; border-radius: 999px; overflow: hidden; }
     .subject-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: inherit; }
     .subject-tip { color: var(--subtext); font-size: 0.78rem; margin-top: 5px; }
-    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p, .leaderboard-panel p, .challenge-panel p, .practice-panel p, .next-step-panel p, .domain-panel p, .flashcard-panel p { color: var(--subtext); line-height: 1.55; }
+    .study-plan p, .data-panel p, .subject-panel p, .parent-panel p, .leaderboard-panel p, .challenge-panel p, .practice-panel p, .next-step-panel p, .domain-panel p, .flashcard-panel p, .matching-panel p { color: var(--subtext); line-height: 1.55; }
     .challenge-card { background: #fff; border: 1px solid #fde68a; border-radius: 14px; padding: 12px; }
     .challenge-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; color: var(--subtext); font-size: 0.78rem; font-weight: 800; }
     .challenge-question { font-weight: 900; color: var(--text); margin-bottom: 6px; }
@@ -368,7 +368,13 @@
     .curriculum-badge { border-radius: 999px; background: #eef2ff; color: #4338ca; padding: 4px 8px; font-size: 0.72rem; font-weight: 900; }
     .curriculum-status { color: var(--primary); font-size: 0.73rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
     .curriculum-status.recommended { color: #1d4ed8; }
-    .flashcard-panel { margin-top: 14px; }
+    .flashcard-panel, .matching-panel { margin-top: 14px; }
+    .matching-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .matching-card { border: 1px solid #bbf7d0; background: linear-gradient(180deg, #f0fdf4, #fff); border-radius: 16px; padding: 12px; display: grid; gap: 8px; }
+    .matching-prompt { color: #166534; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+    .matching-term { font-size: 1.35rem; font-weight: 900; color: #14532d; }
+    .matching-answer { color: var(--text); font-weight: 800; }
+    .matching-meta { color: var(--subtext); font-size: 0.78rem; line-height: 1.35; }
     .flashcard-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
     .flashcard { border: 1px solid #fecdd3; background: linear-gradient(180deg, #fff7ed, #fff); border-radius: 16px; padding: 12px; min-height: 132px; display: grid; gap: 6px; align-content: start; }
     .flashcard-placeholder { border-style: dashed; background: #fff; }
@@ -416,7 +422,7 @@
       .question-text { font-size: 1.1rem; }
       .option { padding: 13px 14px; font-size: 0.97rem; }
       .stats-grid, .badge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .domain-grid, .curriculum-grid, .mission-metrics, .flashcard-grid { grid-template-columns: 1fr; }
+      .domain-grid, .curriculum-grid, .mission-metrics, .flashcard-grid, .matching-grid { grid-template-columns: 1fr; }
       .family-row, .leaderboard-row { grid-template-columns: 1fr; text-align: left; }
       .family-stat, .family-focus, .leaderboard-score { text-align: left; }
     }
@@ -505,7 +511,7 @@
     .domain-card, .curriculum-card { border-radius: 22px; border: 1px solid var(--line); box-shadow: none; background: linear-gradient(180deg, #fff, #f8fafc); padding: 16px; }
     .domain-card.ready, .domain-card.next { border-color: rgba(79,70,229,.20); }
     .domain-icon { width: 42px; height: 42px; border-radius: 16px; display:grid; place-items:center; background:#eef2ff; margin-bottom: 10px; }
-    .practice-panel, .next-step-panel, .stats-panel, .badges-panel, .parent-panel, .leaderboard-panel, .subject-panel, .history-panel, .data-panel, .domain-panel, .learner-panel, .challenge-panel, .flashcard-panel { background: transparent; border: 0; box-shadow: none; padding: 0; margin: 0; }
+    .practice-panel, .next-step-panel, .stats-panel, .badges-panel, .parent-panel, .leaderboard-panel, .subject-panel, .history-panel, .data-panel, .domain-panel, .learner-panel, .challenge-panel, .flashcard-panel, .matching-panel { background: transparent; border: 0; box-shadow: none; padding: 0; margin: 0; }
     .practice-options, .learner-options, .data-actions { gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; scrollbar-width: none; }
     .practice-chip, .learner-chip { min-height: 42px; white-space: nowrap; box-shadow: 0 6px 16px rgba(79,70,229,.08); }
     .start-cta-sticky { position: sticky; bottom: 88px; z-index: 12; margin-top: 14px; padding: 10px; border-radius: 24px; background: rgba(255,255,255,.78); border: 1px solid rgba(255,255,255,.78); box-shadow: 0 16px 50px rgba(15,23,42,.16); backdrop-filter: blur(16px); }
@@ -520,7 +526,7 @@
       .section-card.wide { grid-column: 1 / -1; }
       .domain-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .curriculum-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .flashcard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flashcard-grid, .matching-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .start-cta-sticky { bottom: 20px; max-width: 420px; margin-left: auto; }
     }
     @media (min-width: 1080px) {
@@ -530,6 +536,7 @@
       .section-card.rail { grid-column: 3; }
       .domain-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .flashcard-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .matching-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
     @media (max-width: 480px) {
       .card { max-width: 100%; }
@@ -545,7 +552,7 @@
     html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
     body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
     .app-shell, #start-screen, main, .hero-v2, .app-grid, .section-card, .command-card, .today-hero { min-width: 0; }
-    .section-card *, .command-card *, .today-hero *, .domain-card *, .curriculum-card *, .flashcard * { min-width: 0; overflow-wrap: anywhere; word-break: normal; }
+    .section-card *, .command-card *, .today-hero *, .domain-card *, .curriculum-card *, .flashcard *, .matching-card * { min-width: 0; overflow-wrap: anywhere; word-break: normal; }
     .section-card { color: var(--ink); }
     .section-head { text-align: left; }
     .section-head > div:first-child { min-width: 0; flex: 1 1 auto; }
@@ -831,7 +838,9 @@
             </div>
             <div class="domain-panel" id="curriculum-panel"><div class="curriculum-grid" id="curriculum-grid"></div></div>
             <div class="flashcard-panel" id="flashcard-panel"><h3>🧧 Traditional HK Chinese starter cards</h3><p>A first real curriculum slice: Traditional characters, Jyutping, Cantonese prompts, and English meaning.</p><div class="flashcard-grid" id="flashcard-grid"></div></div>
+            <div class="matching-panel" id="hk-matching-panel"><h3>🔗 Traditional HK Chinese matching practice</h3><p>Match the Traditional term to its English meaning before repeating the Cantonese prompt.</p><div class="matching-grid" id="hk-matching-grid"></div></div>
             <div class="flashcard-panel" id="mandarin-flashcard-panel"><h3>🧧 Simplified Mandarin starter cards</h3><p>A second reusable curriculum slice: Simplified characters, Pinyin, Traditional comparison, and English meaning.</p><div class="flashcard-grid" id="mandarin-flashcard-grid"></div></div>
+            <div class="matching-panel" id="mandarin-matching-panel"><h3>🔗 Simplified Mandarin matching practice</h3><p>Match Simplified characters to English meaning, then compare Pinyin and Traditional forms.</p><div class="matching-grid" id="mandarin-matching-grid"></div></div>
           </article>
 
           <article class="section-card rail" id="progress">
@@ -941,8 +950,8 @@
     ];
     const CONTENT_PACK_REGISTRY_PATH = 'content-packs/registry.json';
     const FALLBACK_CONTENT_PACK_REGISTRY = [
-      { id: 'hk-chinese-basics-v1', path: 'content-packs/hk-chinese-basics.json', kind: 'flashcards', title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'All learners', activity: 'Flashcards + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.', schema: ['traditional', 'jyutping', 'canto', 'english', 'prompt'], renderTarget: 'flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['confidence', 'language', 'mastery'], progressionSteps: ['Start with family words and greetings', 'Practise colours, numbers, and Jyutping recall', 'Move into audio prompts and short household phrases'] },
-      { id: 'mandarin-basics-v1', path: 'content-packs/mandarin-basics.json', kind: 'flashcards', title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + listen/repeat', readiness: 'Live slice', next: 'Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.', schema: ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], renderTarget: 'mandarin-flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence', 'mastery'], progressionSteps: ['Start with greetings and core family words', 'Compare Simplified, Traditional, and Pinyin forms', 'Move into matching practice and listening prompts'] }
+      { id: 'hk-chinese-basics-v1', path: 'content-packs/hk-chinese-basics.json', kind: 'flashcards', title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'All learners', activity: 'Flashcards + matching + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.', schema: ['traditional', 'jyutping', 'canto', 'english', 'prompt'], renderTarget: 'flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['confidence', 'language', 'mastery'], progressionSteps: ['Start with family words and greetings', 'Practise colours, numbers, and Jyutping recall', 'Move into matching practice, audio prompts, and short household phrases'] },
+      { id: 'mandarin-basics-v1', path: 'content-packs/mandarin-basics.json', kind: 'flashcards', title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching + listen/repeat', readiness: 'Live slice', next: 'Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.', schema: ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], renderTarget: 'mandarin-flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence', 'mastery'], progressionSteps: ['Start with greetings and core family words', 'Compare Simplified, Traditional, and Pinyin forms', 'Use matching practice, then move into listening prompts'] }
     ];
     let contentPackRegistry = [...FALLBACK_CONTENT_PACK_REGISTRY];
     let contentPackRegistryError = null;
@@ -1590,11 +1599,49 @@
       `).join('');
     }
 
+    function matchingPracticeCards(cards, termField, soundField) {
+      return cards.slice(0, 4).map((card, index) => ({
+        index: index + 1,
+        term: card[termField],
+        answer: card.english,
+        sound: card[soundField],
+        prompt: card.prompt
+      }));
+    }
+
+    function renderMatchingPractice(gridId, cards, termField, soundField, unavailableMessage) {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      if (!cards.length) {
+        grid.innerHTML = `
+          <article class="matching-card">
+            <div class="matching-prompt">Matching practice waits for the pack</div>
+            <div class="matching-term">${unavailableMessage ? '稍後' : '…'}</div>
+            <div class="matching-meta">${escapeHTML(unavailableMessage || 'Loading matching pairs')}</div>
+          </article>`;
+        return;
+      }
+      grid.innerHTML = matchingPracticeCards(cards, termField, soundField).map(card => `
+        <article class="matching-card">
+          <div class="matching-prompt">Pair ${card.index}: match term → meaning</div>
+          <div class="matching-term">${escapeHTML(card.term)}</div>
+          <div class="matching-answer">${escapeHTML(card.answer)}</div>
+          <div class="matching-meta">Sound clue: ${escapeHTML(card.sound)}<br>${escapeHTML(card.prompt)}</div>
+        </article>
+      `).join('');
+    }
+
+    function renderChineseMatchingPractice() {
+      renderMatchingPractice('hk-matching-grid', hkChineseFlashcards, 'traditional', 'jyutping', hkChinesePackError);
+      renderMatchingPractice('mandarin-matching-grid', mandarinFlashcards, 'simplified', 'pinyin', mandarinPackError);
+    }
+
     function updateRecommendedCurriculumTestState() {
       window.__learningQuestTestState = {
         ...(window.__learningQuestTestState || {}),
         recommendedCurriculumTitles: curriculumPacks().filter(pack => pack.recommended).map(pack => pack.title),
-        recommendedProgressionPaths: curriculumPacks().filter(pack => pack.recommended).map(pack => progressionPathText(pack))
+        recommendedProgressionPaths: curriculumPacks().filter(pack => pack.recommended).map(pack => progressionPathText(pack)),
+        matchingPracticeCounts: { hkChinese: hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0, mandarin: mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0 }
       };
     }
 
@@ -1689,6 +1736,7 @@
       } finally {
         renderCurriculumPacks();
         renderHKChineseFlashcards();
+        renderChineseMatchingPractice();
       }
     }
 
@@ -1724,6 +1772,7 @@
       } finally {
         renderCurriculumPacks();
         renderMandarinFlashcards();
+        renderChineseMatchingPractice();
       }
     }
 
