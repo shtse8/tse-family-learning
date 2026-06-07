@@ -166,3 +166,10 @@ Next slices:
 - Persisted Chinese matching-practice answers into the same browser-local learner history used by quizzes.
 - Matching progress now contributes to progress stats, subject dashboard, leaderboard XP, backup/export, and next-step recommendations.
 - Added `latestMatchingProgress` test-state evidence plus mobile coverage proving HK Chinese and Mandarin matching entries are saved.
+
+
+## Run #19 Traditional/Simplified comparison drill
+
+- Added a runtime Traditional/Simplified comparison drill that joins shared meanings across the HK Chinese and Mandarin content packs.
+- The drill highlights same-form words versus changed characters with Jyutping and Pinyin side by side.
+- Added `comparisonDrillCards`, `renderChineseComparisonDrill`, and `comparisonDrillPairs` test-state evidence.
