@@ -13,8 +13,24 @@
       "activity": "Flashcards + listen/repeat",
       "readiness": "Live slice",
       "next": "Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.",
-      "schema": ["traditional", "jyutping", "canto", "english", "prompt"],
-      "renderTarget": "flashcard-grid"
+      "schema": [
+        "traditional",
+        "jyutping",
+        "canto",
+        "english",
+        "prompt"
+      ],
+      "renderTarget": "flashcard-grid",
+      "recommendedStages": [
+        "early",
+        "primary",
+        "adult"
+      ],
+      "recommendedGoals": [
+        "confidence",
+        "language",
+        "mastery"
+      ]
     },
     {
       "id": "mandarin-basics-v1",
@@ -27,8 +43,24 @@
       "activity": "Flashcards + listen/repeat",
       "readiness": "Live slice",
       "next": "Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.",
-      "schema": ["simplified", "traditional", "pinyin", "english", "prompt"],
-      "renderTarget": "mandarin-flashcard-grid"
+      "schema": [
+        "simplified",
+        "traditional",
+        "pinyin",
+        "english",
+        "prompt"
+      ],
+      "renderTarget": "mandarin-flashcard-grid",
+      "recommendedStages": [
+        "early",
+        "primary",
+        "adult"
+      ],
+      "recommendedGoals": [
+        "language",
+        "confidence",
+        "mastery"
+      ]
     }
   ]
 }

@@ -23,7 +23,7 @@ Start with browser-local storage rather than accounts or server-side secrets:
 - `questionSets`: subject, level, tags, language, source, estimated time.
 - `attempts`: learner id, question set id, answers, score, completed at.
 - `progress`: XP, level, streak, badges, last practice date.
-- Current implementation starts with a responsive platform shell, learning-domain cards, curriculum-pack roadmap cards, browser-local learner profiles, attempts, best score, average score, level, daily streak, practice XP, per-learner subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, and subject, difficulty, and skill quick-practice filters.
+- Current implementation starts with a responsive platform shell, learning-domain cards, onboarding-recommended curriculum-pack cards, browser-local learner profiles, attempts, best score, average score, level, daily streak, practice XP, per-learner subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, and subject, difficulty, and skill quick-practice filters.
 
 Export/import JSON is now available for browser-local progress so family progress is not easily lost. Silas, Sylvie, Kyle, and Cheryl can now keep separate local history buckets.
 
@@ -128,3 +128,11 @@ Next slices:
 - The app now loads registry metadata before optional packs, uses registered paths for HK Chinese and Mandarin pack fetches, and falls back to baked-in registry metadata if the registry route is temporarily unavailable.
 - Validation now cross-checks registry ids, paths, schemas, and required display metadata against the actual pack files.
 - Mobile regression coverage verifies both registered packs still render when the registry endpoint is unavailable.
+
+
+## Run #14 learner-specific pack recommendations
+
+- Onboarding stage and learning goal now rank curriculum cards, marking the best two packs as recommended.
+- Runtime content-pack registry entries carry `recommendedStages` and `recommendedGoals` metadata, keeping pack recommendation hints with the registry SSOT.
+- Recommendations re-render immediately when the learner switches stage or goal and remain resilient when optional pack routes are loading or unavailable.
+- Mobile regression coverage verifies exam-prep learners see the 11+ starter bank and adult language learners see registry-driven Mandarin recommendations.
