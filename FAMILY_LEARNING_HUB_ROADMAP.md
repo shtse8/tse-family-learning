@@ -144,3 +144,11 @@ Next slices:
 - Runtime content-pack registry entries carry `progressionSteps` metadata for HK Chinese and Mandarin, keeping progression guidance alongside the pack metadata SSOT.
 - Inline planned packs and the 11+ starter bank include matching progression paths so every recommended card can explain the next sequence.
 - Mobile regression coverage verifies exam-prep and adult-language recommendation paths and exposes `recommendedProgressionPaths` test-state evidence.
+
+
+## Run #16 Chinese matching activity
+
+- Added a registry-driven activity beyond flashcards for the live HK Chinese and Mandarin packs.
+- The curriculum now renders matching-practice panels from runtime pack flashcards, pairing Chinese terms with English meaning and sound clues.
+- Pack and registry metadata now advertise `Flashcards + matching + listen/repeat`, keeping activity promises aligned with the content-pack SSOT.
+- Mobile regression coverage verifies both matching panels and `matchingPracticeCounts` test-state evidence.

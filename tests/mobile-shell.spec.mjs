@@ -20,11 +20,15 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.getByText('Listen & recall: Adult')).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: 'Simplified Mandarin basics' })).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended').getByText('Adult language goal match from the runtime content-pack registry.').first()).toBeVisible();
-  await expect(page.locator('.curriculum-card.recommended').getByText('Start with greetings and core family words → Compare Simplified, Traditional, and Pinyin forms → Move into matching practice and listening prompts').first()).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Start with greetings and core family words → Compare Simplified, Traditional, and Pinyin forms → Use matching practice, then move into listening prompts').first()).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '早晨' })).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '紅色' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '早上好' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '红色' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Traditional HK Chinese matching practice' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Simplified Mandarin matching practice' })).toBeVisible();
+  await expect(page.locator('#hk-matching-grid .matching-card').first().getByText('Dad / father')).toBeVisible();
+  await expect(page.locator('#mandarin-matching-grid .matching-card').first().getByText('bàba')).toBeVisible();
 
   const state = await page.evaluate(() => window.__learningQuestTestState);
   expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(2);
@@ -32,7 +36,8 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(state.hkChinesePackId).toBe('hk-chinese-basics-v1');
   expect(state.mandarinPackId).toBe('mandarin-basics-v1');
   expect(state.recommendedCurriculumTitles).toContain('Simplified Mandarin basics');
-  expect(state.recommendedProgressionPaths.join(' | ')).toContain('Move into matching practice and listening prompts');
+  expect(state.recommendedProgressionPaths.join(' | ')).toContain('Use matching practice, then move into listening prompts');
+  expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);

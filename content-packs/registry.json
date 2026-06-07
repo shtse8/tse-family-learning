@@ -10,9 +10,9 @@
       "domain": "Chinese · Traditional HK",
       "language": "繁體中文 + Cantonese",
       "learners": "All learners",
-      "activity": "Flashcards + listen/repeat",
+      "activity": "Flashcards + matching + listen/repeat",
       "readiness": "Live slice",
-      "next": "Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.",
+      "next": "Expand family words into colours, numbers, greetings, Jyutping, matching practice, and audio prompts.",
       "schema": [
         "traditional",
         "jyutping",
@@ -34,7 +34,7 @@
       "progressionSteps": [
         "Start with family words and greetings",
         "Practise colours, numbers, and Jyutping recall",
-        "Move into audio prompts and short household phrases"
+        "Move into matching practice, audio prompts, and short household phrases"
       ]
     },
     {
@@ -45,7 +45,7 @@
       "domain": "Chinese · Simplified Mandarin",
       "language": "简体中文 + Pinyin",
       "learners": "All learners",
-      "activity": "Flashcards + listen/repeat",
+      "activity": "Flashcards + matching + listen/repeat",
       "readiness": "Live slice",
       "next": "Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.",
       "schema": [
@@ -69,7 +69,7 @@
       "progressionSteps": [
         "Start with greetings and core family words",
         "Compare Simplified, Traditional, and Pinyin forms",
-        "Move into matching practice and listening prompts"
+        "Use matching practice, then move into listening prompts"
       ]
     }
   ]
