@@ -1,0 +1,83 @@
+{
+  "id": "hk-chinese-basics-v1",
+  "title": "Traditional HK Chinese basics",
+  "domain": "Chinese · Traditional HK",
+  "language": "繁體中文 + Cantonese",
+  "learners": "All learners",
+  "activity": "Flashcards + listen/repeat",
+  "readiness": "Live slice",
+  "next": "Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.",
+  "flashcards": [
+    {
+      "traditional": "爸爸",
+      "jyutping": "baa4 baa1",
+      "canto": "baa baa",
+      "english": "Dad / father",
+      "prompt": "Practise with a coach"
+    },
+    {
+      "traditional": "媽媽",
+      "jyutping": "maa4 maa1",
+      "canto": "maa maa",
+      "english": "Mum / mother",
+      "prompt": "Practise with a coach"
+    },
+    {
+      "traditional": "哥哥",
+      "jyutping": "go4 go1",
+      "canto": "go go",
+      "english": "Older brother",
+      "prompt": "A learner can teach another learner"
+    },
+    {
+      "traditional": "妹妹",
+      "jyutping": "mui6 mui2",
+      "canto": "mui mui",
+      "english": "Younger sister",
+      "prompt": "Family vocabulary word"
+    },
+    {
+      "traditional": "多謝",
+      "jyutping": "do1 ze6",
+      "canto": "dor jeh",
+      "english": "Thank you",
+      "prompt": "Use after help"
+    },
+    {
+      "traditional": "早晨",
+      "jyutping": "zou2 san4",
+      "canto": "jo san",
+      "english": "Good morning",
+      "prompt": "Say it at breakfast"
+    },
+    {
+      "traditional": "你好",
+      "jyutping": "nei5 hou2",
+      "canto": "nei ho",
+      "english": "Hello",
+      "prompt": "Start a practice chat"
+    },
+    {
+      "traditional": "紅色",
+      "jyutping": "hung4 sik1",
+      "canto": "hung sik",
+      "english": "Red",
+      "prompt": "Find something red nearby"
+    },
+    {
+      "traditional": "藍色",
+      "jyutping": "laam4 sik1",
+      "canto": "laam sik",
+      "english": "Blue",
+      "prompt": "Point to something blue"
+    },
+    {
+      "traditional": "一",
+      "jyutping": "jat1",
+      "canto": "yat",
+      "english": "One",
+      "prompt": "Count one object"
+    }
+  ],
+  "sourcePath": "content-packs/hk-chinese-basics.json"
+}

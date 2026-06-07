@@ -97,6 +97,7 @@ Shipped first foundation slice:
 - Added GitHub Actions CI validation for HTML/script syntax, question schema, PWA files, and private-name regression checks.
 
 Next slices:
+- ✅ Externalized the first Traditional HK Chinese flashcard slice into `content-packs/hk-chinese-basics.json` and expanded it to family words, greetings, colours, and counting starters.
 1. Add onboarding: create learner profile, age band, goal, and preferred curriculum.
 2. Split inline JS/CSS/data into typed app modules and JSON content packs.
 3. Add mobile-native mission mode as the default first screen.

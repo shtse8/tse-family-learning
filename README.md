@@ -32,3 +32,8 @@ Then verify `/`, `/questions.json`, and `/FAMILY_LEARNING_HUB_ROADMAP.md`, inclu
 ## Public / commercial-grade direction
 
 This app is being generalized from a family prototype into a public-facing product foundation. The current baseline avoids hardcoded private learner names in the UI, includes a PWA manifest/service worker for app-like mobile launch, and adds GitHub Actions CI for static validation.
+
+
+## Content packs
+
+- `content-packs/hk-chinese-basics.json` is the first reusable curriculum pack shape. It powers the live Traditional HK Chinese flashcards with Traditional characters, Jyutping, Cantonese-style pronunciation, English meaning, and family practice prompts.

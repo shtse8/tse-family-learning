@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile'];
+const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/hk-chinese-basics.json'];
 for (const file of requiredFiles) {
   if (!fs.existsSync(file)) throw new Error(`Missing required file: ${file}`);
 }
@@ -29,6 +29,18 @@ const scriptMatch = html.match(/<script>([\s\S]*)<\/script>\s*<\/body>/);
 if (!scriptMatch) throw new Error('Could not locate inline script');
 new vm.Script(scriptMatch[1]);
 
+const hkChinesePack = JSON.parse(fs.readFileSync('content-packs/hk-chinese-basics.json', 'utf8'));
+if (hkChinesePack.id !== 'hk-chinese-basics-v1') throw new Error('HK Chinese pack id changed unexpectedly');
+if (!Array.isArray(hkChinesePack.flashcards) || hkChinesePack.flashcards.length < 10) throw new Error('HK Chinese pack needs at least 10 flashcards');
+for (const [i, card] of hkChinesePack.flashcards.entries()) {
+  for (const field of ['traditional', 'jyutping', 'canto', 'english', 'prompt']) {
+    if (!card[field]) throw new Error(`HK Chinese flashcard ${i + 1} missing ${field}`);
+  }
+}
+for (const marker of ['HK_CHINESE_PACK', '早晨', '紅色', 'content-packs/hk-chinese-basics.json']) {
+  if (!html.includes(marker)) throw new Error(`Missing HK Chinese content-pack marker: ${marker}`);
+}
+
 const data = JSON.parse(fs.readFileSync('questions.json', 'utf8'));
 if (!data.meta || !Array.isArray(data.questions)) throw new Error('questions.json must contain meta and questions[]');
 if (data.meta.questionCount !== data.questions.length) throw new Error(`questionCount ${data.meta.questionCount} != ${data.questions.length}`);
@@ -50,3 +62,6 @@ console.log(`Validated LearningQuest static app with ${data.questions.length} qu
 const serverLog = fs.readFileSync('server.js', 'utf8');
 if (serverLog.includes('Tse Family')) throw new Error('server.js still contains legacy family-specific branding');
 if (!serverLog.includes('LearningQuest running on port')) throw new Error('server.js missing LearningQuest startup marker');
+
+const dockerfile = fs.readFileSync('Dockerfile', 'utf8');
+if (!dockerfile.includes('COPY content-packs ./content-packs')) throw new Error('Dockerfile must publish content-packs for production');
