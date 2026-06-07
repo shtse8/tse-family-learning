@@ -12,6 +12,8 @@ for (const marker of [
   'Mobile-native learning app',
   'manifest.webmanifest',
   'serviceWorker',
+  'Set up today’s mission',
+  'learningquest-onboarding-v1',
   'overflow-x: hidden'
 ]) {
   if (!html.includes(marker)) throw new Error(`Missing app marker: ${marker}`);

@@ -761,24 +761,23 @@
             <h1>Your learning day, beautifully focused.</h1>
             <p id="quiz-desc">A mobile-first learning app for any learner — combining guided missions, adaptive practice, progress insights, and curriculum packs without feeling like a cramped quiz page.</p>
             <div class="hero-actions">
-              <button class="hero-primary" onclick="startQuiz()">Start smart practice →</button>
+              <button class="hero-primary" onclick="startQuiz()">Start mission →</button>
               <button class="hero-secondary" onclick="document.getElementById('learn').scrollIntoView({behavior:'smooth'})">Explore learning paths</button>
             </div>
           </div>
-          <aside class="command-card">
-            <div class="section-kicker">Today command centre</div>
-            <h2 id="quiz-title">Loading...</h2>
-            <p>Pick a learner, choose the right path, then start the smallest useful activity. Progress remains browser-local for now.</p>
-            <div class="mission-grid-v2">
-              <div class="metric-tile"><b>8</b><span>domains</span></div>
-              <div class="metric-tile"><b>∞</b><span>learners</span></div>
-              <div class="metric-tile"><b id="info-questions">-</b><span>questions</span></div>
+          <aside class="onboarding-card" aria-label="Quick learner setup">
+            <span class="mission-status">Personalised start</span>
+            <h3>Set up today’s mission</h3>
+            <p>Choose a learner stage and goal. The app turns the selection into a short, mobile-first mission instead of a long worksheet.</p>
+            <div class="onboarding-step">
+              <div class="onboarding-label">Learner stage</div>
+              <div class="segmented-options" id="stage-options"></div>
             </div>
-            <div class="mission-grid-v2">
-              <div class="metric-tile"><b id="info-time">-</b><span>minutes</span></div>
-              <div class="metric-tile"><b id="info-subject">Mixed</b><span>focus</span></div>
-              <div class="metric-tile"><b>v2</b><span>UI</span></div>
+            <div class="onboarding-step">
+              <div class="onboarding-label">Learning goal</div>
+              <div class="segmented-options" id="goal-options"></div>
             </div>
+            <div class="mission-card" id="daily-mission-card"></div>
             <div class="learner-strip learner-panel">
               <div class="section-kicker">Active learner</div>
               <div class="learner-options" id="learner-options"></div>
@@ -912,6 +911,20 @@
       { id: 'learner-3', name: 'Learner 3', emoji: '🧑', note: 'Adult learning profile' },
       { id: 'coach-demo', name: 'Coach Demo', emoji: '🧑‍🏫', note: 'Coach and parent review profile' }
     ];
+
+    const ONBOARDING_KEY = 'learningquest-onboarding-v1';
+    const LEARNER_STAGES = [
+      { id: 'early', label: 'Early years', detail: 'phonics, matching, confidence' },
+      { id: 'primary', label: 'Primary', detail: 'maths, English, reading' },
+      { id: 'exam', label: 'Exam prep', detail: '11+, timed practice, review' },
+      { id: 'adult', label: 'Adult', detail: 'languages, citizenship, life skills' }
+    ];
+    const LEARNING_GOALS = [
+      { id: 'confidence', label: 'Build confidence', mode: 'Play mode' },
+      { id: 'mastery', label: 'Master a skill', mode: 'Practice mode' },
+      { id: 'exam-ready', label: 'Get exam-ready', mode: 'Exam mode' },
+      { id: 'language', label: 'Learn language', mode: 'Listen & recall' }
+    ];
     const LEARNING_DOMAINS = [
       { id: 'eleven-plus', icon: '🎓', title: '11+ School Prep', audience: 'Young learners', status: 'Live practice', state: 'ready', description: 'English, Maths, Verbal Reasoning, and Phonics starter bank.' },
       { id: 'chinese-hk', icon: '繁', title: 'Chinese · Traditional HK', audience: 'Family', status: 'Roadmap slice', state: 'next', description: 'Traditional Chinese, Cantonese prompts, Jyutping, and Hong Kong usage.' },
@@ -930,13 +943,75 @@
       { traditional: '多謝', jyutping: 'do1 ze6', canto: 'dor jeh', english: 'Thank you', prompt: 'Use after help' }
     ];
     const CURRICULUM_PACKS = [
-      { title: 'Wilson 11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Young learners', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.' },
-      { title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'Family', activity: 'Flashcards + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.' },
-      { title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'Family', activity: 'Flashcards + matching', readiness: 'Next', next: 'Pair Simplified characters with Pinyin, tone marks, and Traditional equivalents.' },
+      { title: '11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Young learners', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.' },
+      { title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'All learners', activity: 'Flashcards + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.' },
+      { title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching', readiness: 'Next', next: 'Pair Simplified characters with Pinyin, tone marks, and Traditional equivalents.' },
       { title: 'Maths numbers foundation', domain: 'Maths Foundation', language: 'English', learners: 'Primary learners', activity: 'Short adaptive drills', readiness: 'Next', next: 'Add number bonds, counting, place value, and times-table micro practice.' },
       { title: 'Life in the UK mock mode', domain: 'Life in the UK', language: 'English', learners: 'Adult learners', activity: '24Q / 45m mock test', readiness: 'Planned', next: 'Add official-topic taxonomy, pass mark display, and timed mock-test shell.' },
-      { title: 'French first phrases', domain: 'French', language: 'French + English', learners: 'Family', activity: 'Phrase recall', readiness: 'Planned', next: 'Start with greetings, family, numbers, food, and travel phrases.' }
+      { title: 'French first phrases', domain: 'French', language: 'French + English', learners: 'All learners', activity: 'Phrase recall', readiness: 'Planned', next: 'Start with greetings, family, numbers, food, and travel phrases.' }
     ];
+
+
+    function onboardingState() {
+      try { return JSON.parse(localStorage.getItem(ONBOARDING_KEY) || '{}'); }
+      catch (error) { return {}; }
+    }
+
+    function saveOnboardingState(patch) {
+      const next = { stage: 'primary', goal: 'confidence', ...onboardingState(), ...patch };
+      localStorage.setItem(ONBOARDING_KEY, JSON.stringify(next));
+      renderOnboarding();
+    }
+
+    function selectedStage() {
+      const state = { stage: 'primary', goal: 'confidence', ...onboardingState() };
+      return LEARNER_STAGES.find(item => item.id === state.stage) || LEARNER_STAGES[1];
+    }
+
+    function selectedGoal() {
+      const state = { stage: 'primary', goal: 'confidence', ...onboardingState() };
+      return LEARNING_GOALS.find(item => item.id === state.goal) || LEARNING_GOALS[0];
+    }
+
+    function missionForSelection() {
+      const stage = selectedStage();
+      const goal = selectedGoal();
+      const focusMap = {
+        early: '3 playful recognition cards',
+        primary: '5 mixed maths and English questions',
+        exam: '8 focused exam-prep questions',
+        adult: '5 language or life-skills prompts'
+      };
+      return { title: `${goal.mode}: ${stage.label}`, description: focusMap[stage.id] || '5 personalised practice prompts', chips: [stage.detail, goal.label, 'XP + next step'] };
+    }
+
+    function renderChips(targetId, items, activeId, onClickName) {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      target.innerHTML = items.map(item => `
+        <button type="button" class="segment-chip ${item.id === activeId ? 'active' : ''}" onclick="${onClickName}('${escapeHTML(item.id)}')">
+          ${escapeHTML(item.label)}
+        </button>
+      `).join('');
+    }
+
+    function selectStage(id) { saveOnboardingState({ stage: id }); }
+    function selectGoal(id) { saveOnboardingState({ goal: id }); }
+
+    function renderOnboarding() {
+      const state = { stage: 'primary', goal: 'confidence', ...onboardingState() };
+      renderChips('stage-options', LEARNER_STAGES, state.stage, 'selectStage');
+      renderChips('goal-options', LEARNING_GOALS, state.goal, 'selectGoal');
+      const mission = missionForSelection();
+      const card = document.getElementById('daily-mission-card');
+      if (!card) return;
+      card.innerHTML = `
+        <strong>${escapeHTML(mission.title)}</strong>
+        <span>${escapeHTML(mission.description)}</span>
+        <div class="mission-pill-row">${mission.chips.map(chip => `<span class="mission-pill">${escapeHTML(chip)}</span>`).join('')}</div>
+        <button class="mission-start" onclick="startQuiz()">Start this mission</button>
+      `;
+    }
 
     function activeLearnerId() {
       const saved = localStorage.getItem(LEARNER_KEY);
