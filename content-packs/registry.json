@@ -1,0 +1,34 @@
+{
+  "id": "learningquest-content-pack-registry-v1",
+  "updated": "2026-06-07",
+  "packs": [
+    {
+      "id": "hk-chinese-basics-v1",
+      "path": "content-packs/hk-chinese-basics.json",
+      "kind": "flashcards",
+      "title": "Traditional HK Chinese basics",
+      "domain": "Chinese · Traditional HK",
+      "language": "繁體中文 + Cantonese",
+      "learners": "All learners",
+      "activity": "Flashcards + listen/repeat",
+      "readiness": "Live slice",
+      "next": "Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.",
+      "schema": ["traditional", "jyutping", "canto", "english", "prompt"],
+      "renderTarget": "flashcard-grid"
+    },
+    {
+      "id": "mandarin-basics-v1",
+      "path": "content-packs/mandarin-basics.json",
+      "kind": "flashcards",
+      "title": "Simplified Mandarin basics",
+      "domain": "Chinese · Simplified Mandarin",
+      "language": "简体中文 + Pinyin",
+      "learners": "All learners",
+      "activity": "Flashcards + listen/repeat",
+      "readiness": "Live slice",
+      "next": "Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.",
+      "schema": ["simplified", "traditional", "pinyin", "english", "prompt"],
+      "renderTarget": "mandarin-flashcard-grid"
+    }
+  ]
+}

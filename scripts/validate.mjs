@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json'];
+const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json'];
 for (const file of requiredFiles) {
   if (!fs.existsSync(file)) throw new Error(`Missing required file: ${file}`);
 }
@@ -41,9 +41,25 @@ function validatePackFile(path, expectedId, fields, label) {
   return pack;
 }
 
-const hkChinesePack = validatePackFile('content-packs/hk-chinese-basics.json', 'hk-chinese-basics-v1', ['traditional', 'jyutping', 'canto', 'english', 'prompt'], 'HK Chinese');
-const mandarinPack = validatePackFile('content-packs/mandarin-basics.json', 'mandarin-basics-v1', ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], 'Mandarin');
-for (const marker of ['HK_CHINESE_PACK_PATH', 'MANDARIN_PACK_PATH', 'loadHKChinesePack', 'loadMandarinPack', 'validateHKChinesePack', 'validateMandarinPack', 'hkChineseFlashcards', 'mandarinFlashcards', 'hkChinesePackError', 'mandarinPackError', 'flashcard-placeholder', 'Question practice remains available', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json']) {
+const registry = JSON.parse(fs.readFileSync('content-packs/registry.json', 'utf8'));
+if (registry.id !== 'learningquest-content-pack-registry-v1') throw new Error('Content pack registry id changed unexpectedly');
+if (!Array.isArray(registry.packs) || registry.packs.length < 2) throw new Error('Content pack registry needs at least two packs');
+const registryById = Object.fromEntries(registry.packs.map(pack => [pack.id, pack]));
+for (const [id, path, fields] of [
+  ['hk-chinese-basics-v1', 'content-packs/hk-chinese-basics.json', ['traditional', 'jyutping', 'canto', 'english', 'prompt']],
+  ['mandarin-basics-v1', 'content-packs/mandarin-basics.json', ['simplified', 'traditional', 'pinyin', 'english', 'prompt']]
+]) {
+  const registered = registryById[id];
+  if (!registered) throw new Error(`Content pack registry missing ${id}`);
+  if (registered.path !== path) throw new Error(`Content pack registry path mismatch for ${id}`);
+  if (!Array.isArray(registered.schema) || fields.some(field => !registered.schema.includes(field))) throw new Error(`Content pack registry schema mismatch for ${id}`);
+  for (const field of ['kind', 'title', 'domain', 'language', 'learners', 'activity', 'readiness', 'next', 'renderTarget']) {
+    if (!registered[field]) throw new Error(`Content pack registry ${id} missing ${field}`);
+  }
+}
+const hkChinesePack = validatePackFile('content-packs/hk-chinese-basics.json', 'hk-chinese-basics-v1', registryById['hk-chinese-basics-v1'].schema, 'HK Chinese');
+const mandarinPack = validatePackFile('content-packs/mandarin-basics.json', 'mandarin-basics-v1', registryById['mandarin-basics-v1'].schema, 'Mandarin');
+for (const marker of ['CONTENT_PACK_REGISTRY_PATH', 'FALLBACK_CONTENT_PACK_REGISTRY', 'loadContentPackRegistry', 'validateContentPackRegistry', 'contentPackRegistryError', 'loadHKChinesePack', 'loadMandarinPack', 'validateHKChinesePack', 'validateMandarinPack', 'hkChineseFlashcards', 'mandarinFlashcards', 'hkChinesePackError', 'mandarinPackError', 'flashcard-placeholder', 'Question practice remains available', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json']) {
   if (!html.includes(marker)) throw new Error(`Missing runtime HK Chinese content-pack marker: ${marker}`);
 }
 for (const inlineSeed of ['baa4 baa1', 'zou2 san4', 'bàba', 'zǎoshang hǎo', 'Find something red nearby']) {
@@ -74,3 +90,5 @@ if (!serverLog.includes('LearningQuest running on port')) throw new Error('serve
 
 const dockerfile = fs.readFileSync('Dockerfile', 'utf8');
 if (!dockerfile.includes('COPY content-packs ./content-packs')) throw new Error('Dockerfile must publish content-packs for production');
+void hkChinesePack;
+void mandarinPack;

@@ -121,3 +121,10 @@ Next slices:
 - Added `content-packs/mandarin-basics.json` as a second reusable Chinese curriculum pack with 10 Simplified Mandarin flashcards.
 - The app now runtime-loads and browser-validates both Traditional HK Chinese and Simplified Mandarin starter packs.
 - Mobile regression coverage verifies the Mandarin cards render and that a Mandarin pack outage fails soft while the core mission and HK Chinese pack remain available.
+
+## Run #13 content-pack registry metadata
+
+- Added `content-packs/registry.json` as the runtime metadata source of truth for reusable curriculum packs.
+- The app now loads registry metadata before optional packs, uses registered paths for HK Chinese and Mandarin pack fetches, and falls back to baked-in registry metadata if the registry route is temporarily unavailable.
+- Validation now cross-checks registry ids, paths, schemas, and required display metadata against the actual pack files.
+- Mobile regression coverage verifies both registered packs still render when the registry endpoint is unavailable.
