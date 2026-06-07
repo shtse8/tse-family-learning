@@ -103,3 +103,10 @@ Next slices:
 3. Add mobile-native mission mode as the default first screen.
 4. Add accessibility, Playwright mobile no-overflow tests, and branch protection required checks.
 5. Add SaaS-ready auth/storage/backend later; do not embed secrets in public static JS.
+
+
+## Run #10 content-pack loader
+
+- Traditional HK Chinese starter cards are now fetched from `content-packs/hk-chinese-basics.json` at runtime.
+- The browser validates the pack id and flashcard fields before rendering.
+- Validation now rejects inline flashcard seed data so future packs stay external and reusable.

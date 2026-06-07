@@ -935,98 +935,42 @@
       { id: 'life-uk', icon: '🇬🇧', title: 'Life in the UK', audience: 'Adult learners', status: 'Mock test planned', state: 'planned', description: '24-question, 45-minute, 75% pass mock tests plus weak-topic review.' },
       { id: 'english', icon: '✍️', title: 'English Mastery', audience: 'Family', status: 'Planned', state: 'planned', description: 'Grammar, comprehension, writing, vocabulary, and reading confidence.' }
     ];
-    const HK_CHINESE_PACK = {
-          "id": "hk-chinese-basics-v1",
-          "sourcePath": "content-packs/hk-chinese-basics.json",
-          "title": "Traditional HK Chinese basics",
-          "domain": "Chinese · Traditional HK",
-          "language": "繁體中文 + Cantonese",
-          "learners": "All learners",
-          "activity": "Flashcards + listen/repeat",
-          "readiness": "Live slice",
-          "next": "Expand family words into colours, numbers, greetings, Jyutping, and audio prompts.",
-          "flashcards": [
-                {
-                      "traditional": "爸爸",
-                      "jyutping": "baa4 baa1",
-                      "canto": "baa baa",
-                      "english": "Dad / father",
-                      "prompt": "Practise with a coach"
-                },
-                {
-                      "traditional": "媽媽",
-                      "jyutping": "maa4 maa1",
-                      "canto": "maa maa",
-                      "english": "Mum / mother",
-                      "prompt": "Practise with a coach"
-                },
-                {
-                      "traditional": "哥哥",
-                      "jyutping": "go4 go1",
-                      "canto": "go go",
-                      "english": "Older brother",
-                      "prompt": "A learner can teach another learner"
-                },
-                {
-                      "traditional": "妹妹",
-                      "jyutping": "mui6 mui2",
-                      "canto": "mui mui",
-                      "english": "Younger sister",
-                      "prompt": "Family vocabulary word"
-                },
-                {
-                      "traditional": "多謝",
-                      "jyutping": "do1 ze6",
-                      "canto": "dor jeh",
-                      "english": "Thank you",
-                      "prompt": "Use after help"
-                },
-                {
-                      "traditional": "早晨",
-                      "jyutping": "zou2 san4",
-                      "canto": "jo san",
-                      "english": "Good morning",
-                      "prompt": "Say it at breakfast"
-                },
-                {
-                      "traditional": "你好",
-                      "jyutping": "nei5 hou2",
-                      "canto": "nei ho",
-                      "english": "Hello",
-                      "prompt": "Start a practice chat"
-                },
-                {
-                      "traditional": "紅色",
-                      "jyutping": "hung4 sik1",
-                      "canto": "hung sik",
-                      "english": "Red",
-                      "prompt": "Find something red nearby"
-                },
-                {
-                      "traditional": "藍色",
-                      "jyutping": "laam4 sik1",
-                      "canto": "laam sik",
-                      "english": "Blue",
-                      "prompt": "Point to something blue"
-                },
-                {
-                      "traditional": "一",
-                      "jyutping": "jat1",
-                      "canto": "yat",
-                      "english": "One",
-                      "prompt": "Count one object"
-                }
-          ]
-    };
-    const HK_CHINESE_FLASHCARDS = HK_CHINESE_PACK.flashcards;
-    const CURRICULUM_PACKS = [
-      { title: '11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Young learners', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.' },
-      { title: HK_CHINESE_PACK.title, domain: HK_CHINESE_PACK.domain, language: HK_CHINESE_PACK.language, learners: HK_CHINESE_PACK.learners, activity: HK_CHINESE_PACK.activity, readiness: HK_CHINESE_PACK.readiness, next: HK_CHINESE_PACK.next },
-      { title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching', readiness: 'Next', next: 'Pair Simplified characters with Pinyin, tone marks, and Traditional equivalents.' },
-      { title: 'Maths numbers foundation', domain: 'Maths Foundation', language: 'English', learners: 'Primary learners', activity: 'Short adaptive drills', readiness: 'Next', next: 'Add number bonds, counting, place value, and times-table micro practice.' },
-      { title: 'Life in the UK mock mode', domain: 'Life in the UK', language: 'English', learners: 'Adult learners', activity: '24Q / 45m mock test', readiness: 'Planned', next: 'Add official-topic taxonomy, pass mark display, and timed mock-test shell.' },
-      { title: 'French first phrases', domain: 'French', language: 'French + English', learners: 'All learners', activity: 'Phrase recall', readiness: 'Planned', next: 'Start with greetings, family, numbers, food, and travel phrases.' }
-    ];
+    const HK_CHINESE_PACK_PATH = 'content-packs/hk-chinese-basics.json';
+    let hkChinesePack = null;
+    let hkChineseFlashcards = [];
+
+    function hkPackSummary() {
+      const pack = hkChinesePack || {
+        title: 'Traditional HK Chinese basics',
+        domain: 'Chinese · Traditional HK',
+        language: '繁體中文 + Cantonese',
+        learners: 'All learners',
+        activity: 'Flashcards + listen/repeat',
+        readiness: 'Loading pack',
+        next: `Runtime-load ${HK_CHINESE_PACK_PATH} and render the flashcards from external JSON.`
+      };
+      return {
+        title: pack.title,
+        domain: pack.domain,
+        language: pack.language,
+        learners: pack.learners,
+        activity: pack.activity,
+        readiness: pack.readiness,
+        next: pack.next
+      };
+    }
+
+    function curriculumPacks() {
+      return [
+        { title: '11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Young learners', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.' },
+        hkPackSummary(),
+        { title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching', readiness: 'Next', next: 'Pair Simplified characters with Pinyin, tone marks, and Traditional equivalents.' },
+        { title: 'Maths numbers foundation', domain: 'Maths Foundation', language: 'English', learners: 'Primary learners', activity: 'Short adaptive drills', readiness: 'Next', next: 'Add number bonds, counting, place value, and times-table micro practice.' },
+        { title: 'Life in the UK mock mode', domain: 'Life in the UK', language: 'English', learners: 'Adult learners', activity: '24Q / 45m mock test', readiness: 'Planned', next: 'Add official-topic taxonomy, pass mark display, and timed mock-test shell.' },
+        { title: 'French first phrases', domain: 'French', language: 'French + English', learners: 'All learners', activity: 'Phrase recall', readiness: 'Planned', next: 'Start with greetings, family, numbers, food, and travel phrases.' }
+      ];
+    }
+
 
 
     function onboardingState() {
@@ -1107,6 +1051,11 @@
       return String(value).replace(/[&<>"']/g, ch => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
       }[ch]));
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
     }
 
     function loadHistoryFor(id = activeLearnerId()) {
@@ -1510,7 +1459,7 @@
     function renderHKChineseFlashcards() {
       const grid = document.getElementById('flashcard-grid');
       if (!grid) return;
-      grid.innerHTML = HK_CHINESE_FLASHCARDS.map(card => `
+      grid.innerHTML = hkChineseFlashcards.map(card => `
         <article class="flashcard">
           <div class="flashcard-term">${escapeHTML(card.traditional)}</div>
           <div class="flashcard-canto">${escapeHTML(card.canto)}</div>
@@ -1523,7 +1472,7 @@
     function renderCurriculumPacks() {
       const grid = document.getElementById('curriculum-grid');
       if (!grid) return;
-      grid.innerHTML = CURRICULUM_PACKS.map(pack => `
+      grid.innerHTML = curriculumPacks().map(pack => `
         <article class="curriculum-card">
           <div class="curriculum-head">
             <div>
@@ -1539,6 +1488,27 @@
           <div class="curriculum-meta"><strong>Next:</strong> ${escapeHTML(pack.next)}</div>
         </article>
       `).join('');
+    }
+
+    function validateHKChinesePack(pack) {
+      if (!pack || pack.id !== 'hk-chinese-basics-v1') throw new Error('Unexpected HK Chinese content pack id');
+      if (!Array.isArray(pack.flashcards) || pack.flashcards.length < 10) throw new Error('HK Chinese content pack needs at least 10 flashcards');
+      pack.flashcards.forEach((card, index) => {
+        ['traditional', 'jyutping', 'canto', 'english', 'prompt'].forEach(field => {
+          if (!card[field]) throw new Error(`HK Chinese flashcard ${index + 1} missing ${field}`);
+        });
+      });
+      return pack;
+    }
+
+    async function loadHKChinesePack() {
+      const response = await fetch(`${HK_CHINESE_PACK_PATH}?v=${Date.now()}`);
+      if (!response.ok) throw new Error(`Could not load ${HK_CHINESE_PACK_PATH}: ${response.status}`);
+      hkChinesePack = validateHKChinesePack(await response.json());
+      hkChineseFlashcards = hkChinesePack.flashcards;
+      window.__learningQuestTestState = { ...(window.__learningQuestTestState || {}), hkChinesePackId: hkChinesePack.id };
+      renderCurriculumPacks();
+      renderHKChineseFlashcards();
     }
 
     function renderLearners() {
@@ -1628,9 +1598,9 @@
     function applyPracticeSelection() {
       questions = practiceQuestionSet();
       const count = questions.length;
-      document.getElementById('info-questions').textContent = count;
+      setText('info-questions', count);
       const focusLabel = [selectedSubject === 'Mixed' ? 'Mixed' : selectedSubject, selectedDifficulty === 'All' ? null : selectedDifficulty, selectedSkill === 'All' ? null : selectedSkill].filter(Boolean).join(' · ');
-      document.getElementById('info-subject').textContent = focusLabel === 'Mixed' ? (quizData?.meta?.subject || 'Mixed') : focusLabel;
+      setText('info-subject', focusLabel === 'Mixed' ? (quizData?.meta?.subject || 'Mixed') : focusLabel);
       document.getElementById('practice-note').textContent = focusLabel === 'Mixed'
         ? `Mixed practice uses all ${count} questions.`
         : `${focusLabel} practice uses ${count} focused question${count === 1 ? '' : 's'}.`;
@@ -1669,28 +1639,30 @@
       renderHistory();
     }
 
-    // Load questions
+    // Load runtime content and questions
     renderOnboarding();
     renderLearners();
-    fetch('questions.json?v=' + Date.now())
-      .then(r => r.json())
-      .then(data => {
+    renderLearningDomains();
+    renderCurriculumPacks();
+    Promise.all([
+      fetch('questions.json?v=' + Date.now()).then(r => r.json()),
+      loadHKChinesePack()
+    ])
+      .then(([data]) => {
         quizData = data;
         allQuestions = data.questions;
         questions = allQuestions;
-        document.getElementById('quiz-title').textContent = data.meta.title;
-        document.getElementById('info-time').textContent = Math.round(data.meta.timeLimit / 60);
-        renderLearningDomains();
-        renderCurriculumPacks();
-        renderHKChineseFlashcards();
+        setText('quiz-title', data.meta.title);
+        setText('info-time', Math.round(data.meta.timeLimit / 60));
         renderPracticeOptions();
         renderOnboarding();
         renderDailyChallenge();
         renderHistory();
       })
-      .catch(() => {
-        document.getElementById('quiz-title').textContent = 'Could not load quiz';
-        document.getElementById('quiz-desc').textContent = 'Please refresh and try again.';
+      .catch(error => {
+        console.error(error);
+        setText('quiz-title', 'Could not load quiz');
+        document.getElementById('quiz-desc').textContent = 'Please refresh and try again. A required question bank or content pack did not load.';
       });
 
     function startQuiz() {

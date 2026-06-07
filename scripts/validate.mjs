@@ -37,8 +37,11 @@ for (const [i, card] of hkChinesePack.flashcards.entries()) {
     if (!card[field]) throw new Error(`HK Chinese flashcard ${i + 1} missing ${field}`);
   }
 }
-for (const marker of ['HK_CHINESE_PACK', '早晨', '紅色', 'content-packs/hk-chinese-basics.json']) {
-  if (!html.includes(marker)) throw new Error(`Missing HK Chinese content-pack marker: ${marker}`);
+for (const marker of ['HK_CHINESE_PACK_PATH', 'loadHKChinesePack', 'validateHKChinesePack', 'hkChineseFlashcards', 'content-packs/hk-chinese-basics.json']) {
+  if (!html.includes(marker)) throw new Error(`Missing runtime HK Chinese content-pack marker: ${marker}`);
+}
+for (const inlineSeed of ['baa4 baa1', 'zou2 san4', 'Find something red nearby']) {
+  if (html.includes(inlineSeed)) throw new Error(`HK Chinese flashcards should be runtime-loaded from JSON, not inline seeded: ${inlineSeed}`);
 }
 
 const data = JSON.parse(fs.readFileSync('questions.json', 'utf8'));

@@ -11,6 +11,11 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await page.getByRole('button', { name: 'Get exam-ready' }).tap();
   await expect(page.getByText('Exam mode: Exam prep')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Start this mission' })).toBeVisible();
+  await expect(page.getByText('早晨')).toBeVisible();
+  await expect(page.getByText('紅色')).toBeVisible();
+
+  const loadedPackId = await page.evaluate(() => window.__learningQuestTestState?.hkChinesePackId);
+  expect(loadedPackId).toBe('hk-chinese-basics-v1');
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
