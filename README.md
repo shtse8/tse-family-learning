@@ -37,3 +37,4 @@ This app is being generalized from a family prototype into a public-facing produ
 ## Content packs
 
 - `content-packs/hk-chinese-basics.json` is the first reusable curriculum pack shape. The app now fetches it at runtime, validates it in the browser, and renders the live Traditional HK Chinese flashcards from external JSON instead of inline seed data.
+- The HK Chinese pack is treated as optional runtime curriculum content: if the pack route is temporarily unavailable, core question practice still loads and the curriculum card shows a clear recovery state instead of blocking the app.

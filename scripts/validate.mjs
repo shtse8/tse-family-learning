@@ -37,7 +37,7 @@ for (const [i, card] of hkChinesePack.flashcards.entries()) {
     if (!card[field]) throw new Error(`HK Chinese flashcard ${i + 1} missing ${field}`);
   }
 }
-for (const marker of ['HK_CHINESE_PACK_PATH', 'loadHKChinesePack', 'validateHKChinesePack', 'hkChineseFlashcards', 'content-packs/hk-chinese-basics.json']) {
+for (const marker of ['HK_CHINESE_PACK_PATH', 'loadHKChinesePack', 'validateHKChinesePack', 'hkChineseFlashcards', 'hkChinesePackError', 'flashcard-placeholder', 'Question practice remains available', 'content-packs/hk-chinese-basics.json']) {
   if (!html.includes(marker)) throw new Error(`Missing runtime HK Chinese content-pack marker: ${marker}`);
 }
 for (const inlineSeed of ['baa4 baa1', 'zou2 san4', 'Find something red nearby']) {

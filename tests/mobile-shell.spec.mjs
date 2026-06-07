@@ -20,3 +20,18 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
+
+test('question practice remains available when optional HK Chinese pack is unavailable', async ({ page }) => {
+  await page.route('**/content-packs/hk-chinese-basics.json?*', route => route.fulfill({ status: 503, body: 'pack unavailable' }));
+  await page.goto('/');
+
+  await expect(page.getByText('LearningQuest').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Set up today’s mission' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start this mission' })).toBeVisible();
+  await expect(page.getByText('Pack unavailable').first()).toBeVisible();
+  await expect(page.getByText('Question practice remains available').first()).toBeVisible();
+
+  const state = await page.evaluate(() => window.__learningQuestTestState);
+  expect(state.hkChinesePackId).toBeNull();
+  expect(state.hkChinesePackError).toContain('content-packs/hk-chinese-basics.json');
+});
