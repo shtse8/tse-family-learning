@@ -369,6 +369,7 @@
     .flashcard-panel { margin-top: 14px; }
     .flashcard-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
     .flashcard { border: 1px solid #fecdd3; background: linear-gradient(180deg, #fff7ed, #fff); border-radius: 16px; padding: 12px; min-height: 132px; display: grid; gap: 6px; align-content: start; }
+    .flashcard-placeholder { border-style: dashed; background: #fff; }
     .flashcard-term { font-size: 1.65rem; font-weight: 900; color: #9f1239; line-height: 1; }
     .flashcard-canto { font-weight: 900; color: var(--text); }
     .flashcard-meta { color: var(--subtext); font-size: 0.78rem; line-height: 1.35; }
@@ -938,6 +939,7 @@
     const HK_CHINESE_PACK_PATH = 'content-packs/hk-chinese-basics.json';
     let hkChinesePack = null;
     let hkChineseFlashcards = [];
+    let hkChinesePackError = null;
 
     function hkPackSummary() {
       const pack = hkChinesePack || {
@@ -946,8 +948,10 @@
         language: '繁體中文 + Cantonese',
         learners: 'All learners',
         activity: 'Flashcards + listen/repeat',
-        readiness: 'Loading pack',
-        next: `Runtime-load ${HK_CHINESE_PACK_PATH} and render the flashcards from external JSON.`
+        readiness: hkChinesePackError ? 'Pack unavailable' : 'Loading pack',
+        next: hkChinesePackError
+          ? 'Question practice still works; retry the content pack route after it recovers.'
+          : `Runtime-load ${HK_CHINESE_PACK_PATH} and render the flashcards from external JSON.`
       };
       return {
         title: pack.title,
@@ -1459,6 +1463,17 @@
     function renderHKChineseFlashcards() {
       const grid = document.getElementById('flashcard-grid');
       if (!grid) return;
+      if (!hkChineseFlashcards.length) {
+        grid.innerHTML = `
+          <article class="flashcard flashcard-placeholder">
+            <div class="flashcard-term">${hkChinesePackError ? '稍後' : '…'}</div>
+            <div class="flashcard-canto">${hkChinesePackError ? 'Pack unavailable' : 'Loading cards'}</div>
+            <div class="flashcard-meta">${escapeHTML(hkChinesePackError || `Fetching ${HK_CHINESE_PACK_PATH}`)}</div>
+            <div class="flashcard-prompt">Question practice remains available</div>
+          </article>
+        `;
+        return;
+      }
       grid.innerHTML = hkChineseFlashcards.map(card => `
         <article class="flashcard">
           <div class="flashcard-term">${escapeHTML(card.traditional)}</div>
@@ -1502,13 +1517,25 @@
     }
 
     async function loadHKChinesePack() {
-      const response = await fetch(`${HK_CHINESE_PACK_PATH}?v=${Date.now()}`);
-      if (!response.ok) throw new Error(`Could not load ${HK_CHINESE_PACK_PATH}: ${response.status}`);
-      hkChinesePack = validateHKChinesePack(await response.json());
-      hkChineseFlashcards = hkChinesePack.flashcards;
-      window.__learningQuestTestState = { ...(window.__learningQuestTestState || {}), hkChinesePackId: hkChinesePack.id };
-      renderCurriculumPacks();
-      renderHKChineseFlashcards();
+      try {
+        const response = await fetch(`${HK_CHINESE_PACK_PATH}?v=${Date.now()}`);
+        if (!response.ok) throw new Error(`Could not load ${HK_CHINESE_PACK_PATH}: ${response.status}`);
+        hkChinesePack = validateHKChinesePack(await response.json());
+        hkChineseFlashcards = hkChinesePack.flashcards;
+        hkChinesePackError = null;
+        window.__learningQuestTestState = { ...(window.__learningQuestTestState || {}), hkChinesePackId: hkChinesePack.id, hkChinesePackError: null };
+        return hkChinesePack;
+      } catch (error) {
+        hkChinesePack = null;
+        hkChineseFlashcards = [];
+        hkChinesePackError = error.message || 'Could not load the HK Chinese content pack';
+        window.__learningQuestTestState = { ...(window.__learningQuestTestState || {}), hkChinesePackId: null, hkChinesePackError };
+        console.warn(hkChinesePackError);
+        return null;
+      } finally {
+        renderCurriculumPacks();
+        renderHKChineseFlashcards();
+      }
     }
 
     function renderLearners() {
@@ -1644,6 +1671,7 @@
     renderLearners();
     renderLearningDomains();
     renderCurriculumPacks();
+    renderHKChineseFlashcards();
     Promise.all([
       fetch('questions.json?v=' + Date.now()).then(r => r.json()),
       loadHKChinesePack()

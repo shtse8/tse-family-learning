@@ -110,3 +110,8 @@ Next slices:
 - Traditional HK Chinese starter cards are now fetched from `content-packs/hk-chinese-basics.json` at runtime.
 - The browser validates the pack id and flashcard fields before rendering.
 - Validation now rejects inline flashcard seed data so future packs stay external and reusable.
+
+## Run #11 optional content-pack resilience
+
+- The Traditional HK Chinese content-pack loader now fails soft: a missing or invalid optional pack shows a clear curriculum recovery state while the core question-practice app remains available.
+- Playwright mobile coverage now simulates a content-pack outage and verifies the mission onboarding/start path still renders.
