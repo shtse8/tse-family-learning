@@ -11,7 +11,8 @@ export default defineConfig({
   },
   use: {
     baseURL: 'http://127.0.0.1:3000',
-    trace: 'retain-on-failure'
+    trace: 'retain-on-failure',
+    serviceWorkers: 'block'
   },
   projects: [
     {

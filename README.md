@@ -9,7 +9,7 @@ A responsive, mobile-native HTML5 learning platform foundation for personalised 
 - Curriculum pack roadmap cards for language variant, learner fit, activity type, readiness, and next production step.
 - First Traditional HK Chinese flashcard slice is runtime-loaded from `content-packs/hk-chinese-basics.json` with family words, greetings, colours, Jyutping, Cantonese prompts, and English meaning.
 - First Simplified Mandarin flashcard slice is runtime-loaded from `content-packs/mandarin-basics.json` with Pinyin, Traditional comparison text, and English meaning.
-- Browser-local per-learner quiz progress history with attempts, best score, average score, level, daily streak, practice XP, subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, milestone badges, daily challenge prompt, and subject/difficulty/skill quick-practice filters.
+- Browser-local per-learner quiz progress history with attempts, best score, average score, level, daily streak, practice XP, subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, milestone badges, daily challenge prompt, subject/difficulty/skill quick-practice filters, and onboarding-driven recommended curriculum packs.
 - JSON export/import for progress backup between browsers or devices.
 - Run #7 cleanup keeps startup state declarations single-source and makes progress-backup copy apply to the selected learner.
 - Run #8 adds skill/topic quick-practice chips from question metadata, so focused practice can target number fluency, sound patterns, grammar, and logic patterns without changing the question schema.
@@ -37,5 +37,5 @@ This app is being generalized from a family prototype into a public-facing produ
 
 ## Content packs
 
-- `content-packs/registry.json` is the runtime pack metadata SSOT. It lists reusable packs, paths, schemas, render targets, readiness copy, and next-step copy. The app fetches the registry first, falls back to baked-in registry metadata if unavailable, then loads `content-packs/hk-chinese-basics.json` and `content-packs/mandarin-basics.json` from the registered paths.
+- `content-packs/registry.json` is the runtime pack metadata SSOT. It lists reusable packs, paths, schemas, render targets, readiness copy, next-step copy, and recommendation tags used by onboarding-driven curriculum recommendations. The app fetches the registry first, falls back to baked-in registry metadata if unavailable, then loads `content-packs/hk-chinese-basics.json` and `content-packs/mandarin-basics.json` from the registered paths.
 - The HK Chinese pack is treated as optional runtime curriculum content: if the pack route is temporarily unavailable, core question practice still loads and the curriculum card shows a clear recovery state instead of blocking the app.
