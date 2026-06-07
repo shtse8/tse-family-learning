@@ -13,12 +13,14 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.getByRole('button', { name: 'Start this mission' })).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: '11+ starter bank' })).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended').getByText('Best match for exam prep from the live question bank.').first()).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Start with a mixed diagnostic round → Focus quick practice on weak skills → Return to timed exam-prep missions').first()).toBeVisible();
 
   await page.getByRole('button', { name: 'Adult' }).tap();
   await page.getByRole('button', { name: 'Learn language' }).tap();
   await expect(page.getByText('Listen & recall: Adult')).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: 'Simplified Mandarin basics' })).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended').getByText('Adult language goal match from the runtime content-pack registry.').first()).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Start with greetings and core family words → Compare Simplified, Traditional, and Pinyin forms → Move into matching practice and listening prompts').first()).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '早晨' })).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '紅色' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '早上好' })).toBeVisible();
@@ -30,6 +32,7 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(state.hkChinesePackId).toBe('hk-chinese-basics-v1');
   expect(state.mandarinPackId).toBe('mandarin-basics-v1');
   expect(state.recommendedCurriculumTitles).toContain('Simplified Mandarin basics');
+  expect(state.recommendedProgressionPaths.join(' | ')).toContain('Move into matching practice and listening prompts');
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
