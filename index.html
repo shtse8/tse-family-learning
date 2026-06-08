@@ -397,6 +397,13 @@
     .maths-answer { color: var(--text); font-weight: 900; }
     .maths-answer-form { display: grid; gap: 7px; }
     .maths-answer-row { display: flex; gap: 8px; align-items: center; }
+    .maths-number-line { display: grid; gap: 7px; border: 1px solid #bbf7d0; border-radius: 14px; background: #f0fdf4; padding: 10px; }
+    .maths-number-line-track { position: relative; min-height: 30px; border-bottom: 3px solid #16a34a; }
+    .maths-number-line-jump { position: absolute; left: 8%; right: 8%; top: 2px; text-align: center; color: #166534; font-size: 0.75rem; font-weight: 900; }
+    .maths-number-line-jump::after { content: '↷'; display: block; font-size: 1.3rem; line-height: 1; }
+    .maths-number-line-jump.left::after { content: '↶'; }
+    .maths-number-line-ticks { display: flex; justify-content: space-between; gap: 5px; color: #14532d; font-size: 0.72rem; font-weight: 900; }
+    .maths-rotation-note { color: #166534; font-size: 0.75rem; font-weight: 900; }
     .maths-answer-input { flex: 1; min-width: 0; border: 1px solid #bbf7d0; border-radius: 12px; padding: 10px 11px; color: #14532d; font-weight: 800; background: #fff; }
     .maths-answer-input:disabled { background: #ecfdf5; color: #166534; }
     .maths-check-button { border: 0; border-radius: 12px; padding: 10px 12px; background: #16a34a; color: #fff; font-weight: 900; cursor: pointer; white-space: nowrap; }
@@ -989,7 +996,7 @@
     const FALLBACK_CONTENT_PACK_REGISTRY = [
       { id: 'hk-chinese-basics-v1', path: 'content-packs/hk-chinese-basics.json', kind: 'flashcards', title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, comparison drills, and audio prompts.', schema: ['traditional', 'jyutping', 'canto', 'english', 'prompt'], renderTarget: 'flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['confidence', 'language', 'mastery'], progressionSteps: ['Start with family words and greetings', 'Practise colours, numbers, and Jyutping recall', 'Move into matching practice, comparison drills, audio prompts, and short household phrases'] },
       { id: 'mandarin-basics-v1', path: 'content-packs/mandarin-basics.json', kind: 'flashcards', title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.', schema: ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], renderTarget: 'mandarin-flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence', 'mastery'], progressionSteps: ['Start with greetings and core family words', 'Compare Simplified, Traditional, and Pinyin forms', 'Use matching practice and comparison drills, then try audio prompts'] },
-      { id: 'maths-foundation-v1', path: 'content-packs/maths-foundation.json', kind: 'practice-cards', title: 'Maths Foundation practice', domain: 'Maths Foundation', language: 'English', learners: 'Early and primary learners', activity: 'Practice cards + Adaptive answer entry + mental maths + confidence drills', readiness: 'Live slice', next: 'Add number-line visuals and learner-specific weak-skill rotation.', schema: ['topic', 'skill', 'prompt', 'answer', 'strategy'], renderTarget: 'maths-foundation-grid', recommendedStages: ['early', 'primary'], recommendedGoals: ['confidence', 'mastery'], progressionSteps: ['Start with number bonds to 10 and 20', 'Practise place value and skip counting', 'Move into times tables, fractions, and short word problems', 'Type answers and unlock strategy feedback'] }
+      { id: 'maths-foundation-v1', path: 'content-packs/maths-foundation.json', kind: 'practice-cards', title: 'Maths Foundation practice', domain: 'Maths Foundation', language: 'English', learners: 'Early and primary learners', activity: 'Practice cards + Number-line models + Adaptive answer entry + weak-skill rotation + mental maths + confidence drills', readiness: 'Live slice', next: 'Add adaptive number-line hints for more operations and learner-specific mixed review.', schema: ['topic', 'skill', 'prompt', 'answer', 'strategy'], renderTarget: 'maths-foundation-grid', recommendedStages: ['early', 'primary'], recommendedGoals: ['confidence', 'mastery'], progressionSteps: ['Start with number bonds to 10 and 20', 'Practise place value and skip counting', 'Move into times tables, fractions, and short word problems', 'Type answers and unlock strategy feedback', 'Review weak skills first with number-line support'] }
     ];
     let contentPackRegistry = [...FALLBACK_CONTENT_PACK_REGISTRY];
     let contentPackRegistryError = null;
@@ -1897,8 +1904,70 @@
         .replace(/\s+/g, ' ');
     }
 
+    function mathsFoundationWeakSkillSet() {
+      const latest = loadHistory().find(item => item.activityType === 'maths-foundation-practice' && Array.isArray(item.weakSkills));
+      return new Set(latest?.weakSkills || []);
+    }
+
     function mathsFoundationPracticeCards() {
-      return mathsFoundationCards.slice(0, MATHS_FOUNDATION_PRACTICE_LIMIT).map((card, index) => ({ ...card, index: index + 1 }));
+      const weakSkills = mathsFoundationWeakSkillSet();
+      return mathsFoundationCards
+        .map((card, index) => ({ ...card, index: index + 1, rotationPriority: weakSkills.has(card.skill) ? 1 : 0 }))
+        .sort((a, b) => b.rotationPriority - a.rotationPriority || a.index - b.index)
+        .slice(0, MATHS_FOUNDATION_PRACTICE_LIMIT);
+    }
+
+    function mathsFoundationSkillResults() {
+      const bySkill = {};
+      for (const card of mathsFoundationCards.map((item, index) => ({ ...item, index: index + 1 }))) {
+        const result = mathsFoundationPracticeScores[card.index];
+        if (typeof result === 'boolean') {
+          bySkill[card.skill] = bySkill[card.skill] || { correct: 0, attempted: 0 };
+          bySkill[card.skill].attempted += 1;
+          if (result) bySkill[card.skill].correct += 1;
+        }
+      }
+      return bySkill;
+    }
+
+    function mathsFoundationWeakSkills() {
+      return Object.entries(mathsFoundationSkillResults())
+        .filter(([, result]) => result.attempted && result.correct < result.attempted)
+        .map(([skill]) => skill);
+    }
+
+    function mathsFoundationPracticeModeLabel(practiceCards = mathsFoundationPracticeCards()) {
+      return practiceCards.some(card => card.rotationPriority > 0)
+        ? 'Weak-skill rotation active'
+        : 'New skills first';
+    }
+
+    function mathsNumberLineTicks(model = {}) {
+      const start = Number(model.start);
+      const end = Number(model.end);
+      const step = Math.max(1, Math.abs(Number(model.step) || 1));
+      if (!Number.isFinite(start) || !Number.isFinite(end)) return [];
+      const min = Math.min(start, end);
+      const max = Math.max(start, end);
+      const ticks = [];
+      for (let value = min; value <= max && ticks.length < 13; value += step) ticks.push(value);
+      if (!ticks.includes(end)) ticks.push(end);
+      return Array.from(new Set(ticks)).sort((a, b) => a - b);
+    }
+
+    function mathsNumberLineVisual(card) {
+      const model = card.numberLine;
+      if (!model) return '';
+      const ticks = mathsNumberLineTicks(model);
+      if (ticks.length < 2) return '';
+      const direction = Number(model.end) >= Number(model.start) ? 'right' : 'left';
+      const jumpLabel = model.jumpLabel || `${model.start} ${direction === 'right' ? '+' : '−'} ${Math.abs(Number(model.jump) || 0)} = ${model.end}`;
+      return `
+        <div class="maths-number-line" aria-label="Number line model: ${escapeHTML(model.label || jumpLabel)}">
+          <div class="maths-number-line-track"><span class="maths-number-line-jump ${direction}">${escapeHTML(jumpLabel)}</span></div>
+          <div class="maths-number-line-ticks">${ticks.map(tick => `<span>${escapeHTML(tick)}</span>`).join('')}</div>
+        </div>
+      `;
     }
 
     function mathsFoundationPracticeScore(total = MATHS_FOUNDATION_PRACTICE_LIMIT) {
@@ -1928,7 +1997,10 @@
         practiceMode: 'maths-foundation-answer-entry',
         difficultyMode: 'maths-foundation',
         activityType: 'maths-foundation-practice',
-        attempted: score.attempted
+        attempted: score.attempted,
+        skillResults: mathsFoundationSkillResults(),
+        weakSkills: mathsFoundationWeakSkills(),
+        rotationMode: 'maths-foundation-weak-skill-rotation'
       };
       const history = upsertHistoryEntry(entry, item => item.activityType === 'maths-foundation-practice');
       renderHistory(history);
@@ -1958,6 +2030,9 @@
         mathsFoundationCardCount: mathsFoundationCards.length,
         mathsFoundationPracticeCount: mathsPracticeCards.length,
         mathsFoundationTopics: Array.from(new Set(mathsFoundationCards.map(card => card.topic))),
+        mathsFoundationWeakSkills: mathsFoundationWeakSkills(),
+        mathsFoundationRotationMode: mathsFoundationPracticeModeLabel(mathsPracticeCards),
+        mathsFoundationNumberLineCount: mathsFoundationCards.filter(card => card.numberLine).length,
         matchingPracticeScores: { hkChinese: matchingPracticeScore('hkChinese', hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0), mandarin: matchingPracticeScore('mandarin', mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0) },
         mathsFoundationPracticeScores: mathsFoundationPracticeScore(mathsPracticeCards.length || MATHS_FOUNDATION_PRACTICE_LIMIT),
         comparisonDrillPairs: comparisonDrillCards().map(card => ({ traditional: card.traditional, simplified: card.simplified, english: card.english, changed: card.changed })),
@@ -1991,6 +2066,8 @@
           <article class="maths-card" data-maths-card-index="${card.index}">
             <div class="maths-topic">${escapeHTML(card.topic)} · ${escapeHTML(card.skill)}</div>
             <div class="maths-prompt">${escapeHTML(card.prompt)}</div>
+            ${mathsNumberLineVisual(card)}
+            <div class="maths-rotation-note">${escapeHTML(card.rotationPriority ? 'Weak-skill rotation: revisiting this skill from recent learner history.' : mathsFoundationPracticeModeLabel(practiceCards))}</div>
             <form class="maths-answer-form" onsubmit="recordMathsFoundationAnswer(${card.index}, this.elements.answer.value); return false;">
               <label class="matching-prompt" for="${inputId}">Type your answer to unlock the strategy</label>
               <div class="maths-answer-row">

@@ -41,6 +41,8 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await makeTenCard.getByRole('button', { name: 'Check answer' }).tap();
   await expect(makeTenCard.getByText('✅ Correct — strategy unlocked.')).toBeVisible();
   await expect(makeTenCard.getByText('1/6 solved · 1 tried')).toBeVisible();
+  await expect(makeTenCard.getByText('6 + 4 = 10')).toBeVisible();
+  await expect(makeTenCard.locator('.maths-number-line')).toBeVisible();
   await expect(makeTenCard.getByText('Count up from 6: 7, 8, 9, 10. That is 4 steps.')).toBeVisible();
   await expect(page.locator('#history-panel').getByText('Maths Foundation answer practice')).toBeVisible();
   const twoTimesCard = page.locator('#maths-foundation-grid .maths-card', { hasText: 'What is 2 × 6?' });
@@ -89,13 +91,20 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
     expect.objectContaining({ traditional: '媽媽', simplified: '妈妈', english: 'Mum / mother', changed: true })
   ]));
   expect(state.mathsFoundationPracticeScores).toEqual({ correct: 2, attempted: 2, total: 6 });
+  expect(state.mathsFoundationNumberLineCount).toBeGreaterThanOrEqual(6);
+  expect(state.mathsFoundationRotationMode).toBe('New skills first');
   expect(state.latestMathsFoundationProgress).toMatchObject({
     activityType: 'maths-foundation-practice',
     practiceMode: 'maths-foundation-answer-entry',
     correct: 2,
     total: 6,
     percent: 33,
-    attempted: 2
+    attempted: 2,
+    rotationMode: 'maths-foundation-weak-skill-rotation'
+  });
+  expect(state.latestMathsFoundationProgress.skillResults).toMatchObject({
+    'Make 10': { correct: 1, attempted: 1 },
+    '2 times table': { correct: 1, attempted: 1 }
   });
   expect(state.matchingPracticeScores.hkChinese).toEqual({ correct: 1, attempted: 1, total: 4 });
   expect(state.matchingPracticeScores.mandarin).toEqual({ correct: 1, attempted: 1, total: 4 });
@@ -114,6 +123,16 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
     expect.objectContaining({ activityType: 'maths-foundation-practice', correct: 2, total: 6, percent: 33 }),
     expect.objectContaining({ activityType: 'matching-practice', matchingPackKey: 'hkChinese', correct: 1, total: 4, percent: 25 })
   ]));
+
+  const makeTwentyCard = page.locator('#maths-foundation-grid .maths-card', { hasText: 'What number goes with 13 to make 20?' });
+  await makeTwentyCard.getByRole('textbox', { name: 'Answer for What number goes with 13 to make 20?' }).fill('6');
+  await makeTwentyCard.getByRole('button', { name: 'Check answer' }).tap();
+  await expect(makeTwentyCard.getByText('Try again')).toBeVisible();
+  await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Weak-skill rotation: revisiting this skill from recent learner history.')).toBeVisible();
+  const rotationState = await page.evaluate(() => window.__learningQuestTestState);
+  expect(rotationState.mathsFoundationWeakSkills).toContain('Make 20');
+  expect(rotationState.mathsFoundationRotationMode).toBe('Weak-skill rotation active');
+  expect(rotationState.latestMathsFoundationProgress.weakSkills).toContain('Make 20');
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
