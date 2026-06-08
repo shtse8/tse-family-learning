@@ -71,6 +71,39 @@
         "Compare Simplified, Traditional, and Pinyin forms",
         "Use matching practice and comparison drills, then try audio prompts"
       ]
+    },
+    {
+      "id": "maths-foundation-v1",
+      "path": "content-packs/maths-foundation.json",
+      "kind": "practice-cards",
+      "title": "Maths Foundation practice",
+      "domain": "Maths Foundation",
+      "language": "English",
+      "learners": "Early and primary learners",
+      "activity": "Practice cards + mental maths + confidence drills",
+      "readiness": "Live slice",
+      "next": "Add adaptive answer entry, number-line visuals, and learner-specific weak-skill rotation.",
+      "schema": [
+        "topic",
+        "skill",
+        "prompt",
+        "answer",
+        "strategy"
+      ],
+      "renderTarget": "maths-foundation-grid",
+      "recommendedStages": [
+        "early",
+        "primary"
+      ],
+      "recommendedGoals": [
+        "confidence",
+        "mastery"
+      ],
+      "progressionSteps": [
+        "Start with number bonds to 10 and 20",
+        "Practise place value and skip counting",
+        "Move into times tables, fractions, and short word problems"
+      ]
     }
   ]
 }

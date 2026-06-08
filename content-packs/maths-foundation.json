@@ -1,0 +1,22 @@
+{
+  "id": "maths-foundation-v1",
+  "title": "Maths Foundation practice",
+  "domain": "Maths Foundation",
+  "language": "English",
+  "learners": "Early and primary learners",
+  "activity": "Practice cards + mental maths + confidence drills",
+  "readiness": "Live slice",
+  "next": "Add adaptive answer entry, number-line visuals, and learner-specific weak-skill rotation.",
+  "practiceCards": [
+    { "topic": "Number bonds", "skill": "Make 10", "prompt": "What number goes with 6 to make 10?", "answer": "4", "strategy": "Count up from 6: 7, 8, 9, 10. That is 4 steps." },
+    { "topic": "Number bonds", "skill": "Make 20", "prompt": "What number goes with 13 to make 20?", "answer": "7", "strategy": "13 needs 7 more to reach the next ten, 20." },
+    { "topic": "Place value", "skill": "Tens and ones", "prompt": "How many tens and ones are in 47?", "answer": "4 tens and 7 ones", "strategy": "The first digit tells the tens; the second digit tells the ones." },
+    { "topic": "Counting", "skill": "Skip counting by 5", "prompt": "What comes next: 5, 10, 15, 20, __?", "answer": "25", "strategy": "Add 5 each time." },
+    { "topic": "Times tables", "skill": "2 times table", "prompt": "What is 2 × 6?", "answer": "12", "strategy": "Double 6 to make 12." },
+    { "topic": "Times tables", "skill": "5 times table", "prompt": "What is 5 × 8?", "answer": "40", "strategy": "Count in fives: 5, 10, 15, 20, 25, 30, 35, 40." },
+    { "topic": "Addition", "skill": "Bridge 10", "prompt": "What is 8 + 5?", "answer": "13", "strategy": "Make 10 first: 8 + 2 = 10, then add 3 more." },
+    { "topic": "Subtraction", "skill": "Count back", "prompt": "What is 15 − 6?", "answer": "9", "strategy": "Count back 6 from 15, or take away 5 to reach 10 then one more." },
+    { "topic": "Fractions", "skill": "Halves", "prompt": "What is half of 18?", "answer": "9", "strategy": "Split 18 into two equal groups of 9." },
+    { "topic": "Word problems", "skill": "Choose the operation", "prompt": "A learner has 9 stickers and gets 4 more. How many stickers now?", "answer": "13 stickers", "strategy": "Getting more means add: 9 + 4 = 13." }
+  ]
+}

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json'];
+const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json', 'content-packs/maths-foundation.json'];
 for (const file of requiredFiles) {
   if (!fs.existsSync(file)) throw new Error(`Missing required file: ${file}`);
 }
@@ -44,13 +44,28 @@ function validatePackFile(path, expectedId, fields, label) {
   return pack;
 }
 
+function validateMathsPackFile(path, expectedId, fields, label) {
+  const pack = JSON.parse(fs.readFileSync(path, 'utf8'));
+  if (pack.id !== expectedId) throw new Error(`${label} pack id changed unexpectedly`);
+  if (!pack.activity || !pack.activity.includes('Practice cards')) throw new Error(`${label} pack metadata must advertise practice cards`);
+  if (!pack.activity || !pack.activity.includes('mental maths')) throw new Error(`${label} pack metadata must advertise mental maths`);
+  if (!Array.isArray(pack.practiceCards) || pack.practiceCards.length < 10) throw new Error(`${label} pack needs at least 10 practice cards`);
+  for (const [i, card] of pack.practiceCards.entries()) {
+    for (const field of fields) {
+      if (!card[field]) throw new Error(`${label} practice card ${i + 1} missing ${field}`);
+    }
+  }
+  return pack;
+}
+
 const registry = JSON.parse(fs.readFileSync('content-packs/registry.json', 'utf8'));
 if (registry.id !== 'learningquest-content-pack-registry-v1') throw new Error('Content pack registry id changed unexpectedly');
-if (!Array.isArray(registry.packs) || registry.packs.length < 2) throw new Error('Content pack registry needs at least two packs');
+if (!Array.isArray(registry.packs) || registry.packs.length < 3) throw new Error('Content pack registry needs at least three packs');
 const registryById = Object.fromEntries(registry.packs.map(pack => [pack.id, pack]));
 for (const [id, path, fields] of [
   ['hk-chinese-basics-v1', 'content-packs/hk-chinese-basics.json', ['traditional', 'jyutping', 'canto', 'english', 'prompt']],
-  ['mandarin-basics-v1', 'content-packs/mandarin-basics.json', ['simplified', 'traditional', 'pinyin', 'english', 'prompt']]
+  ['mandarin-basics-v1', 'content-packs/mandarin-basics.json', ['simplified', 'traditional', 'pinyin', 'english', 'prompt']],
+  ['maths-foundation-v1', 'content-packs/maths-foundation.json', ['topic', 'skill', 'prompt', 'answer', 'strategy']]
 ]) {
   const registered = registryById[id];
   if (!registered) throw new Error(`Content pack registry missing ${id}`);
@@ -62,19 +77,38 @@ for (const [id, path, fields] of [
   for (const field of ['recommendedStages', 'recommendedGoals']) {
     if (!Array.isArray(registered[field]) || !registered[field].length) throw new Error(`Content pack registry ${id} missing ${field}`);
   }
-  if (!registered.activity.includes('matching')) throw new Error(`Content pack registry ${id} missing matching activity`);
-  if (!registered.activity.includes('comparison')) throw new Error(`Content pack registry ${id} missing comparison activity`);
-  if (!registered.activity.includes('audio prompts')) throw new Error(`Content pack registry ${id} missing audio prompt activity`);
+  if (id === 'maths-foundation-v1') {
+    if (registered.kind !== 'practice-cards') throw new Error('Content pack registry maths-foundation-v1 must use practice-cards kind');
+    if (!registered.activity.includes('Practice cards')) throw new Error('Content pack registry maths-foundation-v1 missing practice-card activity');
+    if (!registered.activity.includes('mental maths')) throw new Error('Content pack registry maths-foundation-v1 missing mental maths activity');
+  } else {
+    if (!registered.activity.includes('matching')) throw new Error(`Content pack registry ${id} missing matching activity`);
+    if (!registered.activity.includes('comparison')) throw new Error(`Content pack registry ${id} missing comparison activity`);
+    if (!registered.activity.includes('audio prompts')) throw new Error(`Content pack registry ${id} missing audio prompt activity`);
+  }
   if (!Array.isArray(registered.progressionSteps) || registered.progressionSteps.length < 3) throw new Error(`Content pack registry ${id} missing progressionSteps`);
 }
 const hkChinesePack = validatePackFile('content-packs/hk-chinese-basics.json', 'hk-chinese-basics-v1', registryById['hk-chinese-basics-v1'].schema, 'HK Chinese');
 const mandarinPack = validatePackFile('content-packs/mandarin-basics.json', 'mandarin-basics-v1', registryById['mandarin-basics-v1'].schema, 'Mandarin');
+const mathsFoundationPack = validateMathsPackFile('content-packs/maths-foundation.json', 'maths-foundation-v1', registryById['maths-foundation-v1'].schema, 'Maths Foundation');
 for (const marker of [
   'FALLBACK_CONTENT_PACK_REGISTRY',
   'renderCurriculumPacks',
   'content-packs/registry.json',
   'content-packs/hk-chinese-basics.json',
   'content-packs/mandarin-basics.json',
+  'Number bonds',
+  'Practice cards + mental maths + confidence drills',
+  'Maths Foundation practice cards',
+  'validateMathsFoundationPack',
+  'loadMathsFoundationPack',
+  'mathsFoundationTopics',
+  'mathsFoundationCardCount',
+  'mathsFoundationCards',
+  'maths-foundation-grid',
+  'maths-foundation-v1',
+  'renderMathsFoundationPractice',
+  'content-packs/maths-foundation.json',
   'renderChineseMatchingPractice',
   'matchingPracticeCounts',
   'renderChineseComparisonDrill',
@@ -149,3 +183,4 @@ const dockerfile = fs.readFileSync('Dockerfile', 'utf8');
 if (!dockerfile.includes('COPY content-packs ./content-packs')) throw new Error('Dockerfile must publish content-packs for production');
 void hkChinesePack;
 void mandarinPack;
+void mathsFoundationPack;

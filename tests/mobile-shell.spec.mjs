@@ -32,6 +32,10 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.getByRole('heading', { name: 'Traditional HK Chinese matching practice' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Simplified Mandarin matching practice' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Traditional/Simplified comparison drill' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Maths Foundation practice cards' })).toBeVisible();
+  await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Number bonds · Make 10')).toBeVisible();
+  await expect(page.locator('#maths-foundation-grid .maths-card', { hasText: 'What number goes with 6 to make 10?' }).getByText('Answer: 4')).toBeVisible();
+  await expect(page.locator('#maths-foundation-grid .maths-card', { hasText: 'What is 2 × 6?' }).getByText('Double 6 to make 12.')).toBeVisible();
   await expect(page.locator('#comparison-grid .comparison-card').first().getByText('Traditional HK')).toBeVisible();
   await expect(page.locator('#comparison-grid .comparison-card').first().getByText('Simplified Mandarin')).toBeVisible();
   await expect(page.locator('#comparison-grid .comparison-card', { hasText: '爸爸' }).getByText('Same written form — pronunciation changes.')).toBeVisible();
@@ -48,12 +52,22 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.locator('#mandarin-matching-grid .matching-card').first().getByText('✅ Matched')).toBeVisible();
 
   const state = await page.evaluate(() => window.__learningQuestTestState);
-  expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(2);
+  expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(3);
   expect(state.contentPackRegistryError).toBeNull();
   expect(state.hkChinesePackId).toBe('hk-chinese-basics-v1');
   expect(state.mandarinPackId).toBe('mandarin-basics-v1');
+  expect(state.mathsFoundationPackId).toBe('maths-foundation-v1');
+  expect(state.mathsFoundationCardCount).toBe(10);
+  expect(state.mathsFoundationTopics).toEqual(expect.arrayContaining(['Number bonds', 'Place value', 'Times tables']));
   expect(state.recommendedCurriculumTitles).toContain('Simplified Mandarin basics');
   expect(state.recommendedProgressionPaths.join(' | ')).toContain('Use matching practice and comparison drills, then try audio prompts');
+
+  await page.getByRole('button', { name: 'Primary' }).tap();
+  await page.getByRole('button', { name: 'Build confidence' }).tap();
+  await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: 'Maths Foundation practice' })).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Start with number bonds to 10 and 20 → Practise place value and skip counting → Move into times tables, fractions, and short word problems').first()).toBeVisible();
+  const primaryState = await page.evaluate(() => window.__learningQuestTestState);
+  expect(primaryState.recommendedCurriculumTitles).toContain('Maths Foundation practice');
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
   expect(state.audioPromptCounts).toEqual({ hkChinese: 5, mandarin: 5 });
   expect(state.audioPromptLocales).toEqual(['zh-HK', 'zh-CN']);
@@ -121,6 +135,28 @@ test('question practice remains available when optional Mandarin pack is unavail
   expect(state.mandarinPackError).toContain('content-packs/mandarin-basics.json');
 });
 
+test('question practice remains available when optional Maths Foundation pack is unavailable', async ({ page }) => {
+  await page.route('**/content-packs/maths-foundation.json*', route => route.fulfill({ status: 503, body: 'pack unavailable' }));
+  await page.goto('/');
+
+  await expect(page.getByText('LearningQuest').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Set up today’s mission' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start this mission' })).toBeVisible();
+  await page.waitForFunction(
+    () => window.__learningQuestTestState?.mathsFoundationPackError,
+    null,
+    { timeout: 10000 }
+  );
+  await expect(page.locator('#maths-foundation-grid .maths-card').getByText('Try quiz practice while this pack recovers.')).toBeVisible();
+  await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '早晨' })).toBeVisible();
+
+  const state = await page.evaluate(() => window.__learningQuestTestState);
+  expect(state.mathsFoundationPackId).toBeNull();
+  expect(state.mathsFoundationPackError).toContain('content-packs/maths-foundation.json');
+  expect(state.hkChinesePackId).toBe('hk-chinese-basics-v1');
+  expect(state.mandarinPackId).toBe('mandarin-basics-v1');
+});
+
 test('registered content packs fall back when registry is unavailable', async ({ page }) => {
   await page.route('**/content-packs/registry.json*', route => route.fulfill({ status: 503, body: 'registry unavailable' }));
   await page.goto('/');
@@ -128,10 +164,12 @@ test('registered content packs fall back when registry is unavailable', async ({
   await expect(page.getByText('LearningQuest').first()).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '早晨' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '早上好' })).toBeVisible();
+  await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Number bonds · Make 10')).toBeVisible();
 
   const state = await page.evaluate(() => window.__learningQuestTestState);
-  expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(2);
+  expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(3);
   expect(state.contentPackRegistryError).toContain('content-packs/registry.json');
   expect(state.hkChinesePackId).toBe('hk-chinese-basics-v1');
   expect(state.mandarinPackId).toBe('mandarin-basics-v1');
+  expect(state.mathsFoundationPackId).toBe('maths-foundation-v1');
 });
