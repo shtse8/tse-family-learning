@@ -369,7 +369,7 @@
     .curriculum-status { color: var(--primary); font-size: 0.73rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
     .curriculum-status.recommended { color: #1d4ed8; }
     .flashcard-panel, .matching-panel, .comparison-panel { margin-top: 14px; }
-    .matching-grid, .comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .matching-grid, .comparison-grid, .maths-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
     .matching-card { border: 1px solid #bbf7d0; background: linear-gradient(180deg, #f0fdf4, #fff); border-radius: 16px; padding: 12px; display: grid; gap: 8px; }
     .matching-prompt { color: #166534; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
     .matching-term { font-size: 1.35rem; font-weight: 900; color: #14532d; }
@@ -391,6 +391,11 @@
     .comparison-term { color: #92400e; font-size: 1.45rem; font-weight: 900; line-height: 1.1; margin-top: 4px; }
     .comparison-meta { color: var(--subtext); font-size: 0.78rem; line-height: 1.35; }
     .comparison-note { color: #92400e; font-size: 0.8rem; font-weight: 900; }
+    .maths-card { border: 1px solid #bbf7d0; background: linear-gradient(180deg, #f0fdf4, #fff); border-radius: 16px; padding: 12px; display: grid; gap: 8px; align-content: start; }
+    .maths-topic { color: #15803d; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+    .maths-prompt { color: #14532d; font-size: 1.05rem; font-weight: 900; line-height: 1.25; }
+    .maths-answer { color: var(--text); font-weight: 900; }
+    .maths-strategy { color: var(--subtext); font-size: 0.8rem; line-height: 1.35; }
     .flashcard-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
     .flashcard { border: 1px solid #fecdd3; background: linear-gradient(180deg, #fff7ed, #fff); border-radius: 16px; padding: 12px; min-height: 132px; display: grid; gap: 6px; align-content: start; }
     .flashcard-placeholder { border-style: dashed; background: #fff; }
@@ -443,7 +448,7 @@
       .question-text { font-size: 1.1rem; }
       .option { padding: 13px 14px; font-size: 0.97rem; }
       .stats-grid, .badge-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .domain-grid, .curriculum-grid, .mission-metrics, .flashcard-grid, .matching-grid, .comparison-grid, .comparison-forms { grid-template-columns: 1fr; }
+      .domain-grid, .curriculum-grid, .mission-metrics, .flashcard-grid, .matching-grid, .comparison-grid, .comparison-forms, .maths-grid { grid-template-columns: 1fr; }
       .family-row, .leaderboard-row { grid-template-columns: 1fr; text-align: left; }
       .family-stat, .family-focus, .leaderboard-score { text-align: left; }
     }
@@ -547,7 +552,7 @@
       .section-card.wide { grid-column: 1 / -1; }
       .domain-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .curriculum-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .flashcard-grid, .matching-grid, .comparison-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flashcard-grid, .matching-grid, .comparison-grid, .maths-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .start-cta-sticky { bottom: 20px; max-width: 420px; margin-left: auto; }
     }
     @media (min-width: 1080px) {
@@ -863,6 +868,7 @@
             <div class="flashcard-panel" id="mandarin-flashcard-panel"><h3>🧧 Simplified Mandarin starter cards</h3><p>A second reusable curriculum slice: Simplified characters, Pinyin, Traditional comparison, and English meaning.</p><div class="flashcard-grid" id="mandarin-flashcard-grid"></div></div>
             <div class="matching-panel" id="mandarin-matching-panel"><h3>🔗 Simplified Mandarin matching practice</h3><p>Match Simplified characters to English meaning, then compare Pinyin and Traditional forms.</p><div class="matching-grid" id="mandarin-matching-grid"></div></div>
             <div class="comparison-panel" id="comparison-panel"><h3>🪞 Traditional/Simplified comparison drill</h3><p>Compare shared meanings across the runtime HK Chinese and Mandarin packs before moving into audio prompts.</p><div class="comparison-grid" id="comparison-grid"></div></div>
+            <div class="maths-panel" id="maths-foundation-panel"><h3>🧮 Maths Foundation practice cards</h3><p>Number bonds, place value, skip counting, and times-table prompts are runtime-loaded from the content-pack registry.</p><div class="maths-grid" id="maths-foundation-grid"></div></div>
           </article>
 
           <article class="section-card rail" id="progress">
@@ -973,7 +979,8 @@
     const CONTENT_PACK_REGISTRY_PATH = 'content-packs/registry.json';
     const FALLBACK_CONTENT_PACK_REGISTRY = [
       { id: 'hk-chinese-basics-v1', path: 'content-packs/hk-chinese-basics.json', kind: 'flashcards', title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, comparison drills, and audio prompts.', schema: ['traditional', 'jyutping', 'canto', 'english', 'prompt'], renderTarget: 'flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['confidence', 'language', 'mastery'], progressionSteps: ['Start with family words and greetings', 'Practise colours, numbers, and Jyutping recall', 'Move into matching practice, comparison drills, audio prompts, and short household phrases'] },
-      { id: 'mandarin-basics-v1', path: 'content-packs/mandarin-basics.json', kind: 'flashcards', title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.', schema: ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], renderTarget: 'mandarin-flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence', 'mastery'], progressionSteps: ['Start with greetings and core family words', 'Compare Simplified, Traditional, and Pinyin forms', 'Use matching practice and comparison drills, then try audio prompts'] }
+      { id: 'mandarin-basics-v1', path: 'content-packs/mandarin-basics.json', kind: 'flashcards', title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.', schema: ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], renderTarget: 'mandarin-flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence', 'mastery'], progressionSteps: ['Start with greetings and core family words', 'Compare Simplified, Traditional, and Pinyin forms', 'Use matching practice and comparison drills, then try audio prompts'] },
+      { id: 'maths-foundation-v1', path: 'content-packs/maths-foundation.json', kind: 'practice-cards', title: 'Maths Foundation practice', domain: 'Maths Foundation', language: 'English', learners: 'Early and primary learners', activity: 'Practice cards + mental maths + confidence drills', readiness: 'Live slice', next: 'Add adaptive answer entry, number-line visuals, and learner-specific weak-skill rotation.', schema: ['topic', 'skill', 'prompt', 'answer', 'strategy'], renderTarget: 'maths-foundation-grid', recommendedStages: ['early', 'primary'], recommendedGoals: ['confidence', 'mastery'], progressionSteps: ['Start with number bonds to 10 and 20', 'Practise place value and skip counting', 'Move into times tables, fractions, and short word problems'] }
     ];
     let contentPackRegistry = [...FALLBACK_CONTENT_PACK_REGISTRY];
     let contentPackRegistryError = null;
@@ -983,6 +990,9 @@
     let mandarinPack = null;
     let mandarinFlashcards = [];
     let mandarinPackError = null;
+    let mathsFoundationPack = null;
+    let mathsFoundationCards = [];
+    let mathsFoundationPackError = null;
     const matchingPracticeScores = { hkChinese: {}, mandarin: {} };
     const CHINESE_AUDIO_PROMPT_LIMIT = 5;
 
@@ -1072,7 +1082,9 @@
     function packRecommendationScore(pack, state) {
       const stageMatch = arrayIncludes(state.stage, pack.recommendedStages);
       const goalMatch = arrayIncludes(state.goal, pack.recommendedGoals);
-      return (stageMatch ? 2 : 0) + (goalMatch ? 3 : 0) + (pack.readiness === 'Live' || pack.readiness === 'Live slice' ? 1 : 0);
+      const liveBonus = pack.readiness === 'Live' || pack.readiness === 'Live slice' ? 1 : 0;
+      const primaryPracticeBonus = pack.kind === 'practice-cards' && stageMatch && goalMatch && ['early', 'primary'].includes(state.stage) ? 1 : 0;
+      return (stageMatch ? 2 : 0) + (goalMatch ? 3 : 0) + liveBonus + primaryPracticeBonus;
     }
 
     function progressionPathText(pack) {
@@ -1128,12 +1140,26 @@
       };
     }
 
+    function mathsPackSummary() {
+      const definition = contentPackDefinition('maths-foundation-v1');
+      const path = contentPackPath('maths-foundation-v1');
+      const pack = { ...definition, ...(mathsFoundationPack || {}) };
+      return {
+        ...pack,
+        readiness: mathsFoundationPackError ? 'Pack unavailable' : (mathsFoundationPack ? (pack.readiness || 'Live slice') : 'Loading pack'),
+        next: mathsFoundationPackError ? packRecoveryNext(mathsFoundationPackError, path) : (pack.next || definition.next),
+        recommendedStages: pack.recommendedStages || [],
+        recommendedGoals: pack.recommendedGoals || [],
+        progressionSteps: pack.progressionSteps || []
+      };
+    }
+
     function curriculumPacks() {
       return recommendCurriculumPacks([
         { title: '11+ starter bank', domain: '11+ School Prep', language: 'English', learners: 'Young learners', activity: 'MCQ quiz', readiness: 'Live', next: 'Split into topic packs and add source metadata.', recommendedStages: ['primary', 'exam'], recommendedGoals: ['confidence', 'mastery', 'exam-ready'], progressionSteps: ['Start with a mixed diagnostic round', 'Focus quick practice on weak skills', 'Return to timed exam-prep missions'] },
         hkPackSummary(),
         mandarinPackSummary(),
-        { title: 'Maths numbers foundation', domain: 'Maths Foundation', language: 'English', learners: 'Primary learners', activity: 'Short adaptive drills', readiness: 'Next', next: 'Add number bonds, counting, place value, and times-table micro practice.', recommendedStages: ['early', 'primary'], recommendedGoals: ['confidence', 'mastery'], progressionSteps: ['Start with number bonds', 'Add place-value confidence drills', 'Progress into times-table micro practice'] },
+        mathsPackSummary(),
         { title: 'Life in the UK mock mode', domain: 'Life in the UK', language: 'English', learners: 'Adult learners', activity: '24Q / 45m mock test', readiness: 'Planned', next: 'Add official-topic taxonomy, pass mark display, and timed mock-test shell.', recommendedStages: ['adult'], recommendedGoals: ['exam-ready', 'mastery'], progressionSteps: ['Start with topic discovery', 'Practise weak citizenship topics', 'Attempt a timed mock test'] },
         { title: 'French first phrases', domain: 'French', language: 'French + English', learners: 'All learners', activity: 'Phrase recall', readiness: 'Planned', next: 'Start with greetings, family, numbers, food, and travel phrases.', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence'], progressionSteps: ['Start with greetings', 'Add family, food, and numbers', 'Practise phrase recall in short missions'] }
       ]);
@@ -1860,6 +1886,8 @@
         recommendedCurriculumTitles: curriculumPacks().filter(pack => pack.recommended).map(pack => pack.title),
         recommendedProgressionPaths: curriculumPacks().filter(pack => pack.recommended).map(pack => progressionPathText(pack)),
         matchingPracticeCounts: { hkChinese: hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0, mandarin: mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0 },
+        mathsFoundationCardCount: mathsFoundationCards.length,
+        mathsFoundationTopics: Array.from(new Set(mathsFoundationCards.map(card => card.topic))),
         matchingPracticeScores: { hkChinese: matchingPracticeScore('hkChinese', hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0), mandarin: matchingPracticeScore('mandarin', mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0) },
         comparisonDrillPairs: comparisonDrillCards().map(card => ({ traditional: card.traditional, simplified: card.simplified, english: card.english, changed: card.changed })),
         audioPromptCounts: { hkChinese: audioPromptCards(hkChineseFlashcards, 'hkChinese').length, mandarin: audioPromptCards(mandarinFlashcards, 'mandarin').length },
@@ -1867,6 +1895,29 @@
         latestAudioPrompt: window.__learningQuestTestState?.latestAudioPrompt || null,
         latestMatchingProgress
       };
+    }
+
+    function renderMathsFoundationPractice() {
+      const grid = document.getElementById('maths-foundation-grid');
+      if (!grid) return;
+      if (!mathsFoundationCards.length) {
+        grid.innerHTML = `
+          <article class="maths-card">
+            <div class="maths-topic">${mathsFoundationPackError ? 'Pack unavailable' : 'Loading practice cards'}</div>
+            <div class="maths-prompt">${mathsFoundationPackError ? 'Try quiz practice while this pack recovers.' : 'Fetching Maths Foundation practice cards…'}</div>
+            <div class="maths-strategy">${escapeHTML(mathsFoundationPackError || `Runtime-loading ${contentPackPath('maths-foundation-v1')}`)}</div>
+          </article>`;
+        return;
+      }
+      grid.innerHTML = mathsFoundationCards.slice(0, 6).map((card, index) => `
+        <article class="maths-card" data-maths-card-index="${index + 1}">
+          <div class="maths-topic">${escapeHTML(card.topic)} · ${escapeHTML(card.skill)}</div>
+          <div class="maths-prompt">${escapeHTML(card.prompt)}</div>
+          <div class="maths-answer">Answer: ${escapeHTML(card.answer)}</div>
+          <div class="maths-strategy">Strategy: ${escapeHTML(card.strategy)}</div>
+        </article>
+      `).join('');
+      updateRecommendedCurriculumTestState();
     }
 
     function renderCurriculumPacks() {
@@ -1898,7 +1949,7 @@
       if (!registry || registry.id !== 'learningquest-content-pack-registry-v1') throw new Error('Unexpected content pack registry id');
       if (!Array.isArray(registry.packs) || registry.packs.length < 2) throw new Error('Content pack registry needs at least two packs');
       const ids = new Set(registry.packs.map(pack => pack.id));
-      for (const requiredId of ['hk-chinese-basics-v1', 'mandarin-basics-v1']) {
+      for (const requiredId of ['hk-chinese-basics-v1', 'mandarin-basics-v1', 'maths-foundation-v1']) {
         if (!ids.has(requiredId)) throw new Error(`Content pack registry missing ${requiredId}`);
       }
       registry.packs.forEach((pack, index) => {
@@ -1997,6 +2048,40 @@
         renderCurriculumPacks();
         renderMandarinFlashcards();
         renderChineseMatchingPractice();
+      }
+    }
+
+    function validateMathsFoundationPack(pack) {
+      if (!pack || pack.id !== 'maths-foundation-v1') throw new Error('Unexpected Maths Foundation content pack id');
+      if (!Array.isArray(pack.practiceCards) || pack.practiceCards.length < 10) throw new Error('Maths Foundation content pack needs at least 10 practice cards');
+      pack.practiceCards.forEach((card, index) => {
+        ['topic', 'skill', 'prompt', 'answer', 'strategy'].forEach(field => {
+          if (!card[field]) throw new Error(`Maths Foundation practice card ${index + 1} missing ${field}`);
+        });
+      });
+      return pack;
+    }
+
+    async function loadMathsFoundationPack() {
+      try {
+        const path = contentPackPath('maths-foundation-v1');
+        const response = await fetch(`${path}?v=${Date.now()}`);
+        if (!response.ok) throw new Error(`Could not load ${path}: ${response.status}`);
+        mathsFoundationPack = validateMathsFoundationPack(await response.json());
+        mathsFoundationCards = mathsFoundationPack.practiceCards;
+        mathsFoundationPackError = null;
+        window.__learningQuestTestState = { ...(window.__learningQuestTestState || {}), mathsFoundationPackId: mathsFoundationPack.id, mathsFoundationPackError: null };
+        return mathsFoundationPack;
+      } catch (error) {
+        mathsFoundationPack = null;
+        mathsFoundationCards = [];
+        mathsFoundationPackError = error.message || 'Could not load the Maths Foundation content pack';
+        window.__learningQuestTestState = { ...(window.__learningQuestTestState || {}), mathsFoundationPackId: null, mathsFoundationPackError };
+        console.warn(mathsFoundationPackError);
+        return null;
+      } finally {
+        renderCurriculumPacks();
+        renderMathsFoundationPractice();
       }
     }
 
@@ -2135,11 +2220,13 @@
     renderCurriculumPacks();
     renderHKChineseFlashcards();
     renderMandarinFlashcards();
+    renderMathsFoundationPractice();
     loadContentPackRegistry()
       .then(() => Promise.all([
         fetch('questions.json?v=' + Date.now()).then(r => r.json()),
         loadHKChinesePack(),
-        loadMandarinPack()
+        loadMandarinPack(),
+        loadMathsFoundationPack()
       ]))
       .then(([data]) => {
         quizData = data;

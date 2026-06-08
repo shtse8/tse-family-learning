@@ -180,3 +180,9 @@ Next slices:
 - Added browser Web Speech audio prompt controls to runtime HK Chinese and Mandarin flashcards.
 - Audio controls expose `speakChinesePrompt`, `audioPromptCards`, `audioPromptCounts`, `audioPromptLocales`, and `latestAudioPrompt` evidence for validation.
 - Controls gracefully show visible fallback status when a browser lacks speech synthesis support.
+
+## Run #21 Maths Foundation pack
+
+- Added a registry-driven `maths-foundation-v1` content pack with 10 practice cards for number bonds, place value, counting, times tables, addition, subtraction, fractions, and word problems.
+- The runtime now loads `content-packs/maths-foundation.json`, renders Maths Foundation practice cards, and recommends the pack for early/primary confidence or mastery goals.
+- Added `mathsFoundationPackId`, `mathsFoundationCardCount`, and `mathsFoundationTopics` test-state evidence plus mobile fallback coverage for the optional pack.
