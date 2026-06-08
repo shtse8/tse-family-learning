@@ -285,7 +285,7 @@
     .mission-metric small { color: #bae6fd; }
 
     /* ── Learning history ── */
-    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .leaderboard-panel, .badges-panel, .challenge-panel, .practice-panel, .next-step-panel, .domain-panel, .flashcard-panel, .matching-panel, .comparison-panel {
+    .history-panel, .study-plan, .stats-panel, .data-panel, .learner-panel, .subject-panel, .parent-panel, .leaderboard-panel, .badges-panel, .challenge-panel, .practice-panel, .next-step-panel, .domain-panel, .flashcard-panel, .matching-panel, .comparison-panel, .maths-panel {
       background: #f8fafc;
       border: 1px solid #e0e7ff;
       border-radius: 16px;
@@ -293,7 +293,7 @@
       margin: 18px 0 24px;
       text-align: left;
     }
-    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .leaderboard-panel h3, .badges-panel h3, .challenge-panel h3, .practice-panel h3, .next-step-panel h3, .domain-panel h3, .flashcard-panel h3, .matching-panel h3, .comparison-panel h3 {
+    .history-panel h3, .study-plan h3, .stats-panel h3, .data-panel h3, .learner-panel h3, .subject-panel h3, .parent-panel h3, .leaderboard-panel h3, .badges-panel h3, .challenge-panel h3, .practice-panel h3, .next-step-panel h3, .domain-panel h3, .flashcard-panel h3, .matching-panel h3, .comparison-panel h3, .maths-panel h3 {
       font-size: 1rem;
       margin-bottom: 10px;
       color: var(--primary);
@@ -368,7 +368,7 @@
     .curriculum-badge { border-radius: 999px; background: #eef2ff; color: #4338ca; padding: 4px 8px; font-size: 0.72rem; font-weight: 900; }
     .curriculum-status { color: var(--primary); font-size: 0.73rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
     .curriculum-status.recommended { color: #1d4ed8; }
-    .flashcard-panel, .matching-panel, .comparison-panel { margin-top: 14px; }
+    .flashcard-panel, .matching-panel, .comparison-panel, .maths-panel { margin-top: 14px; }
     .matching-grid, .comparison-grid, .maths-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
     .matching-card { border: 1px solid #bbf7d0; background: linear-gradient(180deg, #f0fdf4, #fff); border-radius: 16px; padding: 12px; display: grid; gap: 8px; }
     .matching-prompt { color: #166534; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -395,6 +395,15 @@
     .maths-topic { color: #15803d; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
     .maths-prompt { color: #14532d; font-size: 1.05rem; font-weight: 900; line-height: 1.25; }
     .maths-answer { color: var(--text); font-weight: 900; }
+    .maths-answer-form { display: grid; gap: 7px; }
+    .maths-answer-row { display: flex; gap: 8px; align-items: center; }
+    .maths-answer-input { flex: 1; min-width: 0; border: 1px solid #bbf7d0; border-radius: 12px; padding: 10px 11px; color: #14532d; font-weight: 800; background: #fff; }
+    .maths-answer-input:disabled { background: #ecfdf5; color: #166534; }
+    .maths-check-button { border: 0; border-radius: 12px; padding: 10px 12px; background: #16a34a; color: #fff; font-weight: 900; cursor: pointer; white-space: nowrap; }
+    .maths-check-button:disabled { background: #86efac; cursor: default; }
+    .maths-feedback { min-height: 1.2em; color: #166534; font-size: 0.78rem; font-weight: 900; }
+    .maths-feedback.incorrect { color: #be123c; }
+    .maths-score { display: inline-flex; align-items: center; gap: 6px; width: fit-content; border-radius: 999px; background: #dcfce7; color: #166534; padding: 5px 9px; font-size: 0.74rem; font-weight: 900; }
     .maths-strategy { color: var(--subtext); font-size: 0.8rem; line-height: 1.35; }
     .flashcard-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
     .flashcard { border: 1px solid #fecdd3; background: linear-gradient(180deg, #fff7ed, #fff); border-radius: 16px; padding: 12px; min-height: 132px; display: grid; gap: 6px; align-content: start; }
@@ -980,7 +989,7 @@
     const FALLBACK_CONTENT_PACK_REGISTRY = [
       { id: 'hk-chinese-basics-v1', path: 'content-packs/hk-chinese-basics.json', kind: 'flashcards', title: 'Traditional HK Chinese basics', domain: 'Chinese · Traditional HK', language: '繁體中文 + Cantonese', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand family words into colours, numbers, greetings, Jyutping, comparison drills, and audio prompts.', schema: ['traditional', 'jyutping', 'canto', 'english', 'prompt'], renderTarget: 'flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['confidence', 'language', 'mastery'], progressionSteps: ['Start with family words and greetings', 'Practise colours, numbers, and Jyutping recall', 'Move into matching practice, comparison drills, audio prompts, and short household phrases'] },
       { id: 'mandarin-basics-v1', path: 'content-packs/mandarin-basics.json', kind: 'flashcards', title: 'Simplified Mandarin basics', domain: 'Chinese · Simplified Mandarin', language: '简体中文 + Pinyin', learners: 'All learners', activity: 'Flashcards + matching + comparison + audio prompts + listen/repeat', readiness: 'Live slice', next: 'Expand into matching practice, audio prompts, and Traditional/Simplified comparison drills.', schema: ['simplified', 'traditional', 'pinyin', 'english', 'prompt'], renderTarget: 'mandarin-flashcard-grid', recommendedStages: ['early', 'primary', 'adult'], recommendedGoals: ['language', 'confidence', 'mastery'], progressionSteps: ['Start with greetings and core family words', 'Compare Simplified, Traditional, and Pinyin forms', 'Use matching practice and comparison drills, then try audio prompts'] },
-      { id: 'maths-foundation-v1', path: 'content-packs/maths-foundation.json', kind: 'practice-cards', title: 'Maths Foundation practice', domain: 'Maths Foundation', language: 'English', learners: 'Early and primary learners', activity: 'Practice cards + mental maths + confidence drills', readiness: 'Live slice', next: 'Add adaptive answer entry, number-line visuals, and learner-specific weak-skill rotation.', schema: ['topic', 'skill', 'prompt', 'answer', 'strategy'], renderTarget: 'maths-foundation-grid', recommendedStages: ['early', 'primary'], recommendedGoals: ['confidence', 'mastery'], progressionSteps: ['Start with number bonds to 10 and 20', 'Practise place value and skip counting', 'Move into times tables, fractions, and short word problems'] }
+      { id: 'maths-foundation-v1', path: 'content-packs/maths-foundation.json', kind: 'practice-cards', title: 'Maths Foundation practice', domain: 'Maths Foundation', language: 'English', learners: 'Early and primary learners', activity: 'Practice cards + Adaptive answer entry + mental maths + confidence drills', readiness: 'Live slice', next: 'Add number-line visuals and learner-specific weak-skill rotation.', schema: ['topic', 'skill', 'prompt', 'answer', 'strategy'], renderTarget: 'maths-foundation-grid', recommendedStages: ['early', 'primary'], recommendedGoals: ['confidence', 'mastery'], progressionSteps: ['Start with number bonds to 10 and 20', 'Practise place value and skip counting', 'Move into times tables, fractions, and short word problems', 'Type answers and unlock strategy feedback'] }
     ];
     let contentPackRegistry = [...FALLBACK_CONTENT_PACK_REGISTRY];
     let contentPackRegistryError = null;
@@ -994,7 +1003,9 @@
     let mathsFoundationCards = [];
     let mathsFoundationPackError = null;
     const matchingPracticeScores = { hkChinese: {}, mandarin: {} };
+    const mathsFoundationPracticeScores = {};
     const CHINESE_AUDIO_PROMPT_LIMIT = 5;
+    const MATHS_FOUNDATION_PRACTICE_LIMIT = 6;
 
     function speechSynthesisAvailable() {
       return typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
@@ -1091,7 +1102,7 @@
       const steps = Array.isArray(pack.progressionSteps) && pack.progressionSteps.length
         ? pack.progressionSteps
         : ['Try the live activity', 'Review feedback and weak topics', 'Move to the next recommended pack'];
-      return steps.slice(0, 3).join(' → ');
+      return steps.slice(0, 4).join(' → ');
     }
 
     function recommendCurriculumPacks(packs) {
@@ -1878,22 +1889,83 @@
       `).join('');
     }
 
-    function updateRecommendedCurriculumTestState(lastMatchingProgress = null) {
+    function normaliseMathsAnswer(value) {
+      return String(value || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[.,!?]/g, '')
+        .replace(/\s+/g, ' ');
+    }
+
+    function mathsFoundationPracticeCards() {
+      return mathsFoundationCards.slice(0, MATHS_FOUNDATION_PRACTICE_LIMIT).map((card, index) => ({ ...card, index: index + 1 }));
+    }
+
+    function mathsFoundationPracticeScore(total = MATHS_FOUNDATION_PRACTICE_LIMIT) {
+      const attempts = Object.values(mathsFoundationPracticeScores);
+      const correct = attempts.filter(Boolean).length;
+      return { correct, attempted: attempts.length, total };
+    }
+
+    function mathsFoundationPracticeSummary(total = MATHS_FOUNDATION_PRACTICE_LIMIT) {
+      const score = mathsFoundationPracticeScore(total);
+      return `${score.correct}/${score.total} solved · ${score.attempted} tried`;
+    }
+
+    function saveMathsFoundationProgress(total = MATHS_FOUNDATION_PRACTICE_LIMIT) {
+      const score = mathsFoundationPracticeScore(total);
+      const percent = total ? Math.round((score.correct / total) * 100) : 0;
+      const learner = activeLearner();
+      const entry = {
+        learner: learner.id,
+        date: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        completedAt: new Date().toISOString(),
+        correct: score.correct,
+        total,
+        percent,
+        focus: 'Maths Foundation answer practice',
+        subjects: { 'Maths Foundation': { correct: score.correct, total } },
+        practiceMode: 'maths-foundation-answer-entry',
+        difficultyMode: 'maths-foundation',
+        activityType: 'maths-foundation-practice',
+        attempted: score.attempted
+      };
+      const history = upsertHistoryEntry(entry, item => item.activityType === 'maths-foundation-practice');
+      renderHistory(history);
+      return entry;
+    }
+
+    function recordMathsFoundationAnswer(cardIndex, answer) {
+      const card = mathsFoundationPracticeCards().find(item => item.index === Number(cardIndex));
+      if (!card) return;
+      const isCorrect = normaliseMathsAnswer(answer) === normaliseMathsAnswer(card.answer);
+      mathsFoundationPracticeScores[card.index] = isCorrect;
+      const saved = saveMathsFoundationProgress(mathsFoundationPracticeCards().length || MATHS_FOUNDATION_PRACTICE_LIMIT);
+      renderMathsFoundationPractice();
+      updateRecommendedCurriculumTestState(null, saved);
+    }
+
+    function updateRecommendedCurriculumTestState(lastMatchingProgress = null, lastMathsFoundationProgress = null) {
       const history = loadHistory();
       const latestMatchingProgress = lastMatchingProgress || history.find(item => item.activityType === 'matching-practice') || null;
+      const latestMathsFoundationProgress = lastMathsFoundationProgress || history.find(item => item.activityType === 'maths-foundation-practice') || null;
+      const mathsPracticeCards = mathsFoundationPracticeCards();
       window.__learningQuestTestState = {
         ...(window.__learningQuestTestState || {}),
         recommendedCurriculumTitles: curriculumPacks().filter(pack => pack.recommended).map(pack => pack.title),
         recommendedProgressionPaths: curriculumPacks().filter(pack => pack.recommended).map(pack => progressionPathText(pack)),
         matchingPracticeCounts: { hkChinese: hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0, mandarin: mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0 },
         mathsFoundationCardCount: mathsFoundationCards.length,
+        mathsFoundationPracticeCount: mathsPracticeCards.length,
         mathsFoundationTopics: Array.from(new Set(mathsFoundationCards.map(card => card.topic))),
         matchingPracticeScores: { hkChinese: matchingPracticeScore('hkChinese', hkChineseFlashcards.length ? Math.min(4, hkChineseFlashcards.length) : 0), mandarin: matchingPracticeScore('mandarin', mandarinFlashcards.length ? Math.min(4, mandarinFlashcards.length) : 0) },
+        mathsFoundationPracticeScores: mathsFoundationPracticeScore(mathsPracticeCards.length || MATHS_FOUNDATION_PRACTICE_LIMIT),
         comparisonDrillPairs: comparisonDrillCards().map(card => ({ traditional: card.traditional, simplified: card.simplified, english: card.english, changed: card.changed })),
         audioPromptCounts: { hkChinese: audioPromptCards(hkChineseFlashcards, 'hkChinese').length, mandarin: audioPromptCards(mandarinFlashcards, 'mandarin').length },
         audioPromptLocales: ['zh-HK', 'zh-CN'],
         latestAudioPrompt: window.__learningQuestTestState?.latestAudioPrompt || null,
-        latestMatchingProgress
+        latestMatchingProgress,
+        latestMathsFoundationProgress
       };
     }
 
@@ -1909,14 +1981,29 @@
           </article>`;
         return;
       }
-      grid.innerHTML = mathsFoundationCards.slice(0, 6).map((card, index) => `
-        <article class="maths-card" data-maths-card-index="${index + 1}">
-          <div class="maths-topic">${escapeHTML(card.topic)} · ${escapeHTML(card.skill)}</div>
-          <div class="maths-prompt">${escapeHTML(card.prompt)}</div>
-          <div class="maths-answer">Answer: ${escapeHTML(card.answer)}</div>
-          <div class="maths-strategy">Strategy: ${escapeHTML(card.strategy)}</div>
-        </article>
-      `).join('');
+      const practiceCards = mathsFoundationPracticeCards();
+      grid.innerHTML = practiceCards.map(card => {
+        const recorded = mathsFoundationPracticeScores[card.index];
+        const answered = typeof recorded === 'boolean';
+        const solved = recorded === true;
+        const inputId = `maths-answer-${card.index}`;
+        return `
+          <article class="maths-card" data-maths-card-index="${card.index}">
+            <div class="maths-topic">${escapeHTML(card.topic)} · ${escapeHTML(card.skill)}</div>
+            <div class="maths-prompt">${escapeHTML(card.prompt)}</div>
+            <form class="maths-answer-form" onsubmit="recordMathsFoundationAnswer(${card.index}, this.elements.answer.value); return false;">
+              <label class="matching-prompt" for="${inputId}">Type your answer to unlock the strategy</label>
+              <div class="maths-answer-row">
+                <input class="maths-answer-input" id="${inputId}" name="answer" autocomplete="off" inputmode="text" value="${solved ? escapeHTML(card.answer) : ''}" ${solved ? 'disabled' : ''} aria-label="Answer for ${escapeHTML(card.prompt)}">
+                <button class="maths-check-button" type="submit" ${solved ? 'disabled' : ''}>Check answer</button>
+              </div>
+            </form>
+            <div class="maths-feedback ${answered && !solved ? 'incorrect' : ''}">${answered ? (solved ? '✅ Correct — strategy unlocked.' : `Try again — ${escapeHTML(card.answer)} unlocks the strategy.`) : 'Retrieval first: the strategy appears after a correct answer.'}</div>
+            <div class="maths-score">${escapeHTML(mathsFoundationPracticeSummary(practiceCards.length))}</div>
+            <div class="maths-strategy">${solved ? `Strategy: ${escapeHTML(card.strategy)}` : 'Strategy locked until this answer is correct.'}</div>
+          </article>
+        `;
+      }).join('');
       updateRecommendedCurriculumTestState();
     }
 

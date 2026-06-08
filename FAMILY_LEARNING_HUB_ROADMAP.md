@@ -186,3 +186,10 @@ Next slices:
 - Added a registry-driven `maths-foundation-v1` content pack with 10 practice cards for number bonds, place value, counting, times tables, addition, subtraction, fractions, and word problems.
 - The runtime now loads `content-packs/maths-foundation.json`, renders Maths Foundation practice cards, and recommends the pack for early/primary confidence or mastery goals.
 - Added `mathsFoundationPackId`, `mathsFoundationCardCount`, and `mathsFoundationTopics` test-state evidence plus mobile fallback coverage for the optional pack.
+
+
+## Run #22 Maths Foundation answer practice
+
+- Upgraded Maths Foundation practice cards from answer reveal cards into adaptive answer-entry drills.
+- Learners now type answers, receive immediate correctness feedback, unlock strategies, and save Maths Foundation progress into learner history.
+- Added `mathsFoundationPracticeScores` and `latestMathsFoundationProgress` test-state evidence plus mobile coverage for solved-answer persistence.
