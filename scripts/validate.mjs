@@ -50,6 +50,8 @@ function validateMathsPackFile(path, expectedId, fields, label) {
   if (!pack.activity || !pack.activity.includes('Practice cards')) throw new Error(`${label} pack metadata must advertise practice cards`);
   if (!pack.activity || !pack.activity.includes('mental maths')) throw new Error(`${label} pack metadata must advertise mental maths`);
   if (expectedId === 'maths-foundation-v1' && !pack.activity.includes('Adaptive answer entry')) throw new Error(`${label} pack metadata must advertise adaptive answer entry`);
+  if (expectedId === 'maths-foundation-v1' && !pack.activity.includes('Number-line models')) throw new Error(`${label} pack metadata must advertise number-line models`);
+  if (expectedId === 'maths-foundation-v1' && !pack.activity.includes('weak-skill rotation')) throw new Error(`${label} pack metadata must advertise weak-skill rotation`);
   if (!Array.isArray(pack.practiceCards) || pack.practiceCards.length < 10) throw new Error(`${label} pack needs at least 10 practice cards`);
   for (const [i, card] of pack.practiceCards.entries()) {
     for (const field of fields) {
@@ -83,7 +85,10 @@ for (const [id, path, fields] of [
     if (!registered.activity.includes('Practice cards')) throw new Error('Content pack registry maths-foundation-v1 missing practice-card activity');
     if (!registered.activity.includes('mental maths')) throw new Error('Content pack registry maths-foundation-v1 missing mental maths activity');
     if (!registered.activity.includes('Adaptive answer entry')) throw new Error('Content pack registry maths-foundation-v1 missing adaptive answer-entry activity');
+    if (!registered.activity.includes('Number-line models')) throw new Error('Content pack registry maths-foundation-v1 missing number-line model activity');
+    if (!registered.activity.includes('weak-skill rotation')) throw new Error('Content pack registry maths-foundation-v1 missing weak-skill rotation activity');
     if (!registered.progressionSteps.includes('Type answers and unlock strategy feedback')) throw new Error('Content pack registry maths-foundation-v1 missing answer-entry progression step');
+    if (!registered.progressionSteps.includes('Review weak skills first with number-line support')) throw new Error('Content pack registry maths-foundation-v1 missing weak-skill rotation progression step');
   } else {
     if (!registered.activity.includes('matching')) throw new Error(`Content pack registry ${id} missing matching activity`);
     if (!registered.activity.includes('comparison')) throw new Error(`Content pack registry ${id} missing comparison activity`);
@@ -101,7 +106,7 @@ for (const marker of [
   'content-packs/hk-chinese-basics.json',
   'content-packs/mandarin-basics.json',
   'Number bonds',
-  'Practice cards + Adaptive answer entry + mental maths + confidence drills',
+  'Practice cards + Number-line models + Adaptive answer entry + weak-skill rotation + mental maths + confidence drills',
   'Maths Foundation practice cards',
   'validateMathsFoundationPack',
   'loadMathsFoundationPack',
@@ -117,6 +122,13 @@ for (const marker of [
   'recordMathsFoundationAnswer',
   'maths-foundation-answer-entry',
   'latestMathsFoundationProgress',
+  'mathsNumberLineVisual',
+  'maths-number-line',
+  'mathsFoundationWeakSkillSet',
+  'mathsFoundationWeakSkills',
+  'mathsFoundationRotationMode',
+  'maths-foundation-weak-skill-rotation',
+  'Review weak skills first with number-line support',
   'MATHS_FOUNDATION_PRACTICE_LIMIT',
   'content-packs/maths-foundation.json',
   'renderChineseMatchingPractice',

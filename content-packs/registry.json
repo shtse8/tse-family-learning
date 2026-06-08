@@ -1,6 +1,6 @@
 {
   "id": "learningquest-content-pack-registry-v1",
-  "updated": "2026-06-07",
+  "updated": "2026-06-08",
   "packs": [
     {
       "id": "hk-chinese-basics-v1",
@@ -80,9 +80,9 @@
       "domain": "Maths Foundation",
       "language": "English",
       "learners": "Early and primary learners",
-      "activity": "Practice cards + Adaptive answer entry + mental maths + confidence drills",
+      "activity": "Practice cards + Number-line models + Adaptive answer entry + weak-skill rotation + mental maths + confidence drills",
       "readiness": "Live slice",
-      "next": "Add number-line visuals and learner-specific weak-skill rotation.",
+      "next": "Add adaptive number-line hints for more operations and learner-specific mixed review.",
       "schema": [
         "topic",
         "skill",
@@ -103,7 +103,8 @@
         "Start with number bonds to 10 and 20",
         "Practise place value and skip counting",
         "Move into times tables, fractions, and short word problems",
-        "Type answers and unlock strategy feedback"
+        "Type answers and unlock strategy feedback",
+        "Review weak skills first with number-line support"
       ]
     }
   ]

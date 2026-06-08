@@ -193,3 +193,9 @@ Next slices:
 - Upgraded Maths Foundation practice cards from answer reveal cards into adaptive answer-entry drills.
 - Learners now type answers, receive immediate correctness feedback, unlock strategies, and save Maths Foundation progress into learner history.
 - Added `mathsFoundationPracticeScores` and `latestMathsFoundationProgress` test-state evidence plus mobile coverage for solved-answer persistence.
+
+## Run #23 Maths Foundation number-line rotation
+
+- Added number-line visual models to Maths Foundation answer-entry cards for number bonds, skip counting, bridge-10, count-back subtraction, and word-problem addition.
+- Added learner-history-aware weak-skill rotation: incorrect Maths Foundation attempts persist `weakSkills` and move those skills to the front of the next practice render.
+- Added `mathsFoundationNumberLineCount`, `mathsFoundationWeakSkills`, and `mathsFoundationRotationMode` test-state evidence plus mobile coverage for weak-skill prioritisation.

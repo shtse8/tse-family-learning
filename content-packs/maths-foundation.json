@@ -4,23 +4,39 @@
   "domain": "Maths Foundation",
   "language": "English",
   "learners": "Early and primary learners",
-  "activity": "Practice cards + Adaptive answer entry + mental maths + confidence drills",
+  "activity": "Practice cards + Number-line models + Adaptive answer entry + weak-skill rotation + mental maths + confidence drills",
   "readiness": "Live slice",
-  "next": "Add number-line visuals and learner-specific weak-skill rotation.",
+  "next": "Add adaptive number-line hints for more operations and learner-specific mixed review.",
   "practiceCards": [
     {
       "topic": "Number bonds",
       "skill": "Make 10",
       "prompt": "What number goes with 6 to make 10?",
       "answer": "4",
-      "strategy": "Count up from 6: 7, 8, 9, 10. That is 4 steps."
+      "strategy": "Count up from 6: 7, 8, 9, 10. That is 4 steps.",
+      "numberLine": {
+        "start": 6,
+        "end": 10,
+        "step": 1,
+        "jump": 4,
+        "jumpLabel": "6 + 4 = 10",
+        "label": "Count four steps from 6 to 10"
+      }
     },
     {
       "topic": "Number bonds",
       "skill": "Make 20",
       "prompt": "What number goes with 13 to make 20?",
       "answer": "7",
-      "strategy": "13 needs 7 more to reach the next ten, 20."
+      "strategy": "13 needs 7 more to reach the next ten, 20.",
+      "numberLine": {
+        "start": 13,
+        "end": 20,
+        "step": 1,
+        "jump": 7,
+        "jumpLabel": "13 + 7 = 20",
+        "label": "Count seven steps from 13 to 20"
+      }
     },
     {
       "topic": "Place value",
@@ -34,7 +50,15 @@
       "skill": "Skip counting by 5",
       "prompt": "What comes next: 5, 10, 15, 20, __?",
       "answer": "25",
-      "strategy": "Add 5 each time."
+      "strategy": "Add 5 each time.",
+      "numberLine": {
+        "start": 5,
+        "end": 25,
+        "step": 5,
+        "jump": 5,
+        "jumpLabel": "+5 each hop",
+        "label": "Skip count by fives to 25"
+      }
     },
     {
       "topic": "Times tables",
@@ -55,14 +79,30 @@
       "skill": "Bridge 10",
       "prompt": "What is 8 + 5?",
       "answer": "13",
-      "strategy": "Make 10 first: 8 + 2 = 10, then add 3 more."
+      "strategy": "Make 10 first: 8 + 2 = 10, then add 3 more.",
+      "numberLine": {
+        "start": 8,
+        "end": 13,
+        "step": 1,
+        "jump": 5,
+        "jumpLabel": "8 + 5 = 13",
+        "label": "Bridge through 10 from 8 to 13"
+      }
     },
     {
       "topic": "Subtraction",
       "skill": "Count back",
       "prompt": "What is 15 − 6?",
       "answer": "9",
-      "strategy": "Count back 6 from 15, or take away 5 to reach 10 then one more."
+      "strategy": "Count back 6 from 15, or take away 5 to reach 10 then one more.",
+      "numberLine": {
+        "start": 15,
+        "end": 9,
+        "step": 1,
+        "jump": -6,
+        "jumpLabel": "15 − 6 = 9",
+        "label": "Count back six steps from 15 to 9"
+      }
     },
     {
       "topic": "Fractions",
@@ -76,7 +116,15 @@
       "skill": "Choose the operation",
       "prompt": "A learner has 9 stickers and gets 4 more. How many stickers now?",
       "answer": "13 stickers",
-      "strategy": "Getting more means add: 9 + 4 = 13."
+      "strategy": "Getting more means add: 9 + 4 = 13.",
+      "numberLine": {
+        "start": 9,
+        "end": 13,
+        "step": 1,
+        "jump": 4,
+        "jumpLabel": "9 + 4 = 13",
+        "label": "Add four more stickers"
+      }
     }
   ]
 }
