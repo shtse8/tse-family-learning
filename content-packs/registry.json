@@ -80,9 +80,9 @@
       "domain": "Maths Foundation",
       "language": "English",
       "learners": "Early and primary learners",
-      "activity": "Practice cards + mental maths + confidence drills",
+      "activity": "Practice cards + Adaptive answer entry + mental maths + confidence drills",
       "readiness": "Live slice",
-      "next": "Add adaptive answer entry, number-line visuals, and learner-specific weak-skill rotation.",
+      "next": "Add number-line visuals and learner-specific weak-skill rotation.",
       "schema": [
         "topic",
         "skill",
@@ -102,7 +102,8 @@
       "progressionSteps": [
         "Start with number bonds to 10 and 20",
         "Practise place value and skip counting",
-        "Move into times tables, fractions, and short word problems"
+        "Move into times tables, fractions, and short word problems",
+        "Type answers and unlock strategy feedback"
       ]
     }
   ]

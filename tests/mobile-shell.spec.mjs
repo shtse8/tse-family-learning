@@ -34,8 +34,20 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.getByRole('heading', { name: 'Traditional/Simplified comparison drill' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Maths Foundation practice cards' })).toBeVisible();
   await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Number bonds · Make 10')).toBeVisible();
-  await expect(page.locator('#maths-foundation-grid .maths-card', { hasText: 'What number goes with 6 to make 10?' }).getByText('Answer: 4')).toBeVisible();
-  await expect(page.locator('#maths-foundation-grid .maths-card', { hasText: 'What is 2 × 6?' }).getByText('Double 6 to make 12.')).toBeVisible();
+  const makeTenCard = page.locator('#maths-foundation-grid .maths-card', { hasText: 'What number goes with 6 to make 10?' });
+  await expect(makeTenCard.getByRole('textbox', { name: 'Answer for What number goes with 6 to make 10?' })).toBeVisible();
+  await expect(makeTenCard.getByText('Strategy locked until this answer is correct.')).toBeVisible();
+  await makeTenCard.getByRole('textbox', { name: 'Answer for What number goes with 6 to make 10?' }).fill('4');
+  await makeTenCard.getByRole('button', { name: 'Check answer' }).tap();
+  await expect(makeTenCard.getByText('✅ Correct — strategy unlocked.')).toBeVisible();
+  await expect(makeTenCard.getByText('1/6 solved · 1 tried')).toBeVisible();
+  await expect(makeTenCard.getByText('Count up from 6: 7, 8, 9, 10. That is 4 steps.')).toBeVisible();
+  await expect(page.locator('#history-panel').getByText('Maths Foundation answer practice')).toBeVisible();
+  const twoTimesCard = page.locator('#maths-foundation-grid .maths-card', { hasText: 'What is 2 × 6?' });
+  await twoTimesCard.getByRole('textbox', { name: 'Answer for What is 2 × 6?' }).fill('12');
+  await twoTimesCard.getByRole('button', { name: 'Check answer' }).tap();
+  await expect(twoTimesCard.getByText('✅ Correct — strategy unlocked.')).toBeVisible();
+  await expect(twoTimesCard.getByText('Double 6 to make 12.')).toBeVisible();
   await expect(page.locator('#comparison-grid .comparison-card').first().getByText('Traditional HK')).toBeVisible();
   await expect(page.locator('#comparison-grid .comparison-card').first().getByText('Simplified Mandarin')).toBeVisible();
   await expect(page.locator('#comparison-grid .comparison-card', { hasText: '爸爸' }).getByText('Same written form — pronunciation changes.')).toBeVisible();
@@ -65,7 +77,7 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await page.getByRole('button', { name: 'Primary' }).tap();
   await page.getByRole('button', { name: 'Build confidence' }).tap();
   await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: 'Maths Foundation practice' })).toBeVisible();
-  await expect(page.locator('.curriculum-card.recommended').getByText('Start with number bonds to 10 and 20 → Practise place value and skip counting → Move into times tables, fractions, and short word problems').first()).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Start with number bonds to 10 and 20 → Practise place value and skip counting → Move into times tables, fractions, and short word problems → Type answers and unlock strategy feedback').first()).toBeVisible();
   const primaryState = await page.evaluate(() => window.__learningQuestTestState);
   expect(primaryState.recommendedCurriculumTitles).toContain('Maths Foundation practice');
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
@@ -76,6 +88,15 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(state.comparisonDrillPairs).toEqual(expect.arrayContaining([
     expect.objectContaining({ traditional: '媽媽', simplified: '妈妈', english: 'Mum / mother', changed: true })
   ]));
+  expect(state.mathsFoundationPracticeScores).toEqual({ correct: 2, attempted: 2, total: 6 });
+  expect(state.latestMathsFoundationProgress).toMatchObject({
+    activityType: 'maths-foundation-practice',
+    practiceMode: 'maths-foundation-answer-entry',
+    correct: 2,
+    total: 6,
+    percent: 33,
+    attempted: 2
+  });
   expect(state.matchingPracticeScores.hkChinese).toEqual({ correct: 1, attempted: 1, total: 4 });
   expect(state.matchingPracticeScores.mandarin).toEqual({ correct: 1, attempted: 1, total: 4 });
   expect(state.latestMatchingProgress).toMatchObject({
@@ -89,7 +110,10 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   });
   const savedHistory = await page.evaluate(() => JSON.parse(localStorage.getItem('learningquest-history-v1-learner-1')));
   expect(savedHistory[0]).toMatchObject({ activityType: 'matching-practice', matchingPackKey: 'mandarin', correct: 1, total: 4, percent: 25 });
-  expect(savedHistory[1]).toMatchObject({ activityType: 'matching-practice', matchingPackKey: 'hkChinese', correct: 1, total: 4, percent: 25 });
+  expect(savedHistory).toEqual(expect.arrayContaining([
+    expect.objectContaining({ activityType: 'maths-foundation-practice', correct: 2, total: 6, percent: 33 }),
+    expect.objectContaining({ activityType: 'matching-practice', matchingPackKey: 'hkChinese', correct: 1, total: 4, percent: 25 })
+  ]));
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
