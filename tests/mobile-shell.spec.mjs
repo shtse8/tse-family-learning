@@ -27,8 +27,13 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '红色' })).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard').first().getByRole('button', { name: 'Hear Cantonese' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard').first().getByRole('button', { name: 'Hear Mandarin' })).toBeVisible();
-  await page.locator('#flashcard-grid .flashcard').first().getByRole('button', { name: 'Hear Cantonese' }).tap();
-  await expect(page.locator('#flashcard-grid .flashcard').first().locator('.audio-status')).toContainText(/Playing Cantonese audio prompt|Audio support unavailable/);
+  const firstCantoneseCard = page.locator('#flashcard-grid .flashcard').first();
+  await expect(firstCantoneseCard.locator('.audio-voice-hint')).toContainText(/tap once, then replay to practise|Voice fallback/);
+  await firstCantoneseCard.getByRole('button', { name: 'Hear Cantonese' }).tap();
+  await expect(firstCantoneseCard.getByRole('button', { name: 'Replay Cantonese audio prompt' })).toBeVisible();
+  await expect(firstCantoneseCard.locator('.audio-status')).toContainText(/Replay ready|Audio support unavailable/);
+  await firstCantoneseCard.getByRole('button', { name: 'Replay Cantonese audio prompt' }).tap();
+  await expect(firstCantoneseCard.locator('.audio-status')).toContainText(/2 listens|2 replay cues/);
   await expect(page.getByRole('heading', { name: 'Traditional HK Chinese matching practice' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Simplified Mandarin matching practice' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Traditional/Simplified comparison drill' })).toBeVisible();
@@ -95,7 +100,9 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
   expect(state.audioPromptCounts).toEqual({ hkChinese: 5, mandarin: 5 });
   expect(state.audioPromptLocales).toEqual(['zh-HK', 'zh-CN']);
-  expect(state.latestAudioPrompt).toMatchObject({ text: '爸爸', lang: 'zh-HK', label: 'Cantonese audio prompt' });
+  expect(state.audioVoiceHints.hkChinese).toMatch(/zh-HK|Voice fallback/);
+  expect(state.audioPromptReplayCounts['zh-HK:爸爸']).toBe(2);
+  expect(state.latestAudioPrompt).toMatchObject({ text: '爸爸', lang: 'zh-HK', label: 'Cantonese audio prompt', replayCount: 2 });
   expect(state.comparisonDrillPairs).toHaveLength(6);
   expect(state.comparisonDrillPairs).toEqual(expect.arrayContaining([
     expect.objectContaining({ traditional: '媽媽', simplified: '妈妈', english: 'Mum / mother', changed: true })
