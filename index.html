@@ -420,11 +420,14 @@
     .flashcard-canto { font-weight: 900; color: var(--text); }
     .flashcard-meta { color: var(--subtext); font-size: 0.78rem; line-height: 1.35; }
     .flashcard-prompt { color: #be123c; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; }
+    .audio-actions { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
     .audio-button { border: 1px solid #fecdd3; background: #fff1f2; color: #9f1239; border-radius: 999px; padding: 7px 10px; width: fit-content; font-weight: 900; cursor: pointer; transition: all 0.2s; }
     .audio-button:hover { background: #ffe4e6; border-color: #fb7185; transform: translateY(-1px); }
     .audio-button:focus-visible { outline: 3px solid #fecdd3; outline-offset: 2px; }
     .audio-button[aria-disabled="true"] { opacity: 0.7; cursor: not-allowed; transform: none; }
     .audio-button[data-audio-played="true"] { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+    .audio-slow-button { background: #ecfeff; border-color: #67e8f9; color: #155e75; }
+    .audio-slow-button[data-audio-played="true"] { background: #cffafe; border-color: #22d3ee; color: #164e63; }
     .audio-status { color: #be123c; font-size: 0.76rem; font-weight: 800; min-height: 1.15em; }
     .audio-voice-hint { color: #7c2d12; font-size: 0.74rem; font-weight: 800; line-height: 1.35; }
     .next-step-card { background: #fff; border: 1px solid #bfdbfe; border-radius: 14px; padding: 12px; }
@@ -1018,6 +1021,8 @@
     const matchingPracticeScores = { hkChinese: {}, mandarin: {} };
     const mathsFoundationPracticeScores = {};
     const audioPromptReplayCounts = {};
+    const audioPromptSlowReplayCounts = {};
+    const audioPromptRates = {};
     const CHINESE_AUDIO_PROMPT_LIMIT = 5;
     const MATHS_FOUNDATION_PRACTICE_LIMIT = 6;
 
@@ -1046,6 +1051,14 @@
       return String(label || 'audio').replace(' audio prompt', '');
     }
 
+    function audioPromptRate(mode = 'normal') {
+      return mode === 'slow' ? 0.62 : 0.82;
+    }
+
+    function audioPromptModeLabel(mode = 'normal') {
+      return mode === 'slow' ? 'slow repeat' : 'normal replay';
+    }
+
     function audioVoiceHint(lang) {
       if (!speechSynthesisAvailable()) return 'Voice fallback: browser speech unavailable; read the prompt aloud and keep the replay cue visible.';
       const voices = typeof window.speechSynthesis.getVoices === 'function' ? window.speechSynthesis.getVoices() : [];
@@ -1072,35 +1085,47 @@
         audioPromptLocales: ['zh-HK', 'zh-CN'],
         audioVoiceHints: { hkChinese: audioVoiceHint('zh-HK'), mandarin: audioVoiceHint('zh-CN') },
         audioPromptReplayCounts: { ...audioPromptReplayCounts },
+        audioPromptSlowReplayCounts: { ...audioPromptSlowReplayCounts },
+        audioPromptRates: { ...audioPromptRates },
         latestAudioPrompt: lastAudioPrompt || window.__learningQuestTestState?.latestAudioPrompt || null
       };
     }
 
-    function speakChinesePrompt(text, lang, label) {
+    function speakChinesePrompt(text, lang, label, mode = 'normal') {
       const key = audioPromptKey(lang, text);
+      const safeMode = mode === 'slow' ? 'slow' : 'normal';
+      const rate = audioPromptRate(safeMode);
       audioPromptReplayCounts[key] = (audioPromptReplayCounts[key] || 0) + 1;
+      if (safeMode === 'slow') audioPromptSlowReplayCounts[key] = (audioPromptSlowReplayCounts[key] || 0) + 1;
+      audioPromptRates[key] = rate;
       const replayCount = audioPromptReplayCounts[key];
-      const prompt = { text, lang, label, key, replayCount, spokenAt: new Date().toISOString(), supported: speechSynthesisAvailable() };
+      const slowReplayCount = audioPromptSlowReplayCounts[key] || 0;
+      const prompt = { text, lang, label, key, mode: safeMode, rate, replayCount, slowReplayCount, spokenAt: new Date().toISOString(), supported: speechSynthesisAvailable() };
       if (prompt.supported) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = lang;
-        utterance.rate = 0.82;
+        utterance.rate = rate;
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(utterance);
       }
       updateAudioPromptTestState(prompt);
       document.querySelectorAll('[data-audio-key]').forEach(button => {
-        if (button.dataset.audioKey === key) {
+        if (button.dataset.audioKey === key && button.dataset.audioPrimary === 'true') {
           button.dataset.audioPlayed = 'true';
           button.textContent = `🔁 Replay ${audioPromptShortLabel(label)}`;
           button.setAttribute('aria-label', `Replay ${label}`);
+        }
+        if (button.dataset.audioKey === key && button.dataset.audioMode === 'slow') {
+          button.dataset.audioPlayed = 'true';
+          button.textContent = slowReplayCount > 0 ? '🐢 Slow repeat again' : '🐢 Slow repeat';
+          button.setAttribute('aria-label', `Slow repeat ${label}`);
         }
       });
       document.querySelectorAll('[data-audio-status]').forEach(node => {
         if (node.dataset.audioStatus === key) {
           node.textContent = prompt.supported
-            ? `${replayCount > 1 ? '🔁 Replaying' : '🔊 Playing'} ${label} · ${replayCount} listen${replayCount === 1 ? '' : 's'} · Replay ready`
-            : `Audio support unavailable in this browser · ${replayCount} replay cue${replayCount === 1 ? '' : 's'} saved`;
+            ? `${safeMode === 'slow' ? '🐢 Slow repeat' : (replayCount > 1 ? '🔁 Replaying' : '🔊 Playing')} ${label} · ${replayCount} listen${replayCount === 1 ? '' : 's'} · ${audioPromptModeLabel(safeMode)} at ${rate}× · Replay ready`
+            : `Audio support unavailable in this browser · ${safeMode === 'slow' ? 'slow ' : ''}replay cue saved · ${replayCount} total cue${replayCount === 1 ? '' : 's'}`;
         } else if (!node.textContent.includes('Replay ready')) {
           node.textContent = '';
         }
@@ -1948,7 +1973,10 @@
           <div class="flashcard-term">${escapeHTML(card.traditional)}</div>
           <div class="flashcard-canto">${escapeHTML(card.canto)}</div>
           <div class="flashcard-meta">Jyutping: ${escapeHTML(card.jyutping)}<br>${escapeHTML(card.english)}</div>
-          <button type="button" class="audio-button" data-audio-key="zh-HK:${escapeHTML(card.traditional)}" data-audio-text="${escapeHTML(card.traditional)}" data-audio-lang="zh-HK" data-audio-label="Cantonese audio prompt" onclick="speakChinesePrompt(this.dataset.audioText, this.dataset.audioLang, this.dataset.audioLabel)">🔊 Hear Cantonese</button>
+          <div class="audio-actions">
+            <button type="button" class="audio-button" data-audio-primary="true" data-audio-mode="normal" data-audio-key="zh-HK:${escapeHTML(card.traditional)}" data-audio-text="${escapeHTML(card.traditional)}" data-audio-lang="zh-HK" data-audio-label="Cantonese audio prompt" onclick="speakChinesePrompt(this.dataset.audioText, this.dataset.audioLang, this.dataset.audioLabel, this.dataset.audioMode)">🔊 Hear Cantonese</button>
+            <button type="button" class="audio-button audio-slow-button" data-audio-mode="slow" data-audio-key="zh-HK:${escapeHTML(card.traditional)}" data-audio-text="${escapeHTML(card.traditional)}" data-audio-lang="zh-HK" data-audio-label="Cantonese audio prompt" onclick="speakChinesePrompt(this.dataset.audioText, this.dataset.audioLang, this.dataset.audioLabel, this.dataset.audioMode)">🐢 Slow repeat</button>
+          </div>
           <div class="audio-status" data-audio-status="zh-HK:${escapeHTML(card.traditional)}"></div>
           <div class="flashcard-prompt">${escapeHTML(card.prompt)}</div>
           <div class="audio-voice-hint">${audioSupportCopy('zh-HK')}</div>
@@ -1978,7 +2006,10 @@
           <div class="flashcard-term">${escapeHTML(card.simplified)}</div>
           <div class="flashcard-canto">${escapeHTML(card.pinyin)}</div>
           <div class="flashcard-meta">Traditional: ${escapeHTML(card.traditional)}<br>${escapeHTML(card.english)}</div>
-          <button type="button" class="audio-button" data-audio-key="zh-CN:${escapeHTML(card.simplified)}" data-audio-text="${escapeHTML(card.simplified)}" data-audio-lang="zh-CN" data-audio-label="Mandarin audio prompt" onclick="speakChinesePrompt(this.dataset.audioText, this.dataset.audioLang, this.dataset.audioLabel)">🔊 Hear Mandarin</button>
+          <div class="audio-actions">
+            <button type="button" class="audio-button" data-audio-primary="true" data-audio-mode="normal" data-audio-key="zh-CN:${escapeHTML(card.simplified)}" data-audio-text="${escapeHTML(card.simplified)}" data-audio-lang="zh-CN" data-audio-label="Mandarin audio prompt" onclick="speakChinesePrompt(this.dataset.audioText, this.dataset.audioLang, this.dataset.audioLabel, this.dataset.audioMode)">🔊 Hear Mandarin</button>
+            <button type="button" class="audio-button audio-slow-button" data-audio-mode="slow" data-audio-key="zh-CN:${escapeHTML(card.simplified)}" data-audio-text="${escapeHTML(card.simplified)}" data-audio-lang="zh-CN" data-audio-label="Mandarin audio prompt" onclick="speakChinesePrompt(this.dataset.audioText, this.dataset.audioLang, this.dataset.audioLabel, this.dataset.audioMode)">🐢 Slow repeat</button>
+          </div>
           <div class="audio-status" data-audio-status="zh-CN:${escapeHTML(card.simplified)}"></div>
           <div class="flashcard-prompt">${escapeHTML(card.prompt)}</div>
           <div class="audio-voice-hint">${audioSupportCopy('zh-CN')}</div>
