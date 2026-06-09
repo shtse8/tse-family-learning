@@ -122,6 +122,8 @@ for (const marker of [
   'recordMathsFoundationAnswer',
   'maths-foundation-answer-entry',
   'latestMathsFoundationProgress',
+  'cleanHistoryEntry',
+  'restoreProgressRuntimeState',
   'mathsNumberLineVisual',
   'maths-number-line',
   'mathsFoundationWeakSkillSet',

@@ -199,3 +199,11 @@ Next slices:
 - Added number-line visual models to Maths Foundation answer-entry cards for number bonds, skip counting, bridge-10, count-back subtraction, and word-problem addition.
 - Added learner-history-aware weak-skill rotation: incorrect Maths Foundation attempts persist `weakSkills` and move those skills to the front of the next practice render.
 - Added `mathsFoundationNumberLineCount`, `mathsFoundationWeakSkills`, and `mathsFoundationRotationMode` test-state evidence plus mobile coverage for weak-skill prioritisation.
+
+
+## Run #24 adaptive progress import
+
+- Progress import now preserves activity metadata instead of flattening every backup into generic quiz history.
+- Imported matching-practice backups restore visible matching score state for HK Chinese and Mandarin cards.
+- Imported Maths Foundation backups keep `skillResults`, `weakSkills`, and `rotationMode`, so weak-skill rotation still prioritises recently missed skills after moving to a new browser/device.
+- Added `cleanHistoryEntry`, `restoreProgressRuntimeState`, and mobile coverage for adaptive backup restoration.
