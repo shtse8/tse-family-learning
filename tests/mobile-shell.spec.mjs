@@ -138,6 +138,84 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(overflow).toBeLessThanOrEqual(1);
 });
 
+
+test('progress import restores adaptive activity metadata', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText('LearningQuest').first()).toBeVisible();
+  await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Number bonds · Make 10')).toBeVisible();
+
+  const adaptiveBackup = {
+    app: 'tse-family-learning',
+    version: 2,
+    history: [
+      {
+        learner: 'learner-1',
+        date: 'Imported',
+        completedAt: '2026-06-09T12:00:00.000Z',
+        correct: 0,
+        total: 6,
+        percent: 0,
+        focus: 'Maths Foundation answer practice',
+        subjects: { 'Maths Foundation': { correct: 0, total: 6 } },
+        practiceMode: 'maths-foundation-answer-entry',
+        difficultyMode: 'maths-foundation',
+        activityType: 'maths-foundation-practice',
+        attempted: 1,
+        skillResults: { 'Make 20': { correct: 0, attempted: 1 } },
+        weakSkills: ['Make 20'],
+        rotationMode: 'maths-foundation-weak-skill-rotation'
+      },
+      {
+        learner: 'learner-1',
+        date: 'Imported',
+        completedAt: '2026-06-09T12:01:00.000Z',
+        correct: 1,
+        total: 4,
+        percent: 25,
+        focus: 'Simplified Mandarin matching',
+        subjects: { 'Chinese · Simplified Mandarin': { correct: 1, total: 4 } },
+        practiceMode: 'matching-practice',
+        difficultyMode: 'mandarin',
+        activityType: 'matching-practice',
+        matchingPackKey: 'mandarin',
+        attempted: 1
+      }
+    ]
+  };
+  const dataTransfer = await page.evaluateHandle((payload) => {
+    const file = new File([JSON.stringify(payload)], 'learningquest-backup.json', { type: 'application/json' });
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    return dt;
+  }, adaptiveBackup);
+  await page.evaluate((dt) => {
+    const input = document.getElementById('import-progress');
+    input.files = dt.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }, dataTransfer);
+  await expect(page.locator('#history-panel').getByText('Maths Foundation answer practice')).toBeVisible();
+  await expect(page.locator('#history-panel').getByText('Simplified Mandarin matching')).toBeVisible();
+  await expect(page.locator('#mandarin-matching-grid .matching-card').first().getByText('1/4 matched · 1 tried')).toBeVisible();
+  await expect(page.locator('#maths-foundation-grid .maths-card').first()).toContainText('What number goes with 13 to make 20?');
+  await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Weak-skill rotation: revisiting this skill from recent learner history.')).toBeVisible();
+
+  const state = await page.evaluate(() => window.__learningQuestTestState);
+  expect(state.mathsFoundationWeakSkills).toContain('Make 20');
+  expect(state.mathsFoundationRotationMode).toBe('Weak-skill rotation active');
+  expect(state.matchingPracticeScores.mandarin).toEqual({ correct: 1, attempted: 1, total: 4 });
+  expect(state.latestMathsFoundationProgress).toMatchObject({
+    activityType: 'maths-foundation-practice',
+    weakSkills: ['Make 20'],
+    rotationMode: 'maths-foundation-weak-skill-rotation'
+  });
+
+  const restoredHistory = await page.evaluate(() => JSON.parse(localStorage.getItem('learningquest-history-v1-learner-1')));
+  expect(restoredHistory).toEqual(expect.arrayContaining([
+    expect.objectContaining({ activityType: 'maths-foundation-practice', weakSkills: ['Make 20'], skillResults: { 'Make 20': { correct: 0, attempted: 1 } } }),
+    expect.objectContaining({ activityType: 'matching-practice', matchingPackKey: 'mandarin', attempted: 1 })
+  ]));
+});
+
 test('question practice remains available when optional HK Chinese pack is unavailable', async ({ page }) => {
   await page.route('**/content-packs/hk-chinese-basics.json*', route => route.fulfill({ status: 503, body: 'pack unavailable' }));
   await page.goto('/');

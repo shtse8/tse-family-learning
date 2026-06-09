@@ -11,10 +11,11 @@ A responsive, mobile-native HTML5 learning platform foundation for personalised 
 - First Simplified Mandarin flashcard slice is runtime-loaded from `content-packs/mandarin-basics.json` with Pinyin, Traditional comparison text, and English meaning.
 - First Maths Foundation slice is runtime-loaded from `content-packs/maths-foundation.json` with number-bond, place-value, counting, times-table, arithmetic, fraction, and word-problem practice cards plus number-line models, adaptive answer entry, and weak-skill rotation.
 - Browser-local per-learner quiz progress history with attempts, best score, average score, level, daily streak, practice XP, subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, milestone badges, daily challenge prompt, subject/difficulty/skill quick-practice filters, and onboarding-driven recommended curriculum packs, visible progression paths plus scored Chinese matching practice, Traditional/Simplified comparison drills, browser speech audio prompts, runtime Maths Foundation answer-entry practice with number-line visuals and weak-skill rotation, and browser-local matching/progression progress for recommended packs.
-- JSON export/import for progress backup between browsers or devices.
+- JSON export/import for progress backup between browsers or devices, preserving activity metadata for matching practice and Maths Foundation weak-skill rotation.
 - Run #7 cleanup keeps startup state declarations single-source and makes progress-backup copy apply to the selected learner.
 - Run #8 adds skill/topic quick-practice chips from question metadata, so focused practice can target number fluency, sound patterns, grammar, and logic patterns without changing the question schema.
 - Run #8 evening increment turns the Traditional HK Chinese roadmap placeholder into a visible starter flashcard slice.
+- Run #24 preserves adaptive activity metadata during progress import, so restored backups keep matching-practice state and Maths Foundation weak-skill rotation.
 - Deployed through the normal Sylphx product path for project `tart-duo-uvt9`.
 
 ## Validation

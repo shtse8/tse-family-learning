@@ -1531,6 +1531,78 @@
       `).join('');
     }
 
+    function cleanSubjects(value) {
+      return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    }
+
+    function cleanSkillResults(value) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+      const cleaned = {};
+      for (const [skill, result] of Object.entries(value)) {
+        if (!result || typeof result !== 'object' || Array.isArray(result)) continue;
+        const attempted = Math.max(0, Number(result.attempted || 0));
+        const correct = Math.max(0, Math.min(attempted, Number(result.correct || 0)));
+        if (attempted) cleaned[String(skill)] = { correct, attempted };
+      }
+      return Object.keys(cleaned).length ? cleaned : null;
+    }
+
+    function cleanStringList(value) {
+      if (!Array.isArray(value)) return [];
+      return Array.from(new Set(value.map(item => String(item || '').trim()).filter(Boolean))).slice(0, 8);
+    }
+
+    function cleanHistoryEntry(item) {
+      const total = Math.max(0, Number(item.total || questions.length || 0));
+      const correct = Math.max(0, Math.min(total, Number(item.correct || 0)));
+      const percent = Math.max(0, Math.min(100, Number(item.percent ?? (total ? Math.round((correct / total) * 100) : 0))));
+      const cleaned = {
+        date: String(item.date || 'Imported'),
+        completedAt: item.completedAt ? String(item.completedAt) : new Date().toISOString(),
+        correct,
+        total,
+        percent,
+        focus: String(item.focus || 'Mixed practice'),
+        subjects: cleanSubjects(item.subjects),
+        practiceMode: item.practiceMode ? String(item.practiceMode) : undefined,
+        difficultyMode: item.difficultyMode ? String(item.difficultyMode) : undefined,
+        activityType: item.activityType ? String(item.activityType) : undefined,
+        attempted: item.attempted === undefined ? undefined : Math.max(0, Number(item.attempted || 0)),
+        matchingPackKey: item.matchingPackKey ? String(item.matchingPackKey) : undefined,
+        rotationMode: item.rotationMode ? String(item.rotationMode) : undefined
+      };
+      const skillResults = cleanSkillResults(item.skillResults);
+      if (skillResults) cleaned.skillResults = skillResults;
+      const weakSkills = cleanStringList(item.weakSkills);
+      if (weakSkills.length) cleaned.weakSkills = weakSkills;
+      Object.keys(cleaned).forEach(key => cleaned[key] === undefined && delete cleaned[key]);
+      return cleaned;
+    }
+
+    function restoreProgressRuntimeState(history) {
+      for (const key of Object.keys(matchingPracticeScores)) matchingPracticeScores[key] = {};
+      for (const key of Object.keys(mathsFoundationPracticeScores)) delete mathsFoundationPracticeScores[key];
+      for (const item of [...history].reverse()) {
+        if (item.activityType === 'matching-practice' && item.matchingPackKey && item.attempted) {
+          matchingPracticeScores[item.matchingPackKey] = matchingPracticeScores[item.matchingPackKey] || {};
+          for (let index = 1; index <= Math.min(Number(item.attempted || 0), Number(item.total || 0)); index += 1) {
+            matchingPracticeScores[item.matchingPackKey][index] = index <= Number(item.correct || 0);
+          }
+        }
+        if (item.activityType === 'maths-foundation-practice' && item.skillResults) {
+          const resultsBySkill = item.skillResults;
+          for (const [index, card] of mathsFoundationCards.entries()) {
+            const result = resultsBySkill[card.skill];
+            if (!result || !result.attempted) continue;
+            mathsFoundationPracticeScores[index + 1] = Number(result.correct || 0) >= Number(result.attempted || 0);
+          }
+        }
+      }
+      renderChineseMatchingPractice();
+      renderMathsFoundationPractice();
+      updateRecommendedCurriculumTestState();
+    }
+
     function exportProgress() {
       const history = loadHistory();
       if (!history.length) {
@@ -1565,17 +1637,10 @@
           const payload = JSON.parse(reader.result);
           const imported = Array.isArray(payload) ? payload : payload.history;
           if (!Array.isArray(imported)) throw new Error('Missing history array');
-          const cleaned = imported.slice(0, 8).map(item => ({
-            date: String(item.date || 'Imported'),
-            completedAt: item.completedAt ? String(item.completedAt) : new Date().toISOString(),
-            correct: Number(item.correct || 0),
-            total: Number(item.total || questions.length || 0),
-            percent: Math.max(0, Math.min(100, Number(item.percent || 0))),
-            focus: String(item.focus || 'Mixed practice'),
-            subjects: item.subjects && typeof item.subjects === 'object' ? item.subjects : {}
-          }));
+          const cleaned = imported.slice(0, 8).map(cleanHistoryEntry);
           localStorage.setItem(learnerHistoryKey(), JSON.stringify(cleaned));
           renderHistory(cleaned);
+          restoreProgressRuntimeState(cleaned);
           renderParentOverview();
           alert('Progress imported successfully.');
         } catch {
