@@ -45,6 +45,8 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(makeTenCard.locator('.maths-number-line')).toBeVisible();
   await expect(makeTenCard.getByText('Count up from 6: 7, 8, 9, 10. That is 4 steps.')).toBeVisible();
   await expect(page.locator('#history-panel').getByText('Maths Foundation answer practice')).toBeVisible();
+  await expect(page.locator('#parent-panel').getByText('Next: Rebuild Maths Foundation')).toBeVisible();
+  await expect(page.locator('#parent-panel').getByText('17% across 6 saved questions — schedule a focused mini-set next.')).toBeVisible();
   const twoTimesCard = page.locator('#maths-foundation-grid .maths-card', { hasText: 'What is 2 × 6?' });
   await twoTimesCard.getByRole('textbox', { name: 'Answer for What is 2 × 6?' }).fill('12');
   await twoTimesCard.getByRole('button', { name: 'Check answer' }).tap();
@@ -86,6 +88,9 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   expect(primaryState.historyAwareCurriculumInsights).toContain('Maths Foundation is at 33% in saved learner history.');
   expect(primaryState.historyRecommendationScores).toEqual(expect.arrayContaining([
     expect.objectContaining({ title: 'Maths Foundation practice', score: 6 })
+  ]));
+  expect(primaryState.parentCoachActions).toEqual(expect.arrayContaining([
+    expect.objectContaining({ learner: 'Learner 1', title: 'Rebuild Chinese · Simplified Mandarin', subject: 'Chinese · Simplified Mandarin', priority: 'focus' })
   ]));
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
   expect(state.audioPromptCounts).toEqual({ hkChinese: 5, mandarin: 5 });
@@ -134,10 +139,15 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await makeTwentyCard.getByRole('button', { name: 'Check answer' }).tap();
   await expect(makeTwentyCard.getByText('Try again')).toBeVisible();
   await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Weak-skill rotation: revisiting this skill from recent learner history.')).toBeVisible();
+  await expect(page.locator('#parent-panel').getByText('Next: Review Make 20')).toBeVisible();
+  await expect(page.locator('#parent-panel').getByText('Recent practice flagged Make 20 for coach follow-up.')).toBeVisible();
   const rotationState = await page.evaluate(() => window.__learningQuestTestState);
   expect(rotationState.mathsFoundationWeakSkills).toContain('Make 20');
   expect(rotationState.mathsFoundationRotationMode).toBe('Weak-skill rotation active');
   expect(rotationState.latestMathsFoundationProgress.weakSkills).toContain('Make 20');
+  expect(rotationState.parentCoachActions).toEqual(expect.arrayContaining([
+    expect.objectContaining({ learner: 'Learner 1', title: 'Review Make 20', priority: 'weak-skill' })
+  ]));
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
@@ -212,6 +222,9 @@ test('progress import restores adaptive activity metadata', async ({ page }) => 
   expect(state.historyAwareCurriculumInsights).toContain('Recent Maths Foundation practice flagged Make 20 for review.');
   expect(state.historyRecommendationScores).toEqual(expect.arrayContaining([
     expect.objectContaining({ title: 'Maths Foundation practice', score: 8 })
+  ]));
+  expect(state.parentCoachActions).toEqual(expect.arrayContaining([
+    expect.objectContaining({ learner: 'Learner 1', title: 'Review Make 20', subject: 'Maths Foundation', priority: 'weak-skill' })
   ]));
   expect(state.latestMathsFoundationProgress).toMatchObject({
     activityType: 'maths-foundation-practice',
