@@ -79,9 +79,14 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await page.getByRole('button', { name: 'Primary' }).tap();
   await page.getByRole('button', { name: 'Build confidence' }).tap();
   await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: 'Maths Foundation practice' })).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Maths Foundation is at 33% in saved learner history.').first()).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended').getByText('Start with number bonds to 10 and 20 → Practise place value and skip counting → Move into times tables, fractions, and short word problems → Type answers and unlock strategy feedback').first()).toBeVisible();
   const primaryState = await page.evaluate(() => window.__learningQuestTestState);
   expect(primaryState.recommendedCurriculumTitles).toContain('Maths Foundation practice');
+  expect(primaryState.historyAwareCurriculumInsights).toContain('Maths Foundation is at 33% in saved learner history.');
+  expect(primaryState.historyRecommendationScores).toEqual(expect.arrayContaining([
+    expect.objectContaining({ title: 'Maths Foundation practice', score: 6 })
+  ]));
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
   expect(state.audioPromptCounts).toEqual({ hkChinese: 5, mandarin: 5 });
   expect(state.audioPromptLocales).toEqual(['zh-HK', 'zh-CN']);
@@ -203,6 +208,11 @@ test('progress import restores adaptive activity metadata', async ({ page }) => 
   expect(state.mathsFoundationWeakSkills).toContain('Make 20');
   expect(state.mathsFoundationRotationMode).toBe('Weak-skill rotation active');
   expect(state.matchingPracticeScores.mandarin).toEqual({ correct: 1, attempted: 1, total: 4 });
+  expect(state.recommendedCurriculumTitles).toContain('Maths Foundation practice');
+  expect(state.historyAwareCurriculumInsights).toContain('Recent Maths Foundation practice flagged Make 20 for review.');
+  expect(state.historyRecommendationScores).toEqual(expect.arrayContaining([
+    expect.objectContaining({ title: 'Maths Foundation practice', score: 8 })
+  ]));
   expect(state.latestMathsFoundationProgress).toMatchObject({
     activityType: 'maths-foundation-practice',
     weakSkills: ['Make 20'],
