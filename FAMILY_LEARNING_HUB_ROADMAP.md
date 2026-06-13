@@ -207,3 +207,16 @@ Next slices:
 - Imported matching-practice backups restore visible matching score state for HK Chinese and Mandarin cards.
 - Imported Maths Foundation backups keep `skillResults`, `weakSkills`, and `rotationMode`, so weak-skill rotation still prioritises recently missed skills after moving to a new browser/device.
 - Added `cleanHistoryEntry`, `restoreProgressRuntimeState`, and mobile coverage for adaptive backup restoration.
+
+## Run #25 Life in the UK starter mock
+
+- Added `content-packs/life-uk.json` as the first adult-learning exam pack, registered through `content-packs/registry.json`.
+- The curriculum surface now renders a Life in the UK starter mock with six practice cards from the runtime pack, a visible 75% pass target, explanations after answering, and saved weak-topic review signals.
+- Progress import/restore and coach recommendations now preserve `life-uk-practice` metadata, so adult learners can resume weak-topic review from backup files.
+- Next: expand the starter slice into a full 24-question, 45-minute mock flow with official-topic weighting.
+
+## Run #29 Life in the UK starter mock
+
+- Turned the Life in the UK roadmap placeholder into a registry-driven runtime content pack (`life-uk-v1`) with 12 starter civic questions.
+- Added a visible starter mock practice surface with a 75% pass target, answer feedback, explanations, weak-topic persistence, and parent-coach review actions.
+- Added validation, service-worker caching, mobile smoke coverage, and progress-import preservation for Life in the UK practice metadata.

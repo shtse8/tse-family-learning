@@ -1,6 +1,6 @@
 {
   "id": "learningquest-content-pack-registry-v1",
-  "updated": "2026-06-08",
+  "updated": "2026-06-13",
   "packs": [
     {
       "id": "hk-chinese-basics-v1",
@@ -105,6 +105,38 @@
         "Move into times tables, fractions, and short word problems",
         "Type answers and unlock strategy feedback",
         "Review weak skills first with number-line support"
+      ]
+    },
+    {
+      "id": "life-uk-v1",
+      "path": "content-packs/life-uk.json",
+      "kind": "mock-questions",
+      "title": "Life in the UK starter mock",
+      "domain": "Life in the UK",
+      "language": "English",
+      "learners": "Adult learners",
+      "activity": "Practice questions + starter mock mode + weak-topic review",
+      "readiness": "Live slice",
+      "next": "Expand to a 24-question timed mock with full official-topic weighting and review mode.",
+      "schema": [
+        "topic",
+        "prompt",
+        "options",
+        "answer",
+        "explanation"
+      ],
+      "renderTarget": "life-uk-grid",
+      "recommendedStages": [
+        "adult"
+      ],
+      "recommendedGoals": [
+        "exam-ready",
+        "mastery"
+      ],
+      "progressionSteps": [
+        "Start with civic basics and everyday UK facts",
+        "Practise weak citizenship topics from saved attempts",
+        "Build toward a 24-question, 45-minute mock test"
       ]
     }
   ]

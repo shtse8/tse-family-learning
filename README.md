@@ -10,12 +10,15 @@ A responsive, mobile-native HTML5 learning platform foundation for personalised 
 - First Traditional HK Chinese flashcard slice is runtime-loaded from `content-packs/hk-chinese-basics.json` with family words, greetings, colours, Jyutping, Cantonese prompts, and English meaning.
 - First Simplified Mandarin flashcard slice is runtime-loaded from `content-packs/mandarin-basics.json` with Pinyin, Traditional comparison text, and English meaning.
 - First Maths Foundation slice is runtime-loaded from `content-packs/maths-foundation.json` with number-bond, place-value, counting, times-table, arithmetic, fraction, and word-problem practice cards plus number-line models, adaptive answer entry, and weak-skill rotation.
+- First Life in the UK slice is runtime-loaded from `content-packs/life-uk.json` with starter mock questions, a 75% pass target, and weak-topic review signals for adult learners.
 - Browser-local per-learner quiz progress history with attempts, best score, average score, level, daily streak, practice XP, subject dashboard, personalised next-step recommendations, parent overview across learner profiles, family leaderboard, milestone badges, daily challenge prompt, subject/difficulty/skill quick-practice filters, and onboarding-driven recommended curriculum packs, visible progression paths plus scored Chinese matching practice, Traditional/Simplified comparison drills, browser speech audio prompts, runtime Maths Foundation answer-entry practice with number-line visuals and weak-skill rotation, and browser-local matching/progression progress for recommended packs.
-- JSON export/import for progress backup between browsers or devices, preserving activity metadata for matching practice and Maths Foundation weak-skill rotation.
+- JSON export/import for progress backup between browsers or devices, preserving activity metadata for matching practice, Maths Foundation weak-skill rotation, and Life in the UK weak-topic review.
 - Run #7 cleanup keeps startup state declarations single-source and makes progress-backup copy apply to the selected learner.
 - Run #8 adds skill/topic quick-practice chips from question metadata, so focused practice can target number fluency, sound patterns, grammar, and logic patterns without changing the question schema.
 - Run #8 evening increment turns the Traditional HK Chinese roadmap placeholder into a visible starter flashcard slice.
 - Run #24 preserves adaptive activity metadata during progress import, so restored backups keep matching-practice state and Maths Foundation weak-skill rotation.
+- Run #29 adds a registry-driven Life in the UK starter mock with 12 civic questions, a 75% pass target, weak-topic review, and progress import support.
+- Run #25 turns Life in the UK from a planned placeholder into a runtime content pack with starter mock questions, pass-target scoring, and weak-topic review.
 - Deployed through the normal Sylphx product path for project `tart-duo-uvt9`.
 
 ## Validation
@@ -39,5 +42,5 @@ This app is being generalized from a family prototype into a public-facing produ
 
 ## Content packs
 
-- `content-packs/registry.json` is the runtime pack metadata SSOT. It lists reusable packs, paths, schemas, render targets, readiness copy, next-step copy, and recommendation tags used by onboarding-driven curriculum recommendations. The app fetches the registry first, falls back to baked-in registry metadata if unavailable, then loads `content-packs/hk-chinese-basics.json`, `content-packs/mandarin-basics.json`, and `content-packs/maths-foundation.json` from the registered paths.
+- `content-packs/registry.json` is the runtime pack metadata SSOT. It lists reusable packs, paths, schemas, render targets, readiness copy, next-step copy, and recommendation tags used by onboarding-driven curriculum recommendations. The app fetches the registry first, falls back to baked-in registry metadata if unavailable, then loads `content-packs/hk-chinese-basics.json`, `content-packs/mandarin-basics.json`, `content-packs/maths-foundation.json`, and `content-packs/life-uk.json` from the registered paths.
 - Runtime content packs are treated as optional curriculum content: if the pack route is temporarily unavailable, core question practice still loads and the curriculum card shows a clear recovery state instead of blocking the app.

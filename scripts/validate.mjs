@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json', 'content-packs/maths-foundation.json'];
+const requiredFiles = ['index.html', 'questions.json', 'manifest.webmanifest', 'sw.js', 'Dockerfile', 'content-packs/registry.json', 'content-packs/hk-chinese-basics.json', 'content-packs/mandarin-basics.json', 'content-packs/maths-foundation.json', 'content-packs/life-uk.json'];
 for (const file of requiredFiles) {
   if (!fs.existsSync(file)) throw new Error(`Missing required file: ${file}`);
 }
@@ -61,14 +61,35 @@ function validateMathsPackFile(path, expectedId, fields, label) {
   return pack;
 }
 
+
+function validateLifeUKPackFile(path, expectedId, fields, label) {
+  const pack = JSON.parse(fs.readFileSync(path, 'utf8'));
+  if (pack.id !== expectedId) throw new Error(`${label} pack id changed unexpectedly`);
+  if (!pack.activity || !pack.activity.includes('Practice questions')) throw new Error(`${label} pack metadata must advertise practice questions`);
+  if (!pack.activity || !pack.activity.includes('starter mock mode')) throw new Error(`${label} pack metadata must advertise starter mock mode`);
+  if (!pack.activity || !pack.activity.includes('weak-topic review')) throw new Error(`${label} pack metadata must advertise weak-topic review`);
+  if (!pack.mock || Number(pack.mock.passMarkPercent) !== 75) throw new Error(`${label} pack must declare a 75% pass mark`);
+  if (!pack.mock || Number(pack.mock.timeLimitMinutes) !== 45) throw new Error(`${label} pack must declare the 45-minute mock target`);
+  if (!Array.isArray(pack.questions) || pack.questions.length < 10) throw new Error(`${label} pack needs at least 10 questions`);
+  for (const [i, question] of pack.questions.entries()) {
+    for (const field of fields) {
+      if (question[field] === undefined || question[field] === null || question[field] === '') throw new Error(`${label} question ${i + 1} missing ${field}`);
+    }
+    if (!Array.isArray(question.options) || question.options.length < 4) throw new Error(`${label} question ${i + 1} needs at least four options`);
+    if (!Number.isInteger(Number(question.answer)) || Number(question.answer) < 0 || Number(question.answer) >= question.options.length) throw new Error(`${label} question ${i + 1} has invalid answer`);
+  }
+  return pack;
+}
+
 const registry = JSON.parse(fs.readFileSync('content-packs/registry.json', 'utf8'));
 if (registry.id !== 'learningquest-content-pack-registry-v1') throw new Error('Content pack registry id changed unexpectedly');
-if (!Array.isArray(registry.packs) || registry.packs.length < 3) throw new Error('Content pack registry needs at least three packs');
+if (!Array.isArray(registry.packs) || registry.packs.length < 4) throw new Error('Content pack registry needs at least four packs');
 const registryById = Object.fromEntries(registry.packs.map(pack => [pack.id, pack]));
 for (const [id, path, fields] of [
   ['hk-chinese-basics-v1', 'content-packs/hk-chinese-basics.json', ['traditional', 'jyutping', 'canto', 'english', 'prompt']],
   ['mandarin-basics-v1', 'content-packs/mandarin-basics.json', ['simplified', 'traditional', 'pinyin', 'english', 'prompt']],
-  ['maths-foundation-v1', 'content-packs/maths-foundation.json', ['topic', 'skill', 'prompt', 'answer', 'strategy']]
+  ['maths-foundation-v1', 'content-packs/maths-foundation.json', ['topic', 'skill', 'prompt', 'answer', 'strategy']],
+  ['life-uk-v1', 'content-packs/life-uk.json', ['topic', 'prompt', 'options', 'answer', 'explanation']]
 ]) {
   const registered = registryById[id];
   if (!registered) throw new Error(`Content pack registry missing ${id}`);
@@ -89,6 +110,12 @@ for (const [id, path, fields] of [
     if (!registered.activity.includes('weak-skill rotation')) throw new Error('Content pack registry maths-foundation-v1 missing weak-skill rotation activity');
     if (!registered.progressionSteps.includes('Type answers and unlock strategy feedback')) throw new Error('Content pack registry maths-foundation-v1 missing answer-entry progression step');
     if (!registered.progressionSteps.includes('Review weak skills first with number-line support')) throw new Error('Content pack registry maths-foundation-v1 missing weak-skill rotation progression step');
+  } else if (id === 'life-uk-v1') {
+    if (registered.kind !== 'mock-questions') throw new Error('Content pack registry life-uk-v1 must use mock-questions kind');
+    if (!registered.activity.includes('Practice questions')) throw new Error('Content pack registry life-uk-v1 missing practice-question activity');
+    if (!registered.activity.includes('starter mock mode')) throw new Error('Content pack registry life-uk-v1 missing starter mock mode activity');
+    if (!registered.activity.includes('weak-topic review')) throw new Error('Content pack registry life-uk-v1 missing weak-topic review activity');
+    if (!registered.progressionSteps.includes('Build toward a 24-question, 45-minute mock test')) throw new Error('Content pack registry life-uk-v1 missing timed-mock progression step');
   } else {
     if (!registered.activity.includes('matching')) throw new Error(`Content pack registry ${id} missing matching activity`);
     if (!registered.activity.includes('comparison')) throw new Error(`Content pack registry ${id} missing comparison activity`);
@@ -99,6 +126,7 @@ for (const [id, path, fields] of [
 const hkChinesePack = validatePackFile('content-packs/hk-chinese-basics.json', 'hk-chinese-basics-v1', registryById['hk-chinese-basics-v1'].schema, 'HK Chinese');
 const mandarinPack = validatePackFile('content-packs/mandarin-basics.json', 'mandarin-basics-v1', registryById['mandarin-basics-v1'].schema, 'Mandarin');
 const mathsFoundationPack = validateMathsPackFile('content-packs/maths-foundation.json', 'maths-foundation-v1', registryById['maths-foundation-v1'].schema, 'Maths Foundation');
+const lifeUKPack = validateLifeUKPackFile('content-packs/life-uk.json', 'life-uk-v1', registryById['life-uk-v1'].schema, 'Life in the UK');
 for (const marker of [
   'FALLBACK_CONTENT_PACK_REGISTRY',
   'renderCurriculumPacks',
@@ -124,6 +152,8 @@ for (const marker of [
   'latestMathsFoundationProgress',
   'cleanHistoryEntry',
   'restoreProgressRuntimeState',
+  'passMark',
+  'passed',
   'mathsNumberLineVisual',
   'maths-number-line',
   'mathsFoundationWeakSkillSet',
@@ -197,6 +227,22 @@ for (const marker of [
   'hkChinesePackError',
   'mandarinPackError',
   'flashcard-placeholder',
+  'life-uk-v1',
+  'content-packs/life-uk.json',
+  'Life in the UK starter mock',
+  'renderLifeUKPractice',
+  'validateLifeUKPack',
+  'loadLifeUKPack',
+  'lifeUKPracticeScores',
+  'lifeUKPracticeSummary',
+  'recordLifeUKAnswer',
+  'life-uk-practice',
+  'latestLifeUKProgress',
+  'lifeUKWeakTopics',
+  '75% pass target',
+  'Build toward a 24-question, 45-minute mock test',
+  'starter mock mode',
+  'weak-topic review',
   'Question practice remains available'
 ]) {
   if (!html.includes(marker)) throw new Error(`Missing runtime HK Chinese content-pack marker: ${marker}`);
@@ -229,6 +275,9 @@ if (!serverLog.includes('LearningQuest running on port')) throw new Error('serve
 
 const dockerfile = fs.readFileSync('Dockerfile', 'utf8');
 if (!dockerfile.includes('COPY content-packs ./content-packs')) throw new Error('Dockerfile must publish content-packs for production');
+const serviceWorker = fs.readFileSync('sw.js', 'utf8');
+if (!serviceWorker.includes('./content-packs/life-uk.json')) throw new Error('Service worker must cache Life in the UK content pack');
 void hkChinesePack;
 void mandarinPack;
 void mathsFoundationPack;
+void lifeUKPack;

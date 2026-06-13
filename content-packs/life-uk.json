@@ -1,0 +1,110 @@
+{
+  "id": "life-uk-v1",
+  "title": "Life in the UK starter mock",
+  "domain": "Life in the UK",
+  "language": "English",
+  "learners": "Adult learners",
+  "activity": "Practice questions + starter mock mode + weak-topic review",
+  "readiness": "Live slice",
+  "next": "Expand to a 24-question timed mock with full official-topic weighting and review mode.",
+  "recommendedStages": ["adult"],
+  "recommendedGoals": ["exam-ready", "mastery"],
+  "progressionSteps": [
+    "Start with civic basics and everyday UK facts",
+    "Practise weak citizenship topics from saved attempts",
+    "Build toward a 24-question, 45-minute mock test"
+  ],
+  "mock": {
+    "questionCount": 24,
+    "timeLimitMinutes": 45,
+    "passMarkPercent": 75,
+    "starterQuestionCount": 6
+  },
+  "questions": [
+    {
+      "topic": "Government",
+      "prompt": "Who appoints the Prime Minister after a general election?",
+      "options": ["The monarch", "The Speaker", "The Mayor of London", "The Supreme Court"],
+      "answer": 0,
+      "explanation": "The monarch appoints as Prime Minister the person most likely to command the confidence of the House of Commons."
+    },
+    {
+      "topic": "Parliament",
+      "prompt": "Which part of Parliament is made up of elected MPs?",
+      "options": ["House of Commons", "House of Lords", "Privy Council", "Civil Service"],
+      "answer": 0,
+      "explanation": "Members of Parliament are elected to the House of Commons."
+    },
+    {
+      "topic": "Law",
+      "prompt": "Which document from 1215 is often linked with limits on royal power?",
+      "options": ["Magna Carta", "Bill of Rights 1689", "Domesday Book", "Act of Union"],
+      "answer": 0,
+      "explanation": "Magna Carta was agreed in 1215 and is associated with limiting the power of the monarch."
+    },
+    {
+      "topic": "Rights and responsibilities",
+      "prompt": "What is one responsibility of people living in the UK?",
+      "options": ["Obeying the law", "Choosing the monarch", "Serving as an MP", "Owning a car"],
+      "answer": 0,
+      "explanation": "Everyone living in the UK is expected to obey the law."
+    },
+    {
+      "topic": "History",
+      "prompt": "What event is remembered on Remembrance Day?",
+      "options": ["The service and sacrifice of people in wars", "The signing of Magna Carta", "The coronation of every monarch", "The start of the school year"],
+      "answer": 0,
+      "explanation": "Remembrance Day honours those who served and died in wars and conflicts."
+    },
+    {
+      "topic": "UK nations",
+      "prompt": "Which city is the capital of Wales?",
+      "options": ["Cardiff", "Edinburgh", "Belfast", "Manchester"],
+      "answer": 0,
+      "explanation": "Cardiff is the capital city of Wales."
+    },
+    {
+      "topic": "Democracy",
+      "prompt": "At what age can most citizens vote in UK general elections?",
+      "options": ["18", "16", "21", "25"],
+      "answer": 0,
+      "explanation": "Most citizens can vote in UK general elections from age 18."
+    },
+    {
+      "topic": "Society",
+      "prompt": "Which service provides healthcare funded mainly through taxation?",
+      "options": ["NHS", "DVLA", "BBC", "HMRC"],
+      "answer": 0,
+      "explanation": "The National Health Service provides healthcare funded mainly through taxation."
+    },
+    {
+      "topic": "Geography",
+      "prompt": "Which of these is one of the four countries of the UK?",
+      "options": ["Northern Ireland", "Republic of Ireland", "Isle of Man", "Jersey"],
+      "answer": 0,
+      "explanation": "The UK is made up of England, Scotland, Wales, and Northern Ireland."
+    },
+    {
+      "topic": "Culture",
+      "prompt": "Which flower is commonly associated with Remembrance?",
+      "options": ["Poppy", "Daffodil", "Rose", "Thistle"],
+      "answer": 0,
+      "explanation": "The poppy is used as a symbol of Remembrance."
+    },
+    {
+      "topic": "Government",
+      "prompt": "Where does the UK Parliament meet?",
+      "options": ["Palace of Westminster", "Buckingham Palace", "Windsor Castle", "10 Downing Street"],
+      "answer": 0,
+      "explanation": "The UK Parliament meets at the Palace of Westminster in London."
+    },
+    {
+      "topic": "Law",
+      "prompt": "What type of trial uses a jury in serious criminal cases?",
+      "options": ["Crown Court trial", "County Court hearing", "Council meeting", "Public inquiry"],
+      "answer": 0,
+      "explanation": "Serious criminal cases can be heard in the Crown Court with a jury."
+    }
+  ],
+  "sourcePath": "content-packs/life-uk.json"
+}
