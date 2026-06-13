@@ -21,6 +21,11 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: 'Simplified Mandarin basics' })).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended').getByText('Adult language goal match from the runtime content-pack registry.').first()).toBeVisible();
   await expect(page.locator('.curriculum-card.recommended').getByText('Start with greetings and core family words → Compare Simplified, Traditional, and Pinyin forms → Use matching practice and comparison drills, then try audio prompts').first()).toBeVisible();
+  await page.getByRole('button', { name: 'Get exam-ready' }).tap();
+  await expect(page.locator('.curriculum-card.recommended .curriculum-title', { hasText: 'Life in the UK starter mock' })).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Adult learning match for bite-sized recall.').first()).toBeVisible();
+  await expect(page.locator('.curriculum-card.recommended').getByText('Start with civic basics and everyday UK facts → Practise weak citizenship topics from saved attempts → Build toward a 24-question, 45-minute mock test').first()).toBeVisible();
+  await page.getByRole('button', { name: 'Learn language' }).tap();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '早晨' })).toBeVisible();
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '紅色' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '早上好' })).toBeVisible();
@@ -42,6 +47,15 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.getByRole('heading', { name: 'Simplified Mandarin matching practice' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Traditional/Simplified comparison drill' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Maths Foundation practice cards' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Life in the UK starter mock' })).toBeVisible();
+  await expect(page.locator('#life-uk-grid .life-uk-card').first().getByText('Government')).toBeVisible();
+  await expect(page.locator('#life-uk-grid .life-uk-card').first().getByText('Who appoints the Prime Minister after a general election?')).toBeVisible();
+  const lifeUKCard = page.locator('#life-uk-grid .life-uk-card').first();
+  await lifeUKCard.getByRole('button', { name: 'The Speaker' }).tap();
+  await expect(lifeUKCard.getByText('Try again in review — this topic is now flagged.')).toBeVisible();
+  await expect(lifeUKCard.getByText('0/6 correct · 0% · 75% pass target')).toBeVisible();
+  await expect(lifeUKCard.getByText('Explanation: The monarch appoints as Prime Minister')).toBeVisible();
+  await expect(page.locator('#history-panel').getByText('Life in the UK starter mock')).toBeVisible();
   await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Number bonds · Make 10')).toBeVisible();
   const makeTenCard = page.locator('#maths-foundation-grid .maths-card', { hasText: 'What number goes with 6 to make 10?' });
   await expect(makeTenCard.getByRole('textbox', { name: 'Answer for What number goes with 6 to make 10?' })).toBeVisible();
@@ -54,8 +68,8 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(makeTenCard.locator('.maths-number-line')).toBeVisible();
   await expect(makeTenCard.getByText('Count up from 6: 7, 8, 9, 10. That is 4 steps.')).toBeVisible();
   await expect(page.locator('#history-panel').getByText('Maths Foundation answer practice')).toBeVisible();
-  await expect(page.locator('#parent-panel').getByText('Next: Rebuild Maths Foundation')).toBeVisible();
-  await expect(page.locator('#parent-panel').getByText('17% across 6 saved questions — schedule a focused mini-set next.')).toBeVisible();
+  await expect(page.locator('#parent-panel').getByText('Next: Review Government')).toBeVisible();
+  await expect(page.locator('#parent-panel').getByText('Recent practice flagged Government for coach follow-up.')).toBeVisible();
   const twoTimesCard = page.locator('#maths-foundation-grid .maths-card', { hasText: 'What is 2 × 6?' });
   await twoTimesCard.getByRole('textbox', { name: 'Answer for What is 2 × 6?' }).fill('12');
   await twoTimesCard.getByRole('button', { name: 'Check answer' }).tap();
@@ -77,15 +91,31 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   await expect(page.locator('#mandarin-matching-grid .matching-card').first().getByText('✅ Matched')).toBeVisible();
 
   const state = await page.evaluate(() => window.__learningQuestTestState);
-  expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(3);
+  expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(4);
   expect(state.contentPackRegistryError).toBeNull();
   expect(state.hkChinesePackId).toBe('hk-chinese-basics-v1');
   expect(state.mandarinPackId).toBe('mandarin-basics-v1');
   expect(state.mathsFoundationPackId).toBe('maths-foundation-v1');
+  expect(state.lifeUKPackId).toBe('life-uk-v1');
+  expect(state.lifeUKQuestionCount).toBe(12);
+  expect(state.lifeUKPracticeCount).toBe(6);
+  expect(state.lifeUKPassMark).toBe(75);
+  expect(state.lifeUKTopics).toEqual(expect.arrayContaining(['Government', 'Parliament', 'Law']));
+  expect(state.lifeUKPracticeScores).toEqual({ correct: 0, attempted: 1, total: 6, percent: 0, passMark: 75, passed: false });
+  expect(state.lifeUKWeakTopics).toContain('Government');
+  expect(state.latestLifeUKProgress).toMatchObject({
+    activityType: 'life-uk-practice',
+    practiceMode: 'life-uk-starter-mock',
+    correct: 0,
+    total: 6,
+    percent: 0,
+    attempted: 1,
+    weakSkills: ['Government']
+  });
   expect(state.mathsFoundationCardCount).toBe(10);
   expect(state.mathsFoundationTopics).toEqual(expect.arrayContaining(['Number bonds', 'Place value', 'Times tables']));
-  expect(state.recommendedCurriculumTitles).toContain('Simplified Mandarin basics');
-  expect(state.recommendedProgressionPaths.join(' | ')).toContain('Use matching practice and comparison drills, then try audio prompts');
+  expect(state.recommendedCurriculumTitles).toContain('Life in the UK starter mock');
+  expect(state.recommendedProgressionPaths.join(' | ')).toContain('Build toward a 24-question, 45-minute mock test');
 
   await page.getByRole('button', { name: 'Primary' }).tap();
   await page.getByRole('button', { name: 'Build confidence' }).tap();
@@ -99,7 +129,7 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
     expect.objectContaining({ title: 'Maths Foundation practice', score: 6 })
   ]));
   expect(primaryState.parentCoachActions).toEqual(expect.arrayContaining([
-    expect.objectContaining({ learner: 'Learner 1', title: 'Rebuild Chinese · Simplified Mandarin', subject: 'Chinese · Simplified Mandarin', priority: 'focus' })
+    expect.objectContaining({ learner: 'Learner 1', title: 'Review Government', subject: 'Life in the UK', priority: 'weak-skill' })
   ]));
   expect(state.matchingPracticeCounts).toEqual({ hkChinese: 4, mandarin: 4 });
   expect(state.audioPromptCounts).toEqual({ hkChinese: 5, mandarin: 5 });
@@ -143,6 +173,7 @@ test('mobile app shell opens without horizontal overflow and mission onboarding 
   const savedHistory = await page.evaluate(() => JSON.parse(localStorage.getItem('learningquest-history-v1-learner-1')));
   expect(savedHistory[0]).toMatchObject({ activityType: 'matching-practice', matchingPackKey: 'mandarin', correct: 1, total: 4, percent: 25 });
   expect(savedHistory).toEqual(expect.arrayContaining([
+    expect.objectContaining({ activityType: 'life-uk-practice', correct: 0, total: 6, percent: 0, weakSkills: ['Government'] }),
     expect.objectContaining({ activityType: 'maths-foundation-practice', correct: 2, total: 6, percent: 33 }),
     expect.objectContaining({ activityType: 'matching-practice', matchingPackKey: 'hkChinese', correct: 1, total: 4, percent: 25 })
   ]));
@@ -196,6 +227,22 @@ test('progress import restores adaptive activity metadata', async ({ page }) => 
       {
         learner: 'learner-1',
         date: 'Imported',
+        completedAt: '2026-06-09T12:00:30.000Z',
+        correct: 0,
+        total: 6,
+        percent: 0,
+        focus: 'Life in the UK starter mock',
+        subjects: { 'Life in the UK': { correct: 0, total: 6 } },
+        practiceMode: 'life-uk-starter-mock',
+        difficultyMode: 'citizenship-starter',
+        activityType: 'life-uk-practice',
+        attempted: 1,
+        skillResults: { Government: { correct: 0, attempted: 1 } },
+        weakSkills: ['Government']
+      },
+      {
+        learner: 'learner-1',
+        date: 'Imported',
         completedAt: '2026-06-09T12:01:00.000Z',
         correct: 1,
         total: 4,
@@ -223,6 +270,7 @@ test('progress import restores adaptive activity metadata', async ({ page }) => 
   }, dataTransfer);
   await expect(page.locator('#history-panel').getByText('Maths Foundation answer practice')).toBeVisible();
   await expect(page.locator('#history-panel').getByText('Simplified Mandarin matching')).toBeVisible();
+  await expect(page.locator('#history-panel').getByText('Life in the UK starter mock')).toBeVisible();
   await expect(page.locator('#mandarin-matching-grid .matching-card').first().getByText('1/4 matched · 1 tried')).toBeVisible();
   await expect(page.locator('#maths-foundation-grid .maths-card').first()).toContainText('What number goes with 13 to make 20?');
   await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Weak-skill rotation: revisiting this skill from recent learner history.')).toBeVisible();
@@ -231,6 +279,8 @@ test('progress import restores adaptive activity metadata', async ({ page }) => 
   expect(state.mathsFoundationWeakSkills).toContain('Make 20');
   expect(state.mathsFoundationRotationMode).toBe('Weak-skill rotation active');
   expect(state.matchingPracticeScores.mandarin).toEqual({ correct: 1, attempted: 1, total: 4 });
+  expect(state.lifeUKWeakTopics).toContain('Government');
+  expect(state.latestLifeUKProgress).toMatchObject({ activityType: 'life-uk-practice', weakSkills: ['Government'] });
   expect(state.recommendedCurriculumTitles).toContain('Maths Foundation practice');
   expect(state.historyAwareCurriculumInsights).toContain('Recent Maths Foundation practice flagged Make 20 for review.');
   expect(state.historyRecommendationScores).toEqual(expect.arrayContaining([
@@ -248,7 +298,8 @@ test('progress import restores adaptive activity metadata', async ({ page }) => 
   const restoredHistory = await page.evaluate(() => JSON.parse(localStorage.getItem('learningquest-history-v1-learner-1')));
   expect(restoredHistory).toEqual(expect.arrayContaining([
     expect.objectContaining({ activityType: 'maths-foundation-practice', weakSkills: ['Make 20'], skillResults: { 'Make 20': { correct: 0, attempted: 1 } } }),
-    expect.objectContaining({ activityType: 'matching-practice', matchingPackKey: 'mandarin', attempted: 1 })
+    expect.objectContaining({ activityType: 'matching-practice', matchingPackKey: 'mandarin', attempted: 1 }),
+    expect.objectContaining({ activityType: 'life-uk-practice', weakSkills: ['Government'], skillResults: { Government: { correct: 0, attempted: 1 } } })
   ]));
 });
 
@@ -314,6 +365,28 @@ test('question practice remains available when optional Maths Foundation pack is
   expect(state.mandarinPackId).toBe('mandarin-basics-v1');
 });
 
+
+test('question practice remains available when optional Life in the UK pack is unavailable', async ({ page }) => {
+  await page.route('**/content-packs/life-uk.json*', route => route.fulfill({ status: 503, body: 'pack unavailable' }));
+  await page.goto('/');
+
+  await expect(page.getByText('LearningQuest').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Set up today’s mission' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Start this mission' })).toBeVisible();
+  await page.waitForFunction(
+    () => window.__learningQuestTestState?.lifeUKPackError,
+    null,
+    { timeout: 10000 }
+  );
+  await expect(page.locator('#life-uk-grid .life-uk-card').getByText('Use the other practice packs while this mock recovers.')).toBeVisible();
+  await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Number bonds · Make 10')).toBeVisible();
+
+  const state = await page.evaluate(() => window.__learningQuestTestState);
+  expect(state.lifeUKPackId).toBeNull();
+  expect(state.lifeUKPackError).toContain('content-packs/life-uk.json');
+  expect(state.mathsFoundationPackId).toBe('maths-foundation-v1');
+});
+
 test('registered content packs fall back when registry is unavailable', async ({ page }) => {
   await page.route('**/content-packs/registry.json*', route => route.fulfill({ status: 503, body: 'registry unavailable' }));
   await page.goto('/');
@@ -322,11 +395,13 @@ test('registered content packs fall back when registry is unavailable', async ({
   await expect(page.locator('#flashcard-grid .flashcard-term', { hasText: '早晨' })).toBeVisible();
   await expect(page.locator('#mandarin-flashcard-grid .flashcard-term', { hasText: '早上好' })).toBeVisible();
   await expect(page.locator('#maths-foundation-grid .maths-card').first().getByText('Number bonds · Make 10')).toBeVisible();
+  await expect(page.locator('#life-uk-grid .life-uk-card').first().getByText('Who appoints the Prime Minister after a general election?')).toBeVisible();
 
   const state = await page.evaluate(() => window.__learningQuestTestState);
-  expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(3);
+  expect(state.contentPackRegistryCount).toBeGreaterThanOrEqual(4);
   expect(state.contentPackRegistryError).toContain('content-packs/registry.json');
   expect(state.hkChinesePackId).toBe('hk-chinese-basics-v1');
   expect(state.mandarinPackId).toBe('mandarin-basics-v1');
   expect(state.mathsFoundationPackId).toBe('maths-foundation-v1');
+  expect(state.lifeUKPackId).toBe('life-uk-v1');
 });

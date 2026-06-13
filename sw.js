@@ -3,7 +3,12 @@ const CORE_ASSETS = [
   './',
   './index.html',
   './questions.json',
-  './manifest.webmanifest'
+  './manifest.webmanifest',
+  './content-packs/registry.json',
+  './content-packs/hk-chinese-basics.json',
+  './content-packs/mandarin-basics.json',
+  './content-packs/maths-foundation.json',
+  './content-packs/life-uk.json'
 ];
 
 self.addEventListener('install', event => {
